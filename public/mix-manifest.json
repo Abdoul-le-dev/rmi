@@ -1,0 +1,10 @@
+{
+    "/assets/learning_page/scripts.min.js": "/assets/learning_page/scripts.min.js",
+    "/assets/default/js/parts/webinar_show.min.js": "/assets/default/js/parts/webinar_show.min.js",
+    "/assets/default/js/parts/video_player_helpers.min.js": "/assets/default/js/parts/video_player_helpers.min.js",
+    "/assets/default/js/panel/webinar.min.js": "/assets/default/js/panel/webinar.min.js",
+    "/assets/default/js/panel/personal_note.min.js": "/assets/default/js/panel/personal_note.min.js",
+    "/assets/admin/js/webinar.min.js": "/assets/admin/js/webinar.min.js",
+    "/assets/default/js/admin/create_certificate_template.min.js": "/assets/default/js/admin/create_certificate_template.min.js",
+    "/assets/default/js/admin/abandoned_cart_rules.min.js": "/assets/default/js/admin/abandoned_cart_rules.min.js"
+}

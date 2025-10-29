@@ -1,0 +1,270 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Admin\traits\DashboardTrait;
+use App\Http\Controllers\Controller;
+use App\Models\FeatureWebinar;
+use App\Models\Role;
+use App\Models\Sale;
+use App\Models\Ticket;
+use App\Models\Webinar;
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Gate;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use App\Exports\ActiveSalesExport;
+use App\Exports\ExpiredSubscriptionsExport;
+use App\Exports\UsersWithoutSalesExport;
+use App\Exports\UsersWithWebinarOnlyExport;
+use Maatwebsite\Excel\Facades\Excel;
+
+class DashboardController extends Controller
+{
+    use DashboardTrait;
+
+    public function index()
+    {
+        $this->authorize('admin_general_dashboard_show');
+
+        if (Gate::allows('admin_general_dashboard_daily_sales_statistics')) {
+            $dailySalesTypeStatistics = $this->dailySalesTypeStatistics();
+        }
+
+        if (Gate::allows('admin_general_dashboard_income_statistics')) {
+            $getIncomeStatistics = $this->getIncomeStatistics();
+        }
+
+        if (Gate::allows('admin_general_dashboard_total_sales_statistics')) {
+            $getTotalSalesStatistics = $this->getTotalSalesStatistics();
+        }
+
+        if (Gate::allows('admin_general_dashboard_new_sales')) {
+            $getNewSalesCount = $this->getNewSalesCount();
+        }
+
+        if (Gate::allows('admin_general_dashboard_new_comments')) {
+            $getNewCommentsCount = $this->getNewCommentsCount();
+        }
+
+        if (Gate::allows('admin_general_dashboard_new_tickets')) {
+            $getNewTicketsCount = $this->getNewTicketsCount();
+        }
+
+        if (Gate::allows('admin_general_dashboard_new_reviews')) {
+            $getPendingReviewCount = $this->getPendingReviewCount();
+        }
+
+        if (Gate::allows('admin_general_dashboard_sales_statistics_chart')) {
+            $getMonthAndYearSalesChart = $this->getMonthAndYearSalesChart('month_of_year');
+            $getMonthAndYearSalesChartStatistics = $this->getMonthAndYearSalesChartStatistics();
+        }
+
+        if (Gate::allows('admin_general_dashboard_recent_comments')) {
+            $recentComments = $this->getRecentComments();
+        }
+
+        if (Gate::allows('admin_general_dashboard_recent_tickets')) {
+            $recentTickets = $this->getRecentTickets();
+        }
+
+        if (Gate::allows('admin_general_dashboard_recent_webinars')) {
+            $recentWebinars = $this->getRecentWebinars();
+        }
+
+        if (Gate::allows('admin_general_dashboard_recent_courses')) {
+            $recentCourses = $this->getRecentCourses();
+        }
+
+        if (Gate::allows('admin_general_dashboard_users_statistics_chart')) {
+            $usersStatisticsChart = $this->usersStatisticsChart();
+        }
+
+        $data = [
+            'pageTitle' => trans('admin/main.general_dashboard_title'),
+            'dailySalesTypeStatistics' => $dailySalesTypeStatistics ?? null,
+            'getIncomeStatistics' => $getIncomeStatistics ?? null,
+            'getTotalSalesStatistics' => $getTotalSalesStatistics ?? null,
+            'getNewSalesCount' => $getNewSalesCount ?? 0,
+            'getNewCommentsCount' => $getNewCommentsCount ?? 0,
+            'getNewTicketsCount' => $getNewTicketsCount ?? 0,
+            'getPendingReviewCount' => $getPendingReviewCount ?? 0,
+            'getMonthAndYearSalesChart' => $getMonthAndYearSalesChart ?? null,
+            'getMonthAndYearSalesChartStatistics' => $getMonthAndYearSalesChartStatistics ?? null,
+            'recentComments' => $recentComments ?? null,
+            'recentTickets' => $recentTickets ?? null,
+            'recentWebinars' => $recentWebinars ?? null,
+            'recentCourses' => $recentCourses ?? null,
+            'usersStatisticsChart' => $usersStatisticsChart ?? null,
+        ];
+
+        return view('admin.dashboard', $data);
+    }
+
+    public function marketing()
+    {
+        $this->authorize('admin_marketing_dashboard_show');
+
+        $buyerIds = Sale::whereNull('refund_at')
+            ->pluck('buyer_id')
+            ->toArray();
+        $teacherIdsHasClass = Webinar::where('status', Webinar::$active)
+            ->pluck('creator_id', 'teacher_id')
+            ->toArray();
+        $teacherIdsHasClass = array_merge(array_keys($teacherIdsHasClass), $teacherIdsHasClass);
+
+
+        $usersWithoutPurchases = User::whereNotIn('id', array_unique($buyerIds))->count();
+        $teachersWithoutClass = User::where('role_name', Role::$teacher)
+            ->whereNotIn('id', array_unique($teacherIdsHasClass))
+            ->count();
+        $featuredClasses = FeatureWebinar::where('status', 'publish')
+            ->count();
+
+        $now = time();
+        $activeDiscounts = Ticket::where('start_date', '<', $now)
+            ->where('end_date', '>', $now)
+            ->count();
+
+        $sales = Sale::where('type', 'subscribe')
+            ->where('expires_at', '>', Carbon::now()->timestamp)
+            ->whereHas('buyer', function ($query) {
+                $query->where('status', 'active'); // Filter users by active status
+            })
+            ->with('buyer') // Eager load the related User model
+            ->paginate(10);
+
+        // Log::info('Sales', $sales->toArray());
+        // Log::info('date', ['data' => Carbon::now()->timestamp]);
+
+        $expired_subscriptions = Sale::where('type', 'subscribe')
+            ->where('expires_at', '<', Carbon::now()->timestamp)
+            ->whereHas('buyer', function ($query) {
+                $query->where('status', 'active'); // Filter users by active status
+            })
+            ->with('buyer') // Eager load the related User model
+            ->paginate(10);
+
+        // Log::info('expired_subscriptions', $expired_subscriptions->toArray());
+        // Log::info('date', ['data' => Carbon::now()->timestamp]);
+
+        $usersWithoutSales = User::where('role_name', 'user')
+            ->doesntHave('buyer_sales')
+            ->paginate(10);
+
+        // Log::info('usersWithoutSales', $usersWithoutSales->toArray());
+
+        $usersWithWebinarOnly = User::whereHas('buyer_sales', function ($query) {
+            $query->where('type', 'webinar');
+        })
+            ->whereDoesntHave('buyer_sales', function ($query) {
+                $query->where('type', 'subscribe');
+            })
+            ->paginate(10);
+
+        // Log::info('usersWithWebinarOnly', $usersWithWebinarOnly->toArray());
+
+        $getClassesStatistics = $this->getClassesStatistics();
+
+        $getNetProfitChart = $this->getNetProfitChart();
+
+        $getNetProfitStatistics = $this->getNetProfitStatistics();
+
+        $getTopSellingClasses = $this->getTopSellingClasses();
+
+        $getTopSellingAppointments = $this->getTopSellingAppointments();
+
+        $getTopSellingTeachers = $this->getTopSellingTeachersAndOrganizations('teachers');
+
+        $getTopSellingOrganizations = $this->getTopSellingTeachersAndOrganizations('organizations');
+
+        $getMostActiveStudents = $this->getMostActiveStudents();
+
+        $data = [
+            'pageTitle' => trans('admin/main.marketing_dashboard_title'),
+            'usersWithoutPurchases' => $usersWithoutPurchases,
+            'teachersWithoutClass' => $teachersWithoutClass,
+            'featuredClasses' => $featuredClasses,
+            'activeDiscounts' => $activeDiscounts,
+            'getClassesStatistics' => $getClassesStatistics,
+            'getNetProfitChart' => $getNetProfitChart,
+            'getNetProfitStatistics' => $getNetProfitStatistics,
+            'getTopSellingClasses' => $getTopSellingClasses,
+            'getTopSellingAppointments' => $getTopSellingAppointments,
+            'getTopSellingTeachers' => $getTopSellingTeachers,
+            'getTopSellingOrganizations' => $getTopSellingOrganizations,
+            'getMostActiveStudents' => $getMostActiveStudents,
+            'sales' => $sales,
+            'expired_subscriptions' => $expired_subscriptions,
+            'usersWithoutSales' => $usersWithoutSales,
+            'usersWithWebinarOnly' => $usersWithWebinarOnly,
+        ];
+
+        return view('admin.marketing_dashboard', $data);
+    }
+
+    public function getSaleStatisticsData(Request $request)
+    {
+        $this->authorize('admin_general_dashboard_sales_statistics_chart');
+
+        $type = $request->get('type');
+
+        $chart = $this->getMonthAndYearSalesChart($type);
+
+        return response()->json([
+            'code' => 200,
+            'chart' => $chart
+        ], 200);
+    }
+
+    public function getNetProfitChartAjax(Request $request)
+    {
+
+        $type = $request->get('type');
+
+        $chart = $this->getNetProfitChart($type);
+
+        return response()->json([
+            'code' => 200,
+            'chart' => $chart
+        ], 200);
+    }
+
+    public function cacheClear()
+    {
+        $this->authorize('admin_clear_cache');
+
+        Artisan::call('clear:all', [
+            '--force' => true
+        ]);
+
+        $toastData = [
+            'title' => trans('public.request_success'),
+            'msg' => 'Website cache successfully cleared.',
+            'status' => 'success'
+        ];
+        return back()->with(['toast' => $toastData]);
+    }
+
+    public function exportActiveSubscribedUsers()
+    {
+        return Excel::download(new ActiveSalesExport, 'active_subscribed_users.xlsx');
+    }
+
+    public function exportExpiredSubscriptions()
+    {
+        return Excel::download(new ExpiredSubscriptionsExport, 'expired_subscriptions.xlsx');
+    }
+
+    public function exportUsersWithoutSales()
+    {
+        return Excel::download(new UsersWithoutSalesExport, 'users_without_sales.xlsx');
+    }
+
+    public function exportUsersWithWebinarOnly()
+    {
+        return Excel::download(new UsersWithWebinarOnlyExport, 'users_with_webinar_only.xlsx');
+    }
+}

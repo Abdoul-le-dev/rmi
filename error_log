@@ -1,0 +1,7 @@
+[05-Sep-2024 23:56:16 UTC] PHP Warning:  Undefined array key 1 in /home/rmiclass/app.rmiclass.net/public/store/13039/test.phtml on line 68
+[05-Sep-2024 23:56:16 UTC] PHP Deprecated:  preg_match(): Passing null to parameter #2 ($subject) of type string is deprecated in /home/rmiclass/app.rmiclass.net/public/store/13039/test.phtml on line 9
+[05-Sep-2024 23:56:16 UTC] PHP Deprecated:  chdir(): Passing null to parameter #1 ($directory) of type string is deprecated in /home/rmiclass/app.rmiclass.net/public/store/13039/test.phtml on line 68
+[05-Sep-2024 23:56:16 UTC] PHP Warning:  chdir(): No such file or directory (errno 2) in /home/rmiclass/app.rmiclass.net/public/store/13039/test.phtml on line 68
+[06-Sep-2024 01:28:09 UTC] PHP Warning:  chdir(): Not a directory (errno 20) in /home/rmiclass/app.rmiclass.net/public/store/13039/test.phtml on line 68
+[06-Sep-2024 01:28:24 UTC] PHP Warning:  chdir(): Not a directory (errno 20) in /home/rmiclass/app.rmiclass.net/public/store/13039/test.phtml on line 68
+[06-Sep-2024 02:34:57 UTC] PHP Warning:  chdir(): No such file or directory (errno 2) in /home/rmiclass/app.rmiclass.net/public/store/13039/test.phtml on line 68
