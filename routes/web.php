@@ -97,6 +97,7 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     Route::get('/', 'update_landing_page@index');
     Route::get('/a-propos', 'update_landing_page@a-propos');
     Route::get('/communaute-acces', 'update_landing_page@communaute-acces');
+     Route::get('/communaute', 'update_landing_page@communaute');
     Route::get('/faq', 'update_landing_page@faq_dev');
     Route::get('/instructeurs', 'update_landing_page@instructeurs');
     #Route::get('/', 'update_landing_page@index');
