@@ -94,6 +94,8 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
 
     Route::get('/', 'HomeController@index');
 
+    Route::get('/', 'update_landing_page@index');
+
     //Route::get('/', function () {
       //  return redirect()->away('https://rmiclass.net/');
     //});

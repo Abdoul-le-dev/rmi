@@ -1,0 +1,349 @@
+$flaticon-font: "flaticon";
+
+@font-face {
+    font-family: $flaticon-font;
+    src: url("./flaticon.ttf?f3d780e8c65b4f0b1e757a3022e0883c") format("truetype"),
+url("./flaticon.woff?f3d780e8c65b4f0b1e757a3022e0883c") format("woff"),
+url("./flaticon.woff2?f3d780e8c65b4f0b1e757a3022e0883c") format("woff2"),
+url("./flaticon.eot?f3d780e8c65b4f0b1e757a3022e0883c#iefix") format("embedded-opentype"),
+url("./flaticon.svg?f3d780e8c65b4f0b1e757a3022e0883c#flaticon") format("svg");
+}
+
+i[class^="flaticon-"]:before, i[class*=" flaticon-"]:before {
+    font-family: flaticon !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+$flaticon-map: (
+    "telephone": "\f101",
+    "phone-call": "\f102",
+    "degree": "\f103",
+    "suitcase": "\f104",
+    "award": "\f105",
+    "science": "\f106",
+    "engineer": "\f107",
+    "graduation": "\f108",
+    "medal": "\f109",
+    "book": "\f10a",
+    "left-quote": "\f10b",
+    "support": "\f10c",
+    "back-in-time": "\f10d",
+    "graduation-1": "\f10e",
+    "file": "\f10f",
+    "right-quote": "\f110",
+    "open-book": "\f111",
+    "book": "\f112",
+    "reader": "\f113",
+    "school-6": "\f114",
+    "mortarboard": "\f115",
+    "book-1": "\f116",
+    "flasks": "\f117",
+    "file": "\f118",
+    "girl": "\f119",
+    "boy-and-girl-students": "\f11a",
+    "creative": "\f11b",
+    "school-5": "\f11c",
+    "tools-and-utensils": "\f11d",
+    "checklist": "\f11e",
+    "university": "\f11f",
+    "work": "\f120",
+    "open-book-top-view": "\f121",
+    "books-stack-of-three": "\f122",
+    "test": "\f123",
+    "child": "\f124",
+    "bus": "\f125",
+    "university-1": "\f126",
+    "student-2": "\f127",
+    "notification": "\f128",
+    "books": "\f129",
+    "school-3": "\f12a",
+    "student-1": "\f12b",
+    "thought": "\f12c",
+    "mortarboard-1": "\f12d",
+    "instruction": "\f12e",
+    "school-1": "\f12f",
+    "presentation": "\f130",
+    "maternity": "\f131",
+    "knowledge": "\f132",
+    "study": "\f133",
+    "school-4": "\f134",
+    "college-graduation": "\f135",
+    "school-bus-front": "\f136",
+    "class-group": "\f137",
+    "attachment": "\f138",
+    "timetable": "\f139",
+    "together": "\f13a",
+    "reading": "\f13b",
+    "resume": "\f13c",
+    "teacher": "\f13d",
+    "college": "\f13e",
+    "sharing": "\f13f",
+    "school": "\f140",
+    "pen": "\f141",
+    "idea": "\f142",
+    "diploma": "\f143",
+    "school-2": "\f144",
+    "education": "\f145",
+    "book-2": "\f146",
+    "student": "\f147",
+    "meeting": "\f148",
+    "classroom": "\f149",
+    "open-book-1": "\f14a",
+    "next": "\f14b",
+    "right-arrow": "\f14c",
+    "right-arrow-1": "\f14d",
+    "right-arrow-2": "\f14e",
+    "right-arrow-3": "\f14f",
+    "next-1": "\f150",
+    "right-arrow-4": "\f151",
+);
+
+.flaticon-telephone:before {
+    content: map-get($flaticon-map, "telephone");
+}
+.flaticon-phone-call:before {
+    content: map-get($flaticon-map, "phone-call");
+}
+.flaticon-degree:before {
+    content: map-get($flaticon-map, "degree");
+}
+.flaticon-suitcase:before {
+    content: map-get($flaticon-map, "suitcase");
+}
+.flaticon-award:before {
+    content: map-get($flaticon-map, "award");
+}
+.flaticon-science:before {
+    content: map-get($flaticon-map, "science");
+}
+.flaticon-engineer:before {
+    content: map-get($flaticon-map, "engineer");
+}
+.flaticon-graduation:before {
+    content: map-get($flaticon-map, "graduation");
+}
+.flaticon-medal:before {
+    content: map-get($flaticon-map, "medal");
+}
+.flaticon-book:before {
+    content: map-get($flaticon-map, "book");
+}
+.flaticon-left-quote:before {
+    content: map-get($flaticon-map, "left-quote");
+}
+.flaticon-support:before {
+    content: map-get($flaticon-map, "support");
+}
+.flaticon-back-in-time:before {
+    content: map-get($flaticon-map, "back-in-time");
+}
+.flaticon-graduation-1:before {
+    content: map-get($flaticon-map, "graduation-1");
+}
+.flaticon-file:before {
+    content: map-get($flaticon-map, "file");
+}
+.flaticon-right-quote:before {
+    content: map-get($flaticon-map, "right-quote");
+}
+.flaticon-open-book:before {
+    content: map-get($flaticon-map, "open-book");
+}
+.flaticon-book:before {
+    content: map-get($flaticon-map, "book");
+}
+.flaticon-reader:before {
+    content: map-get($flaticon-map, "reader");
+}
+.flaticon-school-6:before {
+    content: map-get($flaticon-map, "school-6");
+}
+.flaticon-mortarboard:before {
+    content: map-get($flaticon-map, "mortarboard");
+}
+.flaticon-book-1:before {
+    content: map-get($flaticon-map, "book-1");
+}
+.flaticon-flasks:before {
+    content: map-get($flaticon-map, "flasks");
+}
+.flaticon-file:before {
+    content: map-get($flaticon-map, "file");
+}
+.flaticon-girl:before {
+    content: map-get($flaticon-map, "girl");
+}
+.flaticon-boy-and-girl-students:before {
+    content: map-get($flaticon-map, "boy-and-girl-students");
+}
+.flaticon-creative:before {
+    content: map-get($flaticon-map, "creative");
+}
+.flaticon-school-5:before {
+    content: map-get($flaticon-map, "school-5");
+}
+.flaticon-tools-and-utensils:before {
+    content: map-get($flaticon-map, "tools-and-utensils");
+}
+.flaticon-checklist:before {
+    content: map-get($flaticon-map, "checklist");
+}
+.flaticon-university:before {
+    content: map-get($flaticon-map, "university");
+}
+.flaticon-work:before {
+    content: map-get($flaticon-map, "work");
+}
+.flaticon-open-book-top-view:before {
+    content: map-get($flaticon-map, "open-book-top-view");
+}
+.flaticon-books-stack-of-three:before {
+    content: map-get($flaticon-map, "books-stack-of-three");
+}
+.flaticon-test:before {
+    content: map-get($flaticon-map, "test");
+}
+.flaticon-child:before {
+    content: map-get($flaticon-map, "child");
+}
+.flaticon-bus:before {
+    content: map-get($flaticon-map, "bus");
+}
+.flaticon-university-1:before {
+    content: map-get($flaticon-map, "university-1");
+}
+.flaticon-student-2:before {
+    content: map-get($flaticon-map, "student-2");
+}
+.flaticon-notification:before {
+    content: map-get($flaticon-map, "notification");
+}
+.flaticon-books:before {
+    content: map-get($flaticon-map, "books");
+}
+.flaticon-school-3:before {
+    content: map-get($flaticon-map, "school-3");
+}
+.flaticon-student-1:before {
+    content: map-get($flaticon-map, "student-1");
+}
+.flaticon-thought:before {
+    content: map-get($flaticon-map, "thought");
+}
+.flaticon-mortarboard-1:before {
+    content: map-get($flaticon-map, "mortarboard-1");
+}
+.flaticon-instruction:before {
+    content: map-get($flaticon-map, "instruction");
+}
+.flaticon-school-1:before {
+    content: map-get($flaticon-map, "school-1");
+}
+.flaticon-presentation:before {
+    content: map-get($flaticon-map, "presentation");
+}
+.flaticon-maternity:before {
+    content: map-get($flaticon-map, "maternity");
+}
+.flaticon-knowledge:before {
+    content: map-get($flaticon-map, "knowledge");
+}
+.flaticon-study:before {
+    content: map-get($flaticon-map, "study");
+}
+.flaticon-school-4:before {
+    content: map-get($flaticon-map, "school-4");
+}
+.flaticon-college-graduation:before {
+    content: map-get($flaticon-map, "college-graduation");
+}
+.flaticon-school-bus-front:before {
+    content: map-get($flaticon-map, "school-bus-front");
+}
+.flaticon-class-group:before {
+    content: map-get($flaticon-map, "class-group");
+}
+.flaticon-attachment:before {
+    content: map-get($flaticon-map, "attachment");
+}
+.flaticon-timetable:before {
+    content: map-get($flaticon-map, "timetable");
+}
+.flaticon-together:before {
+    content: map-get($flaticon-map, "together");
+}
+.flaticon-reading:before {
+    content: map-get($flaticon-map, "reading");
+}
+.flaticon-resume:before {
+    content: map-get($flaticon-map, "resume");
+}
+.flaticon-teacher:before {
+    content: map-get($flaticon-map, "teacher");
+}
+.flaticon-college:before {
+    content: map-get($flaticon-map, "college");
+}
+.flaticon-sharing:before {
+    content: map-get($flaticon-map, "sharing");
+}
+.flaticon-school:before {
+    content: map-get($flaticon-map, "school");
+}
+.flaticon-pen:before {
+    content: map-get($flaticon-map, "pen");
+}
+.flaticon-idea:before {
+    content: map-get($flaticon-map, "idea");
+}
+.flaticon-diploma:before {
+    content: map-get($flaticon-map, "diploma");
+}
+.flaticon-school-2:before {
+    content: map-get($flaticon-map, "school-2");
+}
+.flaticon-education:before {
+    content: map-get($flaticon-map, "education");
+}
+.flaticon-book-2:before {
+    content: map-get($flaticon-map, "book-2");
+}
+.flaticon-student:before {
+    content: map-get($flaticon-map, "student");
+}
+.flaticon-meeting:before {
+    content: map-get($flaticon-map, "meeting");
+}
+.flaticon-classroom:before {
+    content: map-get($flaticon-map, "classroom");
+}
+.flaticon-open-book-1:before {
+    content: map-get($flaticon-map, "open-book-1");
+}
+.flaticon-next:before {
+    content: map-get($flaticon-map, "next");
+}
+.flaticon-right-arrow:before {
+    content: map-get($flaticon-map, "right-arrow");
+}
+.flaticon-right-arrow-1:before {
+    content: map-get($flaticon-map, "right-arrow-1");
+}
+.flaticon-right-arrow-1:before {
+    content: map-get($flaticon-map, "right-arrow-2");
+}
+.flaticon-right-arrow-3:before {
+    content: map-get($flaticon-map, "right-arrow-3");
+}
+.flaticon-next-1:before {
+    content: map-get($flaticon-map, "next-1");
+}
+.flaticon-right-arrow-4:before {
+    content: map-get($flaticon-map, "right-arrow-4");
+}
