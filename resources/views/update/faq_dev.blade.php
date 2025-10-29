@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Royal Market Invest Class </title>
 
-<link rel="shortcut icon" href="images/favicon.png" />
+<link rel="shortcut icon" href="update/images/favicon.png" />
 <link rel="stylesheet" type="text/css" href="update/css/bootstrap.min.css"/>
 <link rel="stylesheet" type="text/css" href="update/css/animate.css"/>
 <link rel="stylesheet" type="text/css" href="update/css/fontello.css"/>
@@ -80,7 +80,7 @@
                                     <!-- site-branding -->
                                     <div class="site-branding">
                                         <a class="home-link" href="index.html" title="Uniaro" rel="home">
-                                            <img id="logo-img" class="img-fluid auto_size" alt="image" width="136" height="45" src="images/logo_rmi.png">
+                                            <img id="logo-img" class="img-fluid auto_size" alt="image" width="136" height="45" src="update/images/logo_rmi.png">
                                         </a>
                                     </div><!-- site-branding end -->
                                     <div class="btn-show-menu-mobile menubar menubar--squeeze">
@@ -289,7 +289,7 @@
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3 widget-area">
                             <div class="widget widget_text clearfix">
                                 <div class="footer-logo">
-                                    <img id="footer-logo-img" class="img-fluid auto_size" alt="image" width="136" height="45" src="images/logoblanc.png">
+                                    <img id="footer-logo-img" class="img-fluid auto_size" alt="image" width="136" height="45" src="update/images/logoblanc.png">
                                 </div>
                                 <div class="textwidget widget-text">
                                     <p class="pb-10 pr-30 res-575-pr-0">La Rmi class est une plateforme d’éducation et d’accompagnement en ligne dans le domaine du Trading sur les marchés financiers.</p>
@@ -342,17 +342,17 @@
                                <h3 class="widget-title">Nos récentes Formation</h3>
                                 <ul class="widget-post ttm-recent-post-list pr-5">
                                     <li>
-                                        <a href="blog-single.html"><img class="img-fluid" alt="post-img" src="images/b1.jpg"></a>
+                                        <a href="blog-single.html"><img class="img-fluid" alt="post-img" src="update/images/b1.jpg"></a>
                                         <span class="post-date">12 Juin, 2024</span>
                                         <a href="#">Formation complète en Trading</a>
                                     </li>
                                     <li>
-                                        <a href="blog-single.html"><img class="img-fluid" alt="post-img" src="images/b2.jpg"></a>
+                                        <a href="blog-single.html"><img class="img-fluid" alt="post-img" src="update/images/b2.jpg"></a>
                                         <span class="post-date">28 Juillet, 2024</span>
                                         <a href="#">Devenir Expert Trader. Formation complète</a>
                                     </li>
                                     <li>
-                                        <a href="blog-single.html"><img class="img-fluid" alt="post-img" src="images/b3.jpg"></a>
+                                        <a href="blog-single.html"><img class="img-fluid" alt="post-img" src="update/images/b3.jpg"></a>
                                         <span class="post-date">À venir en 2024</span>
                                         <a href="#">Cryptomaster</a>
                                     </li>

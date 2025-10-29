@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Royal Market Invest Class </title>
 
-<link rel="shortcut icon" href="images/favicon.png" />
+<link rel="shortcut icon" href="update/images/favicon.png" />
 <link rel="stylesheet" type="text/css" href="update/css/bootstrap.min.css"/>
 <link rel="stylesheet" type="text/css" href="update/css/animate.css"/>
 <link rel="stylesheet" type="text/css" href="update/css/fontello.css"/>
@@ -79,8 +79,8 @@
                                 <div class="site-navigation d-flex flex-row">
                                     <!-- site-branding -->
                                     <div class="site-branding">
-                                        <a class="home-link" href="https://www.rmiclass.net/index" title="Uniaro" rel="home">
-                                            <img id="logo-img" class="img-fluid auto_size" alt="image" width="136" height="45" src="images/logo_rmi.png">
+                                        <a class="home-link" href="https://www.rmiclass.net/" title="Uniaro" rel="home">
+                                            <img id="logo-img" class="img-fluid auto_size" alt="image" width="136" height="45" src="update/images/logo_rmi.png">
                                         </a>
                                     </div><!-- site-branding end -->
                                     <div class="btn-show-menu-mobile menubar menubar--squeeze">
@@ -92,7 +92,7 @@
                                     <nav class="main-menu menu-mobile" id="menu">
                                         <ul class="menu">
                                             <li class="mega-menu-item active">
-                                                <a href="https://www.rmiclass.net/index">Accueil</a>
+                                                <a href="https://www.rmiclass.net/">Accueil</a>
                                             </li>
                                             <li class="mega-menu-item">
                                                 <a href="#" class="mega-menu-link">Formations</a>
@@ -145,7 +145,7 @@
         <!-- Banner -->
         <div class="banner_slider" data-slick='{"slidesToShow": 1, "slidesToScroll": 1, "arrows":true, "autoplay":true, "centerMode":true, "centerPadding":0, "infinite":true, "initialSlide":2, "responsive": [{"breakpoint":870,"settings":{"slidesToShow": 1}} , {"breakpoint":525,"settings":{"slidesToShow": 1}}]}'>
             <div class="slide">
-                <div class="slide_img" style="background-image: url(images/pack2.jpg);"></div>
+                <div class="slide_img" style="background-image: url(update/images/pack2.jpg);"></div>
                 <div class="slide__content">
                     <div class="container">
                         <div class="row no-gutters">
@@ -167,7 +167,7 @@
                 </div>
             </div>
             <div class="slide">
-                <div class="slide_img" style="background-image: url(images/pack2.jpg);"></div>
+                <div class="slide_img" style="background-image: url(update/images/pack2.jpg);"></div>
                 <div class="slide__content">
                     <div class="container">
                         <div class="row no-gutters">
@@ -208,7 +208,7 @@
                                     <!-- featured-imagebox-course -->
                                     <div class="featured-imagebox featured-imagebox-course_highlight">
                                         <div class="featured-thumbnail"> 
-                                            <img class="img-fluid" src="images/free1.jpg" alt="image"> 
+                                            <img class="img-fluid" src="update/images/free1.jpg" alt="image"> 
                                         </div>
                                         <div class="featured-content">
                                             <div class="featured-title">
@@ -226,7 +226,7 @@
                                     <!-- featured-imagebox-course -->
                                     <div class="featured-imagebox featured-imagebox-course_highlight">
                                         <div class="featured-thumbnail"> 
-                                            <img class="img-fluid" src="images/free2.jpg" alt="image"> 
+                                            <img class="img-fluid" src="update/images/free2.jpg" alt="image"> 
                                         </div>
                                         <div class="featured-content">
                                             <div class="featured-title">
@@ -244,7 +244,7 @@
                                     <!-- featured-imagebox-course -->
                                     <div class="featured-imagebox featured-imagebox-course_highlight">
                                         <div class="featured-thumbnail"> 
-                                            <img class="img-fluid" src="images/free3.jpg" alt="image"> 
+                                            <img class="img-fluid" src="update/images/free3.jpg" alt="image"> 
                                         </div>
                                         <div class="featured-content">
                                             <div class="featured-title">
@@ -262,7 +262,7 @@
                                     <!-- featured-imagebox-course -->
                                     <div class="featured-imagebox featured-imagebox-course_highlight">
                                         <div class="featured-thumbnail"> 
-                                            <img class="img-fluid" src="images/free3.jpg" alt="image"> 
+                                            <img class="img-fluid" src="update/images/free3.jpg" alt="image"> 
                                         </div>
                                         <div class="featured-content">
                                             <div class="featured-title">
@@ -290,7 +290,7 @@
                         <div class="col-lg-5 col-md-7 col-sm-9 mx-auto">
                             <!-- ttm_single_image-wrapper -->
                             <div class="ttm_single_image-wrapper d-inline-block pl-40 res-991-ml-15 res-991-mr-15">
-                                <img class="img-fluid" src="images/trader_pro.jpg" alt="image">
+                                <img class="img-fluid" src="update/images/trader_pro.jpg" alt="image">
                                 <div class="d-flex justify-content-start mt_75 ml_40">
                                     <!-- ttm-fid -->
                                     <div class="ttm-fid inside ttm-fid-without-icon ttm-bgcolor-darkgrey style1">
@@ -552,7 +552,7 @@
                                                     <!-- featured-imagebox-course -->
                                                     <div class="featured-imagebox featured-imagebox-course">
                                                         <div class="featured-thumbnail"> 
-                                                            <img class="img-fluid" src="images/cours4.jpg"" alt="image"> 
+                                                            <img class="img-fluid" src="update/images/cours4.jpg"" alt="image"> 
                                                         </div>
                                                         <div class="featured-content">
                                                             <div class="ttm-lp-price"></div>
@@ -582,7 +582,7 @@
                                                     <!-- featured-imagebox-course -->
                                                     <div class="featured-imagebox featured-imagebox-course">
                                                         <div class="featured-thumbnail"> 
-                                                            <img class="img-fluid" src="images/cours1.jpg" alt="image"> 
+                                                            <img class="img-fluid" src="update/images/cours1.jpg" alt="image"> 
                                                         </div>
                                                         <div class="featured-content">
                                                             <div class="ttm-lp-price"></div>
@@ -612,7 +612,7 @@
                                                     <!-- featured-imagebox-course -->
                                                     <div class="featured-imagebox featured-imagebox-course">
                                                         <div class="featured-thumbnail"> 
-                                                            <img class="img-fluid" src="images/cours2.jpg" alt="image"> 
+                                                            <img class="img-fluid" src="update/images/cours2.jpg" alt="image"> 
                                                         </div>
                                                         <div class="featured-content">
                                                             <div class="ttm-lp-price"></div>
@@ -644,7 +644,7 @@
                                                     <!-- featured-imagebox-course -->
                                                     <div class="featured-imagebox featured-imagebox-course">
                                                         <div class="featured-thumbnail"> 
-                                                            <img class="img-fluid" src="images/cours3.jpg" alt="image"> 
+                                                            <img class="img-fluid" src="update/images/cours3.jpg" alt="image"> 
                                                         </div>
                                                         <div class="featured-content">
                                                             <div class="ttm-lp-price"></div>
@@ -681,7 +681,7 @@
                                         <div class="layer-content">
                                         </div>
                                     </div><!-- col-img-bg-img-one end-->
-                                    <img class="img-fluid ttm-equal-height-image w-100" src="images/tclass.jpg" alt="bg-image">
+                                    <img class="img-fluid ttm-equal-height-image w-100" src="update/images/tclass.jpg" alt="bg-image">
                                 </div>
                             </div><!-- row end -->
                         </div>
@@ -978,7 +978,7 @@ Que Dieu bénisse toute l’équipe.</blockquote>
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3 widget-area">
                             <div class="widget widget_text clearfix">
                                 <div class="footer-logo">
-                                    <img id="footer-logo-img" class="img-fluid auto_size" alt="image" width="136" height="45" src="images/logoblanc.png">
+                                    <img id="footer-logo-img" class="img-fluid auto_size" alt="image" width="136" height="45" src="update/images/logoblanc.png">
                                 </div>
                                 <div class="textwidget widget-text">
                                     <p class="pb-10 pr-30 res-575-pr-0">La Rmi class est une plateforme d’éducation et d’accompagnement en ligne dans le domaine du Trading sur les marchés financiers.</p>
@@ -1031,17 +1031,17 @@ Que Dieu bénisse toute l’équipe.</blockquote>
                                <h3 class="widget-title">Nos récentes Formation</h3>
                                 <ul class="widget-post ttm-recent-post-list pr-5">
                                     <li>
-                                        <a href="#"><img class="img-fluid" alt="post-img" src="images/b1.jpg"></a>
+                                        <a href="#"><img class="img-fluid" alt="post-img" src="update/images/b1.jpg"></a>
                                         <span class="post-date">12 Juin, 2024</span>
                                         <a href="#">Formation complète en Trading</a>
                                     </li>
                                     <li>
-                                        <a href="#"><img class="img-fluid" alt="post-img" src="images/b2.jpg"></a>
+                                        <a href="#"><img class="img-fluid" alt="post-img" src="update/images/b2.jpg"></a>
                                         <span class="post-date">28 Juillet, 2024</span>
                                         <a href="#">Devenir Expert Trader. Formation complète</a>
                                     </li>
                                     <li>
-                                        <a href="#"><img class="img-fluid" alt="post-img" src="images/b3.jpg"></a>
+                                        <a href="#"><img class="img-fluid" alt="post-img" src="update/images/b3.jpg"></a>
                                         <span class="post-date">À venir en 2024</span>
                                         <a href="#">Cryptomaster</a>
                                     </li>
