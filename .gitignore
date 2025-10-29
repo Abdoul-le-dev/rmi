@@ -24,3 +24,7 @@ terminat
 .phpunit.result.cache
 .rnd
 .env
+
+#git 
+
+/storage/*
