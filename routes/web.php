@@ -93,8 +93,11 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     Route::post('/set-currency', 'SetCurrencyController@setCurrency');
 
     Route::get('/', 'HomeController@index');
-
-    Route::get('/', 'update_landing_page@index');
+    Route::get('/a-propos', 'update_landing_page@a-propos');
+    Route::get('/communaute-acces', 'update_landing_page@communaute-acces');
+    Route::get('/faq_dev', 'update_landing_page@faq_dev');
+    Route::get('/instructeurs', 'update_landing_page@instructeurs');
+    #Route::get('/', 'update_landing_page@index');
 
     //Route::get('/', function () {
       //  return redirect()->away('https://rmiclass.net/');
