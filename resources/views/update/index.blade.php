@@ -114,7 +114,7 @@
                                                 <a href="https://www.rmiclass.net/instructeurs">Instructeurs</a>
                                             </li>
                                             <li class="mega-menu-item">
-                                                <a href="https://www.rmiclass.net/communaute" class="mega-menu-link">Communauté</a>
+                                                <a href="https:comm//www.rmiclass.net/unaute" class="mega-menu-link">Communauté</a>
                                             </li>
                                         </ul>
                                     </nav>

@@ -79,7 +79,7 @@
                                 <div class="site-navigation d-flex flex-row">
                                     <!-- site-branding -->
                                     <div class="site-branding">
-                                        <a class="home-link" href="index.html" title="Uniaro" rel="home">
+                                        <a class="home-link" href="https://www.rmiclass.net/" title="Uniaro" rel="home">
                                             <img id="logo-img" class="img-fluid auto_size" alt="image" width="136" height="45" src="update/images/logo_rmi.png">
                                         </a>
                                     </div><!-- site-branding end -->
@@ -92,7 +92,7 @@
                                     <nav class="main-menu menu-mobile" id="menu">
                                         <ul class="menu">
                                             <li class="mega-menu-item">
-                                                <a href="index.html">Accueil</a>
+                                                <a href="https://www.rmiclass.net/">Accueil</a>
                                             </li>
                                             <li class="mega-menu-item">
                                                 <a href="#" class="mega-menu-link">Formations</a>
@@ -105,16 +105,16 @@
                                             <li class="mega-menu-item">
                                                 <a href="#" class="mega-menu-link">RMI Class</a>
                                                 <ul class="mega-submenu">
-                                                    <li><a href="a-propos.html">A propos</a></li>
+                                                    <li><a href="https://www.rmiclass.net/a-propos">A propos</a></li>
                                                     <li><a href="#">Partner Program</a></li>
-                                                    <li><a href="faq.html">Faq</a></li>
+                                                    <li><a href="https://www.rmiclass.net/faq">Faq</a></li>
                                                 </ul>
                                             </li>
                                             <li class="mega-menu-item active">
-                                                <a href="instructeurs.html">Instructeurs</a>
+                                                <a href="https://www.rmiclass.net/instructeurs">Instructeurs</a>
                                             </li>
                                             <li class="mega-menu-item">
-                                                <a href="communaute.html" class="mega-menu-link">Communauté</a>
+                                                <a href="https://www.rmiclass.net/communaute" class="mega-menu-link">Communauté</a>
                                             </li>
                                         </ul>
                                     </nav>
@@ -154,7 +154,7 @@
                             <div class="breadcrumb-wrapper">
                                 <span>
                                     <i class="ti ti-home"></i>
-                                    <a title="Homepage" href="index.html">Accueil</a>
+                                    <a title="Homepage" href="https://www.rmiclass.net/">Accueil</a>
                                 </span>
                                 <span>Nos instructeurs</span>
                             </div>
@@ -314,7 +314,7 @@
                                     </div>
                                 </div>
                                 <div class="rt-side flex-grow-0 flex-shrink-0 mb-15">
-                                    <a class="ttm-btn ttm-btn-size-md ttm-btn-shape-square ttm-btn-style-border ttm-btn-color-dark ttm-icon-btn-right" href="communaute-access.html">Devenez membre<i class="flaticon-right-arrow-1"></i></a>
+                                    <a class="ttm-btn ttm-btn-size-md ttm-btn-shape-square ttm-btn-style-border ttm-btn-color-dark ttm-icon-btn-right" href="https://www.rmiclass.net/communaute-access">Devenez membre<i class="flaticon-right-arrow-1"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -384,17 +384,17 @@
                                <h3 class="widget-title">Nos récentes Formation</h3>
                                 <ul class="widget-post ttm-recent-post-list pr-5">
                                     <li>
-                                        <a href="blog-single.html"><img class="img-fluid" alt="post-img" src="update/images/b1.jpg"></a>
+                                        <a href="#"><img class="img-fluid" alt="post-img" src="update/images/b1.jpg"></a>
                                         <span class="post-date">12 Juin, 2024</span>
                                         <a href="#">Formation complète en Trading</a>
                                     </li>
                                     <li>
-                                        <a href="blog-single.html"><img class="img-fluid" alt="post-img" src="update/images/b2.jpg"></a>
+                                        <a href="#"><img class="img-fluid" alt="post-img" src="update/images/b2.jpg"></a>
                                         <span class="post-date">28 Juillet, 2024</span>
                                         <a href="#">Devenir Expert Trader. Formation complète</a>
                                     </li>
                                     <li>
-                                        <a href="blog-single.html"><img class="img-fluid" alt="post-img" src="update/images/b3.jpg"></a>
+                                        <a href="#"><img class="img-fluid" alt="post-img" src="update/images/b3.jpg"></a>
                                         <span class="post-date">À venir en 2024</span>
                                         <a href="#">Cryptomaster</a>
                                     </li>
