@@ -92,7 +92,9 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     // set Locale
     Route::post('/set-currency', 'SetCurrencyController@setCurrency');
 
-    Route::get('/', 'HomeController@index');
+    #Route::get('/', 'HomeController@index');
+
+    Route::get('/', 'update_landing_page@index');
     Route::get('/a-propos', 'update_landing_page@a-propos');
     Route::get('/communaute-acces', 'update_landing_page@communaute-acces');
     Route::get('/faq_dev', 'update_landing_page@faq_dev');
