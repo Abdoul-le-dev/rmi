@@ -25,7 +25,7 @@ class DashboardController extends Controller
 {
     use DashboardTrait;
 
-    public function index()
+    public function indexs()
     {   
        
         $this->authorize('admin_general_dashboard_show');
@@ -105,6 +105,116 @@ class DashboardController extends Controller
 
         return view('admin.dashboard', $data);
     }
+
+    public function index()
+{
+    try {
+        $this->authorize('admin_general_dashboard_show');
+        \Log::info('--- Dashboard start ---');
+
+        if (Gate::allows('admin_general_dashboard_daily_sales_statistics')) {
+            $dailySalesTypeStatistics = $this->dailySalesTypeStatistics();
+            \Log::info('✓ dailySalesTypeStatistics OK');
+        }
+
+        if (Gate::allows('admin_general_dashboard_income_statistics')) {
+            $getIncomeStatistics = $this->getIncomeStatistics();
+            \Log::info('✓ getIncomeStatistics OK');
+        }
+
+        if (Gate::allows('admin_general_dashboard_total_sales_statistics')) {
+            $getTotalSalesStatistics = $this->getTotalSalesStatistics();
+            \Log::info('✓ getTotalSalesStatistics OK');
+        }
+
+        if (Gate::allows('admin_general_dashboard_new_sales')) {
+            $getNewSalesCount = $this->getNewSalesCount();
+            \Log::info('✓ getNewSalesCount OK');
+        }
+
+        if (Gate::allows('admin_general_dashboard_new_comments')) {
+            $getNewCommentsCount = $this->getNewCommentsCount();
+            \Log::info('✓ getNewCommentsCount OK');
+        }
+
+        if (Gate::allows('admin_general_dashboard_new_tickets')) {
+            $getNewTicketsCount = $this->getNewTicketsCount();
+            \Log::info('✓ getNewTicketsCount OK');
+        }
+
+        if (Gate::allows('admin_general_dashboard_new_reviews')) {
+            $getPendingReviewCount = $this->getPendingReviewCount();
+            \Log::info('✓ getPendingReviewCount OK');
+        }
+
+        if (Gate::allows('admin_general_dashboard_sales_statistics_chart')) {
+            $getMonthAndYearSalesChart = $this->getMonthAndYearSalesChart('month_of_year');
+            $getMonthAndYearSalesChartStatistics = $this->getMonthAndYearSalesChartStatistics();
+            \Log::info('✓ getMonthAndYearSalesChart OK');
+        }
+
+        if (Gate::allows('admin_general_dashboard_recent_comments')) {
+            $recentComments = $this->getRecentComments();
+            \Log::info('✓ getRecentComments OK');
+        }
+
+        if (Gate::allows('admin_general_dashboard_recent_tickets')) {
+            $recentTickets = $this->getRecentTickets();
+            \Log::info('✓ getRecentTickets OK');
+        }
+
+        if (Gate::allows('admin_general_dashboard_recent_webinars')) {
+            $recentWebinars = $this->getRecentWebinars();
+            \Log::info('✓ getRecentWebinars OK');
+        }
+
+        if (Gate::allows('admin_general_dashboard_recent_courses')) {
+            $recentCourses = $this->getRecentCourses();
+            \Log::info('✓ getRecentCourses OK');
+        }
+
+        if (Gate::allows('admin_general_dashboard_users_statistics_chart')) {
+            $usersStatisticsChart = $this->usersStatisticsChart();
+            \Log::info('✓ usersStatisticsChart OK');
+        }
+
+        \Log::info('--- Dashboard data prepared ---');
+
+        // ✅ Toutes les variables rassemblées ici
+        $data = [
+            'pageTitle' => trans('admin/main.general_dashboard_title'),
+            'dailySalesTypeStatistics' => $dailySalesTypeStatistics ?? null,
+            'getIncomeStatistics' => $getIncomeStatistics ?? null,
+            'getTotalSalesStatistics' => $getTotalSalesStatistics ?? null,
+            'getNewSalesCount' => $getNewSalesCount ?? 0,
+            'getNewCommentsCount' => $getNewCommentsCount ?? 0,
+            'getNewTicketsCount' => $getNewTicketsCount ?? 0,
+            'getPendingReviewCount' => $getPendingReviewCount ?? 0,
+            'getMonthAndYearSalesChart' => $getMonthAndYearSalesChart ?? null,
+            'getMonthAndYearSalesChartStatistics' => $getMonthAndYearSalesChartStatistics ?? null,
+            'recentComments' => $recentComments ?? null,
+            'recentTickets' => $recentTickets ?? null,
+            'recentWebinars' => $recentWebinars ?? null,
+            'recentCourses' => $recentCourses ?? null,
+            'usersStatisticsChart' => $usersStatisticsChart ?? null,
+        ];
+
+        \Log::info('--- Dashboard view render ---');
+
+        return view('admin.dashboard', $data);
+
+    } catch (\Throwable $e) {
+        // ⚠️ Capture toute erreur (DB, mémoire, timeout Laravel)
+        \Log::error('Dashboard error: ' . $e->getMessage(), [
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+        ]);
+
+        // (optionnel) renvoie une vue simple pour éviter un 504 silencieux
+        return response()->view('errors.500', ['message' => 'Erreur Dashboard : '.$e->getMessage()], 500);
+    }
+}
+
 
     public function marketing()
     {
