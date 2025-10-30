@@ -101,7 +101,7 @@ class DashboardController extends Controller
             'usersStatisticsChart' => $usersStatisticsChart ?? null,
         ];
 
-        dd($data);
+        
 
         return view('admin.dashboard', $data);
     }

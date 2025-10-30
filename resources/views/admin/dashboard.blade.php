@@ -1,5 +1,7 @@
- @extends('admin.layouts.app')
-
+@extends('admin.layouts.app')
+@php
+    dd('hi');
+@endphp
 @push('libraries_top')
     <link rel="stylesheet" href="/assets/admin/vendor/owl.carousel/owl.carousel.min.css">
     <link rel="stylesheet" href="/assets/admin/vendor/owl.carousel/owl.theme.min.css">
