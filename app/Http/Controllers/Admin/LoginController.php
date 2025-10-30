@@ -114,6 +114,9 @@ class LoginController extends Controller
                // $userLoginHistoryMixin->storeUserLoginHistory($user);
             }
 
+            $settings = Settings::all();
+            dd($settings);
+
             
 
             return Redirect::to(getAdminPanelUrl());
