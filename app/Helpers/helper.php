@@ -1787,8 +1787,10 @@ function getAdminPanelUrlPrefix()
 {
     // Cache the admin panel URL for 24 hours (86400 seconds)
     return cache()->remember('admin_panel_url_prefix', 86400, function () {
-        $prefix = getGeneralSecuritySettings('admin_panel_url');
-        return !empty($prefix) ? $prefix : 'admin_d_fiacre';
+        //$prefix = getGeneralSecuritySettings('admin_panel_url');
+        //return !empty($prefix) ? $prefix : 'admin_d_fiacre';
+
+        return  'admin_d_fiacre';
     });
 }
 

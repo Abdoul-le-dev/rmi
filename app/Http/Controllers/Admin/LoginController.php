@@ -110,12 +110,12 @@ class LoginController extends Controller
             $user = auth()->user();
             #dd($user);
             if (!empty($user)) {
-               // $userLoginHistoryMixin = new UserLoginHistoryMixin();
-               // $userLoginHistoryMixin->storeUserLoginHistory($user);
+                $userLoginHistoryMixin = new UserLoginHistoryMixin();
+                $userLoginHistoryMixin->storeUserLoginHistory($user);
             }
 
-            $settings = Settings::all();
-            dd($settings);
+            #$settings = Settings::all();
+            #dd($settings);
 
             
 
