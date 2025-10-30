@@ -108,24 +108,24 @@ class LoginController extends Controller
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
             $user = auth()->user();
-            #dd($user);
+            
             if (!empty($user)) {
                
                 $userLoginHistoryMixin = new UserLoginHistoryMixin();
                 $userLoginHistoryMixin->storeUserLoginHistory($user);
-                dd('yes');
+                
                 
             }
 
-            #$settings = Settings::all();
-            #dd($settings);
+            
 
             
 
-            return Redirect::to(getAdminPanelUrl());
+            #return Redirect::to(getAdminPanelUrl());
+            return redirect::to('/admin_d_fiacre');
         }
 
-        dd('ok');
+       
 
         return redirect()->back()->withInput($request->only('email', 'remember'))->withErrors([
             'password' => 'Wrong password or this account not approved yet.',
