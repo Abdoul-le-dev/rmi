@@ -92,6 +92,7 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+        dd($request);
         $rules = [
             'email' => 'required|email|exists:users,email,status,active',
             'password' => 'required|min:4',
