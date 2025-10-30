@@ -121,8 +121,8 @@ class LoginController extends Controller
 
             
 
-            #return Redirect::to(getAdminPanelUrl());
-            return redirect::to('/admin_d_fiacre');
+            return Redirect::to(getAdminPanelUrl());
+            //return redirect::to('/admin_d_fiacre');
         }
 
        

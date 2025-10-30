@@ -27,7 +27,7 @@ class DashboardController extends Controller
 
     public function index()
     {   
-        dd('yes');
+       
         $this->authorize('admin_general_dashboard_show');
 
         if (Gate::allows('admin_general_dashboard_daily_sales_statistics')) {
@@ -100,6 +100,8 @@ class DashboardController extends Controller
             'recentCourses' => $recentCourses ?? null,
             'usersStatisticsChart' => $usersStatisticsChart ?? null,
         ];
+
+        dd($data);
 
         return view('admin.dashboard', $data);
     }
