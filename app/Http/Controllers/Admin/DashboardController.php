@@ -20,6 +20,7 @@ use App\Exports\ExpiredSubscriptionsExport;
 use App\Exports\UsersWithoutSalesExport;
 use App\Exports\UsersWithWebinarOnlyExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
 {
@@ -106,7 +107,7 @@ class DashboardController extends Controller
         return view('admin.dashboard', $data);
     }
 
-    public function index()
+    public function indext()
 {
     try {
         $this->authorize('admin_general_dashboard_show');
@@ -214,7 +215,95 @@ class DashboardController extends Controller
         return response()->view('errors.500', ['message' => 'Erreur Dashboard : '.$e->getMessage()], 500);
     }
 }
+public function index()
+{
+    try {
+        $this->authorize('admin_general_dashboard_show');
+        
+        $startTime = microtime(true);
+        \Log::info('--- Dashboard start ---');
 
+        // Durée de cache : 5 minutes (300 secondes)
+        $cacheMinutes = 5;
+        
+        // Récupérer toutes les données avec cache
+        $data = [
+            'pageTitle' => trans('admin/main.general_dashboard_title'),
+            
+            'dailySalesTypeStatistics' => Gate::allows('admin_general_dashboard_daily_sales_statistics') 
+                ? Cache::remember('dashboard.daily_sales', $cacheMinutes * 60, fn() => $this->dailySalesTypeStatistics())
+                : null,
+            
+            'getIncomeStatistics' => Gate::allows('admin_general_dashboard_income_statistics')
+                ? Cache::remember('dashboard.income_stats', $cacheMinutes * 60, fn() => $this->getIncomeStatistics())
+                : null,
+            
+            'getTotalSalesStatistics' => Gate::allows('admin_general_dashboard_total_sales_statistics')
+                ? Cache::remember('dashboard.total_sales', $cacheMinutes * 60, fn() => $this->getTotalSalesStatistics())
+                : null,
+            
+            'getNewSalesCount' => Gate::allows('admin_general_dashboard_new_sales')
+                ? Cache::remember('dashboard.new_sales_count', $cacheMinutes * 60, fn() => $this->getNewSalesCount())
+                : 0,
+            
+            'getNewCommentsCount' => Gate::allows('admin_general_dashboard_new_comments')
+                ? Cache::remember('dashboard.new_comments_count', $cacheMinutes * 60, fn() => $this->getNewCommentsCount())
+                : 0,
+            
+            'getNewTicketsCount' => Gate::allows('admin_general_dashboard_new_tickets')
+                ? Cache::remember('dashboard.new_tickets_count', $cacheMinutes * 60, fn() => $this->getNewTicketsCount())
+                : 0,
+            
+            'getPendingReviewCount' => Gate::allows('admin_general_dashboard_new_reviews')
+                ? Cache::remember('dashboard.pending_review_count', $cacheMinutes * 60, fn() => $this->getPendingReviewCount())
+                : 0,
+            
+            'getMonthAndYearSalesChart' => Gate::allows('admin_general_dashboard_sales_statistics_chart')
+                ? Cache::remember('dashboard.sales_chart', $cacheMinutes * 60, fn() => $this->getMonthAndYearSalesChart('month_of_year'))
+                : null,
+            
+            'getMonthAndYearSalesChartStatistics' => Gate::allows('admin_general_dashboard_sales_statistics_chart')
+                ? Cache::remember('dashboard.sales_chart_stats', $cacheMinutes * 60, fn() => $this->getMonthAndYearSalesChartStatistics())
+                : null,
+            
+            'recentComments' => Gate::allows('admin_general_dashboard_recent_comments')
+                ? Cache::remember('dashboard.recent_comments', $cacheMinutes * 60, fn() => $this->getRecentComments())
+                : null,
+            
+            'recentTickets' => Gate::allows('admin_general_dashboard_recent_tickets')
+                ? Cache::remember('dashboard.recent_tickets', $cacheMinutes * 60, fn() => $this->getRecentTickets())
+                : null,
+            
+            'recentWebinars' => Gate::allows('admin_general_dashboard_recent_webinars')
+                ? Cache::remember('dashboard.recent_webinars', $cacheMinutes * 60, fn() => $this->getRecentWebinars())
+                : null,
+            
+            'recentCourses' => Gate::allows('admin_general_dashboard_recent_courses')
+                ? Cache::remember('dashboard.recent_courses', $cacheMinutes * 60, fn() => $this->getRecentCourses())
+                : null,
+            
+            'usersStatisticsChart' => Gate::allows('admin_general_dashboard_users_statistics_chart')
+                ? Cache::remember('dashboard.users_chart', $cacheMinutes * 60, fn() => $this->usersStatisticsChart())
+                : null,
+        ];
+
+        $executionTime = round((microtime(true) - $startTime) * 1000, 2);
+        \Log::info("--- Dashboard loaded in {$executionTime}ms ---");
+
+        return view('admin.dashboard', $data);
+
+    } catch (\Throwable $e) {
+        \Log::error('Dashboard error: ' . $e->getMessage(), [
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString()
+        ]);
+
+        return response()->view('errors.500', [
+            'message' => 'Le tableau de bord ne peut pas être chargé. Veuillez réessayer dans quelques instants.'
+        ], 500);
+    }
+}
 
     public function marketing()
     {
