@@ -92,7 +92,7 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        dd($request);
+        
         $rules = [
             'email' => 'required|email|exists:users,email,status,active',
             'password' => 'required|min:4',
@@ -100,6 +100,7 @@ class LoginController extends Controller
 
         if (!empty(getGeneralSecuritySettings('captcha_for_admin_login'))) {
             $rules['captcha'] = 'required|captcha';
+
         }
 
         // validate the form data
@@ -107,7 +108,7 @@ class LoginController extends Controller
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
             $user = auth()->user();
-
+            dd($user);
             if (!empty($user)) {
                 $userLoginHistoryMixin = new UserLoginHistoryMixin();
                 $userLoginHistoryMixin->storeUserLoginHistory($user);

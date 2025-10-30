@@ -4,7 +4,7 @@
 /public/uploads
 /public/contents
 /uploads
-/storage/laravel-backups
+/storage/laravel-backups/*
 # /storage/*.key
 /vendor
 /design
