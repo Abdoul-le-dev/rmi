@@ -26,7 +26,8 @@ class DashboardController extends Controller
     use DashboardTrait;
 
     public function index()
-    {
+    {   
+        dd('yes');
         $this->authorize('admin_general_dashboard_show');
 
         if (Gate::allows('admin_general_dashboard_daily_sales_statistics')) {
