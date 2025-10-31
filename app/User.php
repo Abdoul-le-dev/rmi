@@ -614,7 +614,7 @@ class User extends Authenticatable
                 }
             });
         })->doesntHave('notificationStatus')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'desc')->limit(10)
             ->get();
 
         $userGroup = $this->userGroup()->first();
