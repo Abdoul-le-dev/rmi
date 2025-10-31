@@ -123,7 +123,7 @@ return [
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
-            'url' => 'https://rmiclass-prod-s3-uploads.s3.eu-north-1.amazonaws.com',
+            'url' => 'https://rmibucket053752723003.s3.us-east-1.amazonaws.com/rmiclass-prod-uploads/',
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
         ],
