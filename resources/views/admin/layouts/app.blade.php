@@ -7,7 +7,7 @@
         || (!empty($generalSettings['rtl_layout']) && $generalSettings['rtl_layout'] == 1)
     );@endphp
 <head>
-    @include('web.default.includes.metas')
+    {{-- @include('web.default.includes.metas') --}}
     <title>{{ $pageTitle ?? '' }} </title>
 
     <!-- General CSS File -->
@@ -21,28 +21,29 @@
     <link rel="stylesheet" href="/assets/admin/css/style.css">
     <link rel="stylesheet" href="/assets/admin/css/custom.css">
     <link rel="stylesheet" href="/assets/admin/css/components.css">
-    @if($isRtl)
+    {{-- @if($isRtl) --}}
         <link rel="stylesheet" href="/assets/admin/css/rtl.css">
-    @endif
+    {{-- @endif --}}
     <link rel="stylesheet" href="/assets/admin/vendor/daterangepicker/daterangepicker.min.css">
     <link rel="stylesheet" href="/assets/default/vendors/select2/select2.min.css">
 
     @stack('styles_top')
     @stack('scripts_top')
 
-    <style>
+    {{-- <style>
         {!! !empty(getCustomCssAndJs('css')) ? getCustomCssAndJs('css') : '' !!}
 
         {!! getThemeColorsSettings(true) !!}
-    </style>
+    </style> --}}
 </head>
-<body class="@if($isRtl) rtl @endif">
+{{-- <body class="@if($isRtl) rtl @endif"> --}}
+<body class="rtl">
 
 <div id="app">
     <div class="main-wrapper">
-        @include('admin.includes.navbar')
+        {{-- @include('admin.includes.navbar')
 
-        @include('admin.includes.sidebar')
+        @include('admin.includes.sidebar') --}}
 
 
         <div class="main-content">
@@ -75,9 +76,9 @@
 </div>
 
 {{-- AI Contents --}}
-@if(!empty(getAiContentsSettingsName("status")) and !empty(getAiContentsSettingsName("active_for_admin_panel")))
+{{-- @if(!empty(getAiContentsSettingsName("status")) and !empty(getAiContentsSettingsName("active_for_admin_panel")))
     @include('admin.includes.aiContent.generator')
-@endif
+@endif --}}
 
 
 <!-- General JS Scripts -->
@@ -145,8 +146,8 @@
 <script src="/assets/admin/js/custom.js"></script>
 <script src="/assets/default/js/panel/ai-content-generator.min.js"></script>
 
-<script>
+{{-- <script>
     {!! !empty(getCustomCssAndJs('js')) ? getCustomCssAndJs('js') : '' !!}
-</script>
+</script> --}}
 </body>
 </html>
