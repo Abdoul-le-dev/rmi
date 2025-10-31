@@ -6,7 +6,7 @@
 
 @endpush
 
-@section('content')
+{{-- @section('content') --}}
 
 
     <section class="section">
@@ -559,7 +559,7 @@
             </div>
         @endcan
     </section>
-@endsection
+{{-- @endsection --}}
 
     @push('scripts_bottom')
         <script src="/assets/default/vendors/chartjs/chart.min.js"></script>
