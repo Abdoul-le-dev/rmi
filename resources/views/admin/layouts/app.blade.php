@@ -7,7 +7,7 @@
         || (!empty($generalSettings['rtl_layout']) && $generalSettings['rtl_layout'] == 1)
     );@endphp
 <head>
-    {{-- @include('web.default.includes.metas') --}}
+    @include('web.default.includes.metas')
     <title>{{ $pageTitle ?? '' }} </title>
 
     <!-- General CSS File -->
