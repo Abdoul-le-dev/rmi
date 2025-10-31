@@ -41,7 +41,7 @@
 
 <div id="app">
     <div class="main-wrapper">
-        {{-- @include('admin.includes.navbar') --}}
+        @include('admin.includes.navbar')
 
         @include('admin.includes.sidebar')
 
