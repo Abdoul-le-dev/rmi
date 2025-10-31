@@ -53,9 +53,7 @@
                 <a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg @if(!empty($unreadNotifications) and count($unreadNotifications)) beep @else disabled @endif">
                     <i class="far fa-bell"></i>
                 </a>
-                @php
-                    dd($unreadNotifications);
-                @endphp
+             
                 <div class="dropdown-menu dropdown-list dropdown-menu-right">
                     <div class="dropdown-header">{{ trans('admin/main.notifications') }}
                         <div class="float-right">
