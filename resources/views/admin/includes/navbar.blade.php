@@ -63,7 +63,7 @@
                         </div>
                     </div>
 
-                    {{-- <div class="dropdown-list-content dropdown-list-icons">
+                    <div class="dropdown-list-content dropdown-list-icons">
                         @foreach($unreadNotifications as $unreadNotification)
                             <a href="{{ getAdminPanelUrl() }}/notifications" class="dropdown-item">
                                 <div class="dropdown-item-icon bg-info text-white d-flex align-items-center justify-content-center">
@@ -75,7 +75,7 @@
                                 </div>
                             </a>
                         @endforeach
-                    </div> --}}
+                    </div>
                     <div class="dropdown-footer text-center">
                         <a href="{{ getAdminPanelUrl() }}/notifications">{{ trans('admin/main.view_all') }} <i class="fas fa-chevron-right"></i></a>
                     </div>
