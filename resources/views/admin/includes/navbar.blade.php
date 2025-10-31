@@ -18,14 +18,14 @@
 
         @include('admin.includes.navbar.currency')
 
-        @if(!empty(getAiContentsSettingsName("status")) and !empty(getAiContentsSettingsName("active_for_admin_panel")))
+        {{-- @if(!empty(getAiContentsSettingsName("status")) and !empty(getAiContentsSettingsName("active_for_admin_panel")))
             <div class="js-show-ai-content-drawer show-ai-content-drawer-btn d-flex-center mr-4">
                 <div class="d-flex-center size-32 rounded-circle bg-white">
                     <img src="/assets/default/img/ai/ai-chip.svg" alt="ai" class="" width="16px" height="16px">
                 </div>
                 <span class="ml-1 font-weight-500 font-14">{{ trans('update.ai_content') }}</span>
             </div>
-        @endif
+        @endif --}}
 
 
         @can('admin_notifications_list')
