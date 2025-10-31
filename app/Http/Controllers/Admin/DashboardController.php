@@ -55,7 +55,7 @@ class DashboardController extends Controller
         });
 }
 
-    public function indextt()
+    public function index()
     {   
        
         $this->authorize('admin_general_dashboard_show');
@@ -335,7 +335,7 @@ public function index_1()
     }
 }
 
-public function index()
+public function indexs()
 {
     try {
         $this->authorize('admin_general_dashboard_show');
