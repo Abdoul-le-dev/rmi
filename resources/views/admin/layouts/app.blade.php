@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="/assets/admin/css/custom.css">
     <link rel="stylesheet" href="/assets/admin/css/components.css">
     {{-- @if($isRtl) --}}
-        <link rel="stylesheet" href="/assets/admin/css/rtl.css">
+        {{-- <link rel="stylesheet" href="/assets/admin/css/rtl.css"> --}}
     {{-- @endif --}}
     <link rel="stylesheet" href="/assets/admin/vendor/daterangepicker/daterangepicker.min.css">
     <link rel="stylesheet" href="/assets/default/vendors/select2/select2.min.css">
@@ -35,7 +35,7 @@
     </style> --}}
 </head>
 {{-- <body class="@if($isRtl) rtl @endif"> --}}
-<body class="rtl">
+<body class="">
 
 <div id="app">
     <div class="main-wrapper">
