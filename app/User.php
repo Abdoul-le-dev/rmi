@@ -46,11 +46,17 @@ class User extends Authenticatable
      */
     protected $guarded = ['id'];
     protected $hidden = [
-        'password', 'remember_token', 'google_id', 'facebook_id', 'role_id'
+        'password',
+        'remember_token',
+        'google_id',
+        'facebook_id',
+        'role_id'
     ];
 
     static $statuses = [
-        'active', 'pending', 'inactive'
+        'active',
+        'pending',
+        'inactive'
     ];
     /**
      * The attributes that should be cast to native types.
@@ -195,7 +201,6 @@ class User extends Authenticatable
                     $bit = $tmp;
                 }
             } catch (\Exception $exception) {
-
             }
         }
 
@@ -602,19 +607,24 @@ class User extends Authenticatable
     {
         $user = $this;
 
-        $notifications = Notification::where(function ($query) {
-            $query->where(function ($query) {
-                $query->where('user_id', $this->id)
+        $query = Notification::query()
+            ->where(function ($q) {
+                $q->where('user_id', $this->id)
                     ->where('type', 'single');
-            })->orWhere(function ($query) {
-                if (!$this->isAdmin()) {
-                    $query->whereNull('user_id')
-                        ->whereNull('group_id')
-                        ->where('type', 'all_users');
-                }
             });
-        })->doesntHave('notificationStatus')
-            ->orderBy('created_at', 'desc')->limit(5)
+
+        if (! $this->isAdmin()) {
+            $query->orWhere(function ($q) {
+                $q->whereNull('user_id')
+                    ->whereNull('group_id')
+                    ->where('type', 'all_users');
+            });
+        }
+
+        $notifications = $query
+            ->doesntHave('notificationStatus')
+            ->latest() // équivalent à orderBy('created_at', 'desc')
+            ->limit(5)
             ->get();
 
         $userGroup = $this->userGroup()->first();
