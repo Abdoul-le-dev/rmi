@@ -12,6 +12,7 @@ use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
 
@@ -107,7 +108,7 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         $userLoginHistoryMixin = new UserLoginHistoryMixin();
         $userLoginHistoryMixin->storeUserLogoutHistory($user);
