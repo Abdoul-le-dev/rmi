@@ -5,7 +5,7 @@
     $isRtl = ((in_array(mb_strtoupper(app()->getLocale()), $rtlLanguages)) or (!empty($generalSettings['rtl_layout']) and $generalSettings['rtl_layout'] == 1));
 @endphp --}}
 <head>
-    @include('web.default.includes.metas')
+    {{-- @include('web.default.includes.metas') --}}
     <title>{{ $pageTitle ?? '' }} </title>
 
     <!-- General CSS File -->
@@ -39,9 +39,9 @@
 
 <div id="app">
     <div class="main-wrapper">
-        @include('admin.includes.navbar')
+        {{-- @include('admin.includes.navbar')
 
-        @include('admin.includes.sidebar')
+        @include('admin.includes.sidebar') --}}
 
 
         <div class="main-content">
