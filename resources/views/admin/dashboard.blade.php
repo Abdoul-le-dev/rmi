@@ -561,3 +561,24 @@
     </section>
 @endsection
 
+    @push('scripts_bottom')
+        <script src="/assets/default/vendors/chartjs/chart.min.js"></script>
+        <script src="/assets/admin/vendor/owl.carousel/owl.carousel.min.js"></script>
+
+        <script src="/assets/admin/js/dashboard.min.js"></script>
+
+        <script>
+            (function ($) {
+                "use strict";
+
+                @if(!empty($getMonthAndYearSalesChart))
+                makeStatisticsChart('saleStatisticsChart', saleStatisticsChart, 'Sale', @json($getMonthAndYearSalesChart['labels']),@json($getMonthAndYearSalesChart['data']));
+                @endif
+
+                @if(!empty($usersStatisticsChart))
+                makeStatisticsChart('usersStatisticsChart', usersStatisticsChart, 'Users', @json($usersStatisticsChart['labels']),@json($usersStatisticsChart['data']));
+                @endif
+
+            })(jQuery)
+        </script>
+    @endpush
