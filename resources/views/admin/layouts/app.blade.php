@@ -1,9 +1,9 @@
 <html lang="{{ app()->getLocale() }}">
-{{-- @php
+@php
     $rtlLanguages = !empty($generalSettings['rtl_languages']) ? $generalSettings['rtl_languages'] : [];
 
     $isRtl = ((in_array(mb_strtoupper(app()->getLocale()), $rtlLanguages)) or (!empty($generalSettings['rtl_layout']) and $generalSettings['rtl_layout'] == 1));
-@endphp --}}
+@endphp
 <head>
     @include('web.default.includes.metas')
     <title>{{ $pageTitle ?? '' }} </title>
@@ -19,9 +19,9 @@
     <link rel="stylesheet" href="/assets/admin/css/style.css">
     <link rel="stylesheet" href="/assets/admin/css/custom.css">
     <link rel="stylesheet" href="/assets/admin/css/components.css">
-    {{-- @if($isRtl) --}}
-        {{-- <link rel="stylesheet" href="/assets/admin/css/rtl.css"> --}}
-    {{-- @endif --}}
+    @if($isRtl)
+        <link rel="stylesheet" href="/assets/admin/css/rtl.css">
+    @endif
     <link rel="stylesheet" href="/assets/admin/vendor/daterangepicker/daterangepicker.min.css">
     <link rel="stylesheet" href="/assets/default/vendors/select2/select2.min.css">
 
@@ -34,8 +34,8 @@
         {!! getThemeColorsSettings(true) !!}
     </style>
 </head>
-{{-- <body class="@if($isRtl) rtl @endif"> --}}
-<body class="">
+<body class="@if($isRtl) rtl @endif">
+{{-- <body class=""> --}}
 
 <div id="app">
     <div class="main-wrapper">
