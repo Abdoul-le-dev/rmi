@@ -74,9 +74,9 @@
 </div>
 
 {{-- AI Contents --}}
-@if(!empty(getAiContentsSettingsName("status")) and !empty(getAiContentsSettingsName("active_for_admin_panel")))
+{{-- @if(!empty(getAiContentsSettingsName("status")) and !empty(getAiContentsSettingsName("active_for_admin_panel")))
     @include('admin.includes.aiContent.generator')
-@endif
+@endif --}}
 
 
 <!-- General JS Scripts -->
@@ -144,8 +144,8 @@
 <script src="/assets/admin/js/custom.js"></script>
 <script src="/assets/default/js/panel/ai-content-generator.min.js"></script>
 
-<script>
+{{-- <script>
     {!! !empty(getCustomCssAndJs('js')) ? getCustomCssAndJs('js') : '' !!}
-</script>
+</script> --}}
 </body>
 </html>
