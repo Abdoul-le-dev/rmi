@@ -28,11 +28,11 @@
     @stack('styles_top')
     @stack('scripts_top')
 
-    {{-- <style>
+    <style>
         {!! !empty(getCustomCssAndJs('css')) ? getCustomCssAndJs('css') : '' !!}
 
         {!! getThemeColorsSettings(true) !!}
-    </style> --}}
+    </style>
 </head>
 {{-- <body class="@if($isRtl) rtl @endif"> --}}
 <body class="">
