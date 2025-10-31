@@ -1,4 +1,4 @@
-{{-- @extends('admin.layouts.app') --}}
+@extends('admin.layouts.app')
 
 @push('libraries_top')
     <link rel="stylesheet" href="/assets/admin/vendor/owl.carousel/owl.carousel.min.css">
@@ -6,7 +6,7 @@
 
 @endpush
 
-{{-- @section('content') --}}
+@section('content')
 
 
     <section class="section">
@@ -559,7 +559,7 @@
             </div>
         @endcan
     </section>
-{{-- @endsection --}}
+@endsection
 
     @push('scripts_bottom')
         <script src="/assets/default/vendors/chartjs/chart.min.js"></script>
