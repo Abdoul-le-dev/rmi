@@ -2642,7 +2642,8 @@ function canDeleteContentDirectly()
 function updateImagePaths($htmlContent)
 {
     // Define the base URL for S3
-    $s3Url = 'https://rmiclass-dev-uploads.s3.eu-north-1.amazonaws.com';
+    // $s3Url = 'https://rmiclass-dev-uploads.s3.eu-north-1.amazonaws.com';
+    $s3Url = env('AWS_URL');
 
     // Regular expression to find image paths
     $pattern = '/<img[^>]+src="([^"]+)"/i';
