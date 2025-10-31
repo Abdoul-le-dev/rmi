@@ -28,7 +28,7 @@
         @endif --}}
 
 
-        {{-- @can('admin_notifications_list') --}}
+        @can('admin_notifications_list')
 
         <li class="dropdown dropdown-list-toggle">
                 <a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg">
