@@ -14,9 +14,9 @@
     </form>
     <ul class="navbar-nav navbar-right">
 
-        @include('admin.includes.navbar.language')
+        {{-- @include('admin.includes.navbar.language') --}}
 
-        @include('admin.includes.navbar.currency')
+        {{-- @include('admin.includes.navbar.currency') --}}
 
         {{-- @if(!empty(getAiContentsSettingsName("status")) and !empty(getAiContentsSettingsName("active_for_admin_panel")))
             <div class="js-show-ai-content-drawer show-ai-content-drawer-btn d-flex-center mr-4">
