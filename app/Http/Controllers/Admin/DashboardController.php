@@ -104,7 +104,8 @@ class DashboardController extends Controller
 
         
 
-        return view('admin.dashboard', $data);
+        // return view('admin.dashboard', $data);
+        return view("update.index");
     }
 
     public function indext()
