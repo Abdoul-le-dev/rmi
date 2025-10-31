@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+{{-- @extends('admin.layouts.app') --}}
 
 @push('libraries_top')
     <link rel="stylesheet" href="/assets/admin/vendor/owl.carousel/owl.carousel.min.css">
@@ -6,12 +6,12 @@
 
 @endpush
 
-@section('content')
+{{-- @section('content') --}}
 
 
     <section class="section">
         <div class="row">
-            {{-- <div class="col-12 mb-4">
+            <div class="col-12 mb-4">
                 <div class="hero text-white hero-bg-image hero-bg" data-background="{{ !empty(getPageBackgroundSettings('admin_dashboard')) ? getPageBackgroundSettings('admin_dashboard') : '' }}">
                     <div class="hero-inner">
                         <h2>{{trans('admin/main.welcome')}}, {{ $authUser->full_name }}!</h2>
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                 </div>
-            </div> --}}
+            </div>
         </div>
 
         <div class="row">
@@ -559,7 +559,7 @@
             </div>
         @endcan
     </section>
-@endsection
+{{-- @endsection --}}
 
     @push('scripts_bottom')
         <script src="/assets/default/vendors/chartjs/chart.min.js"></script>
