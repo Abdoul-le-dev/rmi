@@ -53,7 +53,9 @@
                 <a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg @if(!empty($unreadNotifications) and count($unreadNotifications)) beep @else disabled @endif">
                     <i class="far fa-bell"></i>
                 </a>
-
+                @php
+                    dd($unreadNotifications);
+                @endphp
                 <div class="dropdown-menu dropdown-list dropdown-menu-right">
                     <div class="dropdown-header">{{ trans('admin/main.notifications') }}
                         <div class="float-right">
@@ -63,7 +65,7 @@
                         </div>
                     </div>
 
-                    <div class="dropdown-list-content dropdown-list-icons">
+                    {{-- <div class="dropdown-list-content dropdown-list-icons">
                         @foreach($unreadNotifications as $unreadNotification)
                             <a href="{{ getAdminPanelUrl() }}/notifications" class="dropdown-item">
                                 <div class="dropdown-item-icon bg-info text-white d-flex align-items-center justify-content-center">
@@ -75,7 +77,7 @@
                                 </div>
                             </a>
                         @endforeach
-                    </div>
+                    </div> --}}
                     <div class="dropdown-footer text-center">
                         <a href="{{ getAdminPanelUrl() }}/notifications">{{ trans('admin/main.view_all') }} <i class="fas fa-chevron-right"></i></a>
                     </div>
