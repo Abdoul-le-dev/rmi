@@ -21,10 +21,39 @@ use App\Exports\UsersWithoutSalesExport;
 use App\Exports\UsersWithWebinarOnlyExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class DashboardController extends Controller
 {
     use DashboardTrait;
+
+    protected function cacheIfAllowed(string $ability, string $key, int $ttlSeconds, callable $resolver, $default = null)
+{
+    if (!Gate::allows($ability)) {
+        return $default;
+    }
+
+    $user = auth()->user();
+    $locale = app()->getLocale();
+    $tz = config('app.timezone'); // ou $user->timezone si tu l’as
+
+    // Clé de cache "namespacée" par user/locale/tz pour éviter toute fuite
+    $scopedKey = implode(':', [
+        'dash', $key,
+        'u'.$user->id,
+        'loc'.$locale,
+        'tz'.$tz,
+    ]);
+
+    // Tags pour purge ciblée via le bouton "clear cache"
+    return Cache::tags(['dashboard', 'user:'.$user->id])
+        ->remember($scopedKey, $ttlSeconds, function () use ($resolver, $key) {
+            $t0 = microtime(true);
+            $result = $resolver();
+            \Log::info("[DASH] computed '{$key}' in ".round((microtime(true)-$t0)*1000,2).'ms');
+            return $result;
+        });
+}
 
     public function indexs()
     {   
@@ -215,7 +244,7 @@ class DashboardController extends Controller
         return response()->view('errors.500', ['message' => 'Erreur Dashboard : '.$e->getMessage()], 500);
     }
 }
-public function index()
+public function index_1()
 {
     try {
         $this->authorize('admin_general_dashboard_show');
@@ -304,6 +333,128 @@ public function index()
         ], 500);
     }
 }
+
+public function index()
+{
+    try {
+        $this->authorize('admin_general_dashboard_show');
+
+        $tStart = microtime(true);
+        \Log::info('--- Dashboard start ---');
+
+        // TTL base (secondes)
+        $base = 300; // 5 min
+        $jitter = random_int(0, 60); // anti-stampede
+
+        // TTL plus longs pour les stats “peu volatiles”
+        $ttlFast  = $base + $jitter;        // 5–6 min
+        $ttlSlow  = 900 + $jitter;          // 15–16 min (ex: par mois/année)
+        $ttlBrief = 120 + $jitter;          // 2–3 min (compteurs “new”)
+
+        $data = [
+            'pageTitle' => trans('admin/main.general_dashboard_title'),
+
+            'dailySalesTypeStatistics' => $this->cacheIfAllowed(
+                'admin_general_dashboard_daily_sales_statistics',
+                'daily_sales', $ttlFast,
+                fn() => $this->dailySalesTypeStatistics()
+            ),
+
+            'getIncomeStatistics' => $this->cacheIfAllowed(
+                'admin_general_dashboard_income_statistics',
+                'income_stats', $ttlFast,
+                fn() => $this->getIncomeStatistics()
+            ),
+
+            'getTotalSalesStatistics' => $this->cacheIfAllowed(
+                'admin_general_dashboard_total_sales_statistics',
+                'total_sales', $ttlFast,
+                fn() => $this->getTotalSalesStatistics()
+            ),
+
+            'getNewSalesCount' => $this->cacheIfAllowed(
+                'admin_general_dashboard_new_sales',
+                'new_sales_count', $ttlBrief,
+                fn() => $this->getNewSalesCount(), 0
+            ),
+
+            'getNewCommentsCount' => $this->cacheIfAllowed(
+                'admin_general_dashboard_new_comments',
+                'new_comments_count', $ttlBrief,
+                fn() => $this->getNewCommentsCount(), 0
+            ),
+
+            'getNewTicketsCount' => $this->cacheIfAllowed(
+                'admin_general_dashboard_new_tickets',
+                'new_tickets_count', $ttlBrief,
+                fn() => $this->getNewTicketsCount(), 0
+            ),
+
+            'getPendingReviewCount' => $this->cacheIfAllowed(
+                'admin_general_dashboard_new_reviews',
+                'pending_review_count', $ttlBrief,
+                fn() => $this->getPendingReviewCount(), 0
+            ),
+
+            'getMonthAndYearSalesChart' => $this->cacheIfAllowed(
+                'admin_general_dashboard_sales_statistics_chart',
+                'sales_chart', $ttlSlow,
+                fn() => $this->getMonthAndYearSalesChart('month_of_year')
+            ),
+
+            'getMonthAndYearSalesChartStatistics' => $this->cacheIfAllowed(
+                'admin_general_dashboard_sales_statistics_chart',
+                'sales_chart_stats', $ttlSlow,
+                fn() => $this->getMonthAndYearSalesChartStatistics()
+            ),
+
+            'recentComments' => $this->cacheIfAllowed(
+                'admin_general_dashboard_recent_comments',
+                'recent_comments', $ttlFast,
+                fn() => $this->getRecentComments()
+            ),
+
+            'recentTickets' => $this->cacheIfAllowed(
+                'admin_general_dashboard_recent_tickets',
+                'recent_tickets', $ttlFast,
+                fn() => $this->getRecentTickets()
+            ),
+
+            'recentWebinars' => $this->cacheIfAllowed(
+                'admin_general_dashboard_recent_webinars',
+                'recent_webinars', $ttlFast,
+                fn() => $this->getRecentWebinars()
+            ),
+
+            'recentCourses' => $this->cacheIfAllowed(
+                'admin_general_dashboard_recent_courses',
+                'recent_courses', $ttlFast,
+                fn() => $this->getRecentCourses()
+            ),
+
+            'usersStatisticsChart' => $this->cacheIfAllowed(
+                'admin_general_dashboard_users_statistics_chart',
+                'users_chart', $ttlSlow,
+                fn() => $this->usersStatisticsChart()
+            ),
+        ];
+
+        \Log::info('--- Dashboard sections computed in '.round((microtime(true)-$tStart)*1000,2).'ms ---');
+
+        return view('admin.dashboard', $data);
+
+    } catch (\Throwable $e) {
+        \Log::error('Dashboard error: '.$e->getMessage(), [
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+        ]);
+
+        return response()->view('errors.500', [
+            'message' => 'Le tableau de bord ne peut pas être chargé. Veuillez réessayer dans quelques instants.'
+        ], 500);
+    }
+}
+
 
     public function marketing()
     {
