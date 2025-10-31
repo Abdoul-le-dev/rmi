@@ -30,5 +30,17 @@ class AppServiceProvider extends ServiceProvider
         if (env('APP_ENV') === 'production') {
             URL::forceScheme('https');
         }
-    }
+
+        try {
+        // Récupérer les paramètres généraux depuis la base
+        $generalSettings = DB::table('settings')->where('name', 'general')->first();
+        $generalSettings = $generalSettings ? json_decode($generalSettings->value, true) : [];
+
+        // Partager avec toutes les vues
+        view()->share('generalSettings', $generalSettings);
+        } catch (\Exception $e) {
+            // En cas d'erreur (ex: pendant migration)
+            view()->share('generalSettings', []);
+        }
+        }
 }

@@ -1,9 +1,11 @@
 <html lang="{{ app()->getLocale() }}">
 @php
+    $generalSettings = $generalSettings ?? ['rtl_languages' => [], 'rtl_layout' => 0];
     $rtlLanguages = !empty($generalSettings['rtl_languages']) ? $generalSettings['rtl_languages'] : [];
-
-    $isRtl = ((in_array(mb_strtoupper(app()->getLocale()), $rtlLanguages)) or (!empty($generalSettings['rtl_layout']) and $generalSettings['rtl_layout'] == 1));
-@endphp
+    $isRtl = (
+        in_array(mb_strtoupper(app()->getLocale()), $rtlLanguages)
+        || (!empty($generalSettings['rtl_layout']) && $generalSettings['rtl_layout'] == 1)
+    );@endphp
 <head>
     @include('web.default.includes.metas')
     <title>{{ $pageTitle ?? '' }} </title>
