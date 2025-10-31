@@ -81,7 +81,7 @@
                     </div>
                 </div>
             </li>
-        {{-- @endcan --}}
+        @endcan
 
         <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                 <img alt="image" src="{{ $authUser->getAvatar() }}" class="rounded-circle mr-1">
