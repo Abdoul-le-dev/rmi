@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DRIVER', 's3'),
+    'default' => env('FILESYSTEM_DRIVER', 'local'),
 
     /*
     |--------------------------------------------------------------------------
@@ -25,6 +25,7 @@ return [
     | will be bound as the Cloud disk implementation in the container.
     |
     */
+    
 
     'cloud' => env('FILESYSTEM_CLOUD', 's3'),
 
