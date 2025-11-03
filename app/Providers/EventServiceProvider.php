@@ -18,9 +18,7 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        \UniSharp\LaravelFilemanager\Events\FileWasUploaded::class => [
-            \App\Listeners\LfmUploadListener::class,
-        ],
+       
     ];
 
     /**

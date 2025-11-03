@@ -77,7 +77,8 @@
             @foreach($featuredTopics as $featuredTopic)
                 <div class="forums-featured-card d-flex align-items-center bg-white p-20 p-md-35 rounded-lg mt-15">
                     <div class="forums-featured-card-icon">
-                        <img src="{{ $featuredTopic->icon }}" alt="{{ $featuredTopic->topic->title }}" class="img-cover">
+                        <img src="{{ route('media.preview', ['path' => $featuredTopic->icon]) }}" class="img-cover">
+                        {{-- <img src="{{ $featuredTopic->icon }}" alt="{{ $featuredTopic->topic->title }}" class="img-cover"> --}}
                     </div>
 
                     <div class="ml-15">
