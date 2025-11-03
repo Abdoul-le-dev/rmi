@@ -9,12 +9,12 @@ class MediaController extends Controller
 {
     public function preview($path)
     {
-        $temporaryUrl = S3Helper::getUrl($path, 60);
-        
+        $temporaryUrl = \App\Helpers\S3Helper::getTemporaryUrl($path, 60);
+
         if (!$temporaryUrl) {
-            abort(404);
+            return response()->json(['error' => 'File not found'], 404);
         }
-        
-        return $temporaryUrl;
+
+        return response()->json(['url' => $temporaryUrl]);
     }
 }
