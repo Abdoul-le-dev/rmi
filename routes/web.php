@@ -414,3 +414,8 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     Route::post('/forms/{url}/store', 'FormsController@store');
 
 });
+
+
+Route::get('/media/preview/{path}', [MediaController::class, 'preview'])
+    ->where('path', '.*')
+    ->name('media.preview');
