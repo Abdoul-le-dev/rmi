@@ -150,7 +150,8 @@
                     <div class="col-12 col-md-3 mt-15">
                         <div class="forum-recommended-topics__card position-relative rounded-lg bg-white px-20 py-30">
                             <div class="forum-recommended-topics__icon">
-                                <img src="{{ $recommendedTopic->icon }}" alt="{{ $recommendedTopic->title }}" class="img-cover">
+                                <img src="{{ route('media.preview', ['path' => $recommendedTopic->icon]) }}" class="img-cover">
+                                {{-- <img src=" {{ $recommendedTopic->icon }}" alt="{{ $recommendedTopic->title }}" class="img-cover"> --}}
                             </div>
 
                             <h4 class="font-16 font-weight-bold text-secondary mt-10">{{ $recommendedTopic->title }}</h4>
