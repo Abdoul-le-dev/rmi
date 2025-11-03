@@ -1,6 +1,9 @@
 <div class="row no-gutters">
   <div class="col-xl-8">
     <div class="crop-container">
+      @php
+        dd($img->url);
+      @endphp
       <img src="{{ $img->url . '?timestamp=' . $img->time }}" class="img img-responsive">
     </div>
   </div>
