@@ -450,7 +450,22 @@ function loadItems(page) {
             });
 
           if (item.thumb_url) {
-            var image = $('<div>').css('background-image', 'url("' + item.thumb_url + '?timestamp=' + item.time + '")');
+            // var image = $('<div>').css('background-image', 'url("' + item.thumb_url + '?timestamp=' + item.time + '")');
+            var image = $('<div>').attr('data-thumb-url', item.thumb_url).addClass('lfm-loading');
+
+// Charger l'URL temporaire via AJAX
+(function(img, thumbUrl) {
+    var cleanPath = thumbUrl.replace(/^https?:\/\/[^\/]+\//, '').split('?')[0];
+    
+    $.get('/media/temp-url/' + cleanPath, function(response) {
+        if (response.url) {
+            img.css('background-image', 'url("' + response.url + '")').removeClass('lfm-loading');
+        }
+    }).fail(function() {
+        console.error('Failed to load:', thumbUrl);
+        img.removeClass('lfm-loading');
+    });
+})(image, item.thumb_url);
           } else {
             var icon = $('<div>').addClass('ico');
             var image = $('<div>').addClass('mime-icon ico-' + item.icon).append(icon);

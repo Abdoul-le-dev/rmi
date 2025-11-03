@@ -9,12 +9,12 @@ class MediaController extends Controller
 {
     public function preview($path)
     {
-        $temporaryUrl = S3Helper::getTemporaryUrl($path, 60);
+        $temporaryUrl = S3Helper::getUrl($path, 60);
         
         if (!$temporaryUrl) {
             abort(404);
         }
-        dd($temporaryUrl);
-        return redirect($temporaryUrl);
+        
+        return $temporaryUrl;
     }
 }

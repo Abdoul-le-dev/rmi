@@ -420,3 +420,14 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
 Route::get('/media/preview/{path}', [MediaController::class, 'preview'])
     ->where('path', '.*')
     ->name('media.preview');
+
+// routes/web.php
+Route::get('/media/temp-url/{path}', function($path) {
+    $temporaryUrl = \App\Helpers\S3Helper::getTemporaryUrl($path, 60);
+    
+    if (!$temporaryUrl) {
+        return response()->json(['error' => 'File not found'], 404);
+    }
+    
+    return response()->json(['url' => $temporaryUrl]);
+})->where('path', '.*')->name('media.temp-url');
