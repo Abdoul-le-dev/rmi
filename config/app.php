@@ -198,6 +198,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\CustomLfmServiceProvider::class,
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Mews\Captcha\CaptchaServiceProvider::class,
