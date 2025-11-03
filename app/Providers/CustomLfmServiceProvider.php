@@ -9,11 +9,11 @@ class CustomLfmServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        // Désactiver les routes par défaut de LFM
-        $this->loadRoutesFrom();
+        // Charger vos routes personnalisées pour LFM
+        $this->registerLfmRoutes();
     }
     
-    protected function loadRoutesFrom()
+    protected function registerLfmRoutes()
     {
         Route::group([
             'prefix' => 'laravel-filemanager',
@@ -22,5 +22,10 @@ class CustomLfmServiceProvider extends ServiceProvider
         ], function () {
             require base_path('routes/lfm.php');
         });
+    }
+    
+    public function register()
+    {
+        //
     }
 }
