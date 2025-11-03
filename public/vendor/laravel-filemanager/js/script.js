@@ -681,6 +681,7 @@ function preview(items) {
             $.get("/media/temp-url/" + cleanPath, function (response) {
                 if (response.url) {
                     url_temp =response.url;
+                    console.log('aprs',url_temp);
                     carouselItem
                         .find(".carousel-image")
                         .css("background-image", "url('" + response.url + "')");
@@ -692,7 +693,7 @@ function preview(items) {
                 .css("width", "50vh")
                 .append($("<div>").addClass("mime-icon ico-" + item.icon));
         }
-
+          console.log('avant',url_temp);
         carouselItem
             .find(".carousel-label")
             .attr("target", "_blank")
