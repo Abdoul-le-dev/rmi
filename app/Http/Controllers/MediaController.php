@@ -14,7 +14,7 @@ class MediaController extends Controller
         if (!$temporaryUrl) {
             abort(404);
         }
-        
+        dd($temporaryUrl);
         return redirect($temporaryUrl);
     }
 }
