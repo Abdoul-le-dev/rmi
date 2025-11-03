@@ -668,12 +668,17 @@ function preview(items) {
             .addClass(index === 0 ? "active" : "");
 
         if (item.thumb_url) {
-            carouselItem
-                .find(".carousel-image")
-                .css(
-                    "background-image",
-                    "url('" + item.url + "?timestamp=" + item.time + "')"
-                );
+            var cleanPath = item.url
+                .replace(/^https?:\/\/[^\/]+\//, "")
+                .split("?")[0];
+
+            $.get("/media/temp-url/" + cleanPath, function (response) {
+                if (response.url) {
+                    carouselItem
+                        .find(".carousel-image")
+                        .css("background-image", "url('" + response.url + "')");
+                }
+            });
         } else {
             carouselItem
                 .find(".carousel-image")
