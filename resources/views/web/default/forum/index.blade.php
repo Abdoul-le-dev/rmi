@@ -122,7 +122,7 @@
                 <p class="font-14 text-gray mt-5">{{ trans('update.forums_categories_hints') }}</p>
             </div>
              @php
-                    dd($forums[2]->icon);
+                    dd(\App\Helpers\S3Helper::getTemporaryUrl($forums[2]->icon));
                 @endphp
             @foreach($forums as $forum)
                 <div class="forums-categories-card mt-30 rounded-lg border bg-white p-15">
