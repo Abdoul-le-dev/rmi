@@ -194,7 +194,7 @@
   <script src="/assets/default/vendors/jquery-ui/jquery-ui.min.js"></script>
   <script src="{{ asset('vendor/laravel-filemanager/js/cropper.min.js') }}"></script>
   <script src="{{ asset('vendor/laravel-filemanager/js/dropzone.min.js') }}"></script>
-  <script src="{{ asset('vendor/laravel-filemanager/js/lfm-s3-override.js') }}"></script>
+  
   <script>
     var lang = {!! json_encode(trans('laravel-filemanager::lfm')) !!};
     var actions = [
