@@ -11,57 +11,67 @@ class LfmS3PathMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        $response = $next($request);
-        
-        // Vérifier si c'est une réponse JSON
-        $contentType = $response->headers->get('content-type');
-        
-        if ($contentType && Str::contains($contentType, 'application/json')) {
-            $content = $response->getContent();
-            $data = json_decode($content, true);
+        try {
+            $response = $next($request);
             
-            if (json_last_error() === JSON_ERROR_NONE && $data) {
-                Log::info('LFM Middleware - Data avant transformation:', $data);
+            // Vérifier si c'est une réponse JSON
+            $contentType = $response->headers->get('content-type');
+            
+            if ($contentType && Str::contains($contentType, 'application/json')) {
+                $content = $response->getContent();
                 
-                $data = $this->processData($data);
-                
-                Log::info('LFM Middleware - Data après transformation:', $data);
-                
-                $response->setContent(json_encode($data));
+                if (!empty($content)) {
+                    $data = json_decode($content, true);
+                    
+                    if (json_last_error() === JSON_ERROR_NONE && is_array($data)) {
+                        $data = $this->processData($data);
+                        $response->setContent(json_encode($data));
+                    }
+                }
             }
+            
+            return $response;
+            
+        } catch (\Exception $e) {
+            Log::error('LFM Middleware Error: ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            // Retourner la réponse originale en cas d'erreur
+            return $next($request);
         }
-        
-        return $response;
     }
     
     private function processData($data)
     {
-        // Traiter un seul élément
-        if (isset($data['url'])) {
-            $data['url'] = $this->stripS3BaseUrl($data['url']);
+        if (!is_array($data)) {
+            return $data;
         }
         
-        if (isset($data['thumb_url'])) {
-            $data['thumb_url'] = $this->stripS3BaseUrl($data['thumb_url']);
-        }
+        // Traiter les champs URL courants
+        $urlFields = ['url', 'thumb_url', 'path', 'source'];
         
-        if (isset($data['path'])) {
-            $data['path'] = $this->stripS3BaseUrl($data['path']);
+        foreach ($urlFields as $field) {
+            if (isset($data[$field]) && is_string($data[$field])) {
+                $data[$field] = $this->stripS3BaseUrl($data[$field]);
+            }
         }
         
         // Traiter un tableau d'éléments
         if (isset($data['items']) && is_array($data['items'])) {
-            $data['items'] = array_map(function($item) {
-                return $this->processData($item);
-            }, $data['items']);
+            foreach ($data['items'] as $key => $item) {
+                if (is_array($item)) {
+                    $data['items'][$key] = $this->processData($item);
+                }
+            }
         }
         
-        // Traiter récursivement tous les arrays
+        // Traiter récursivement les autres arrays
         foreach ($data as $key => $value) {
-            if (is_array($value)) {
+            if (is_array($value) && $key !== 'items') {
                 $data[$key] = $this->processData($value);
-            } elseif (is_string($value) && $this->isS3Url($value)) {
-                $data[$key] = $this->stripS3BaseUrl($value);
             }
         }
         
@@ -70,69 +80,61 @@ class LfmS3PathMiddleware
     
     private function stripS3BaseUrl($url)
     {
-        if (!is_string($url)) {
+        if (!is_string($url) || empty($url)) {
             return $url;
         }
         
-        $awsUrl = rtrim(env('AWS_URL'), '/');
-        $bucketRoot = trim(env('AWS_BUCKET_ROOT', ''), '/');
+        // Ne traiter que les URLs complètes
+        if (!Str::startsWith($url, 'http')) {
+            return $url;
+        }
         
-        Log::info('Traitement URL:', [
-            'original' => $url,
-            'AWS_URL' => $awsUrl,
-            'AWS_BUCKET_ROOT' => $bucketRoot
-        ]);
-        
-        // Si AWS_BUCKET_ROOT est défini
-        if (!empty($bucketRoot)) {
-            // Chercher et supprimer: AWS_URL/AWS_BUCKET_ROOT/
-            $fullBase = $awsUrl . '/' . $bucketRoot . '/';
-            if (Str::startsWith($url, $fullBase)) {
-                $relativePath = Str::after($url, $fullBase);
-                Log::info('URL transformée avec BUCKET_ROOT:', $relativePath);
-                return $relativePath;
+        try {
+            $awsUrl = env('AWS_URL');
+            $bucketRoot = env('AWS_BUCKET_ROOT');
+            
+            if (empty($awsUrl)) {
+                return $url;
             }
-        }
-        
-        // Sinon, chercher et supprimer uniquement AWS_URL
-        if (Str::startsWith($url, $awsUrl . '/')) {
-            $relativePath = Str::after($url, $awsUrl . '/');
-            Log::info('URL transformée sans BUCKET_ROOT:', $relativePath);
-            return $relativePath;
-        }
-        
-        // Si l'URL contient amazonaws.com (fallback)
-        if (Str::contains($url, 'amazonaws.com')) {
-            $bucket = config('filesystems.disks.s3.bucket');
             
-            // Essayer différents patterns S3
-            $patterns = [
-                "/{$bucket}\/(.+)$/",
-                "/amazonaws\.com\/(.+)$/",
-            ];
+            $awsUrl = rtrim($awsUrl, '/');
             
-            foreach ($patterns as $pattern) {
-                if (preg_match($pattern, $url, $matches)) {
-                    $relativePath = urldecode($matches[1]);
-                    Log::info('URL transformée avec pattern:', $relativePath);
-                    return $relativePath;
+            // Cas 1: AWS_URL + AWS_BUCKET_ROOT
+            if (!empty($bucketRoot)) {
+                $bucketRoot = trim($bucketRoot, '/');
+                $fullBase = $awsUrl . '/' . $bucketRoot . '/';
+                
+                if (Str::startsWith($url, $fullBase)) {
+                    return Str::after($url, $fullBase);
                 }
             }
+            
+            // Cas 2: Seulement AWS_URL
+            if (Str::startsWith($url, $awsUrl . '/')) {
+                return Str::after($url, $awsUrl . '/');
+            }
+            
+            // Cas 3: Fallback pour les URLs S3 standard
+            if (Str::contains($url, 'amazonaws.com')) {
+                $bucket = config('filesystems.disks.s3.bucket');
+                
+                if (!empty($bucket)) {
+                    // Pattern: https://bucket.s3.region.amazonaws.com/path
+                    if (preg_match("#/{$bucket}/(.+)$#", $url, $matches)) {
+                        return urldecode($matches[1]);
+                    }
+                    
+                    // Pattern: https://s3.region.amazonaws.com/bucket/path
+                    if (preg_match("#amazonaws\.com/{$bucket}/(.+)$#", $url, $matches)) {
+                        return urldecode($matches[1]);
+                    }
+                }
+            }
+            
+        } catch (\Exception $e) {
+            Log::error('Error stripping S3 URL: ' . $e->getMessage(), ['url' => $url]);
         }
         
         return $url;
-    }
-    
-    private function isS3Url($url)
-    {
-        if (!is_string($url)) {
-            return false;
-        }
-        
-        $awsUrl = env('AWS_URL');
-        
-        return Str::startsWith($url, $awsUrl) || 
-               Str::contains($url, 'amazonaws.com') ||
-               Str::contains($url, 's3.');
     }
 }
