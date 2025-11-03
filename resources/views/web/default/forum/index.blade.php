@@ -121,9 +121,7 @@
                 <h2 class="font-30 text-secondary font-weight-bold">{{ trans('update.forums') }}</h2>
                 <p class="font-14 text-gray mt-5">{{ trans('update.forums_categories_hints') }}</p>
             </div>
-             @php
-                    dd(\App\Helpers\S3Helper::getTemporaryUrl($forums[2]->icon));
-                @endphp
+             
             @foreach($forums as $forum)
                 <div class="forums-categories-card mt-30 rounded-lg border bg-white p-15">
                     <h3 class="forums-categories-card__title text-dark font-16 font-weight-bold mb-15">{{ $forum->title }}</h3>
