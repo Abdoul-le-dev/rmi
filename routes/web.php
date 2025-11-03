@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::group(['prefix' => 'my_api', 'namespace' => 'Api\Panel', 'middleware' => 'signed', 'as' => 'my_api.web.'], function () {
     Route::get('checkout/{user}', 'CartController@webCheckoutRender')->name('checkout');
     Route::get('/charge/{user}', 'PaymentsController@webChargeRender')->name('charge');
@@ -23,6 +22,7 @@ Route::group(['prefix' => 'my_api', 'namespace' => 'Api\Panel', 'middleware' => 
 Route::group(['prefix' => 'api_sessions'], function () {
     Route::get('/big_blue_button', ['uses' => 'Api\Panel\SessionsController@BigBlueButton'])->name('big_blue_button');
     Route::get('/agora', ['uses' => 'Api\Panel\SessionsController@agora'])->name('agora');
+
 });
 
 Route::get('/mobile-app', 'Web\MobileAppController@index')->middleware(['share'])->name('mobileAppRoute');
@@ -97,13 +97,13 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     Route::get('/', 'update_landing_page@index');
     Route::get('/a-propos', 'update_landing_page@a_propos');
     Route::get('/communaute-acces', 'update_landing_page@communaute-acces');
-    Route::get('/communaute', 'update_landing_page@communaute');
+     Route::get('/communaute', 'update_landing_page@communaute');
     Route::get('/faq', 'update_landing_page@faq_dev');
     Route::get('/instructeurs', 'update_landing_page@instructeurs');
     #Route::get('/', 'update_landing_page@index');
 
     //Route::get('/', function () {
-    //  return redirect()->away('https://rmiclass.net/');
+      //  return redirect()->away('https://rmiclass.net/');
     //});
 
     Route::get('/getDefaultAvatar', 'DefaultAvatarController@make');
@@ -171,26 +171,8 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
 
     Route::group(['middleware' => 'web.auth'], function () {
 
-        // Route::group(['prefix' => 'laravel-filemanager'], function () {
-        //     \UniSharp\LaravelFilemanager\Lfm::routes();
-        // });
-        Route::group([
-            'prefix' => 'laravel-filemanager',
-            // 'middleware' => ['web', 'auth']
-        ], function () {
-            Route::controller(\App\Http\Controllers\CustomLfmController::class)->group(function () {
-                Route::get('/', 'show')->name('unisharp.lfm.show');
-                Route::get('/jsonitems', 'getItems')->name('unisharp.lfm.getItems');
-                Route::post('/upload', 'upload')->name('unisharp.lfm.upload');
-                Route::get('/folders', 'getFolders')->name('unisharp.lfm.getFolders');
-                Route::get('/newfolder', 'getAddfolder')->name('unisharp.lfm.getAddfolder');
-                Route::post('/rename', 'getRename')->name('unisharp.lfm.getRename');
-                Route::get('/move', 'getMove')->name('unisharp.lfm.getMove');
-                Route::post('/resize', 'performResize')->name('unisharp.lfm.resize');
-                Route::get('/download', 'getDownload')->name('unisharp.lfm.getDownload');
-                Route::post('/delete', 'getDelete')->name('unisharp.lfm.getDelete');
-                Route::get('/errors', 'getErrors')->name('unisharp.lfm.getErrors');
-            });
+        Route::group(['prefix' => 'laravel-filemanager'], function () {
+            \UniSharp\LaravelFilemanager\Lfm::routes();
         });
 
         Route::group(['prefix' => 'reviews'], function () {
@@ -233,6 +215,7 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
             Route::post('/', 'BecomeInstructorController@store');
             Route::post('/form-fields', 'BecomeInstructorController@getFormFieldsByUserType');
         });
+
     });
 
     Route::group(['prefix' => 'meetings'], function () {
@@ -369,7 +352,7 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     });
 
     Route::group(['prefix' => 'forums', 'middleware' => 'check.subscription'], function () {
-        // Route::group(['prefix' => 'forums'], function () {
+    // Route::group(['prefix' => 'forums'], function () {
         Route::get('/', 'ForumController@index');
         Route::get('/create-topic', 'ForumController@createTopic');
         Route::post('/create-topic', 'ForumController@storeTopic');
@@ -429,4 +412,5 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     /* Forms */
     Route::get('/forms/{url}', 'FormsController@index');
     Route::post('/forms/{url}/store', 'FormsController@store');
+
 });
