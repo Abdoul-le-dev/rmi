@@ -28,6 +28,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class User extends Authenticatable
 {
@@ -133,7 +134,20 @@ class User extends Authenticatable
     {
         if (!empty($this->avatar)) {
             // $avatarUrl = $this->avatar;
-            $avatarUrl = Storage::disk('s3')->url($this->avatar);
+            // $avatarUrl = Storage::disk('s3')->url($this->avatar);
+
+            // Modification StanislasKB
+            
+            $cacheKey = "user:avatar:{$this->id}:{$size}"; // Cache key unique par utilisateur et taille
+
+            // On met en cache pendant 2h (7200 secondes)
+            $avatarUrl = Cache::remember($cacheKey, 7200, function () {
+                
+                return Storage::disk('s3')->temporaryUrl(
+                    $this->avatar,
+                    now()->addHours(2)
+                );
+            });
         } else {
             $settings = getOthersPersonalizationSettings();
 
