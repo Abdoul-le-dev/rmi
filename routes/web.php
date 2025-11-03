@@ -172,7 +172,7 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
 
     Route::group(['middleware' => 'web.auth'], function () {
 
-        Route::group(['prefix' => 'laravel-filemanager','middleware' => 'lfm.s3'], function () {
+        Route::group(['prefix' => 'laravel-filemanager'], function () {
             \UniSharp\LaravelFilemanager\Lfm::routes();
         });
 
