@@ -77,7 +77,8 @@
             @foreach($featuredTopics as $featuredTopic)
                 <div class="forums-featured-card d-flex align-items-center bg-white p-20 p-md-35 rounded-lg mt-15">
                     <div class="forums-featured-card-icon">
-                        <img src="{{ route('media.preview', ['path' => $featuredTopic->icon]) }}" class="img-cover">
+                         <img src="{{ \App\Helpers\S3Helper::getTemporaryUrl($featuredTopic->icon) }}" class="img-cover">
+
                         {{-- <img src="{{ $featuredTopic->icon }}" alt="{{ $featuredTopic->topic->title }}" class="img-cover"> --}}
                     </div>
 
@@ -150,7 +151,9 @@
                     <div class="col-12 col-md-3 mt-15">
                         <div class="forum-recommended-topics__card position-relative rounded-lg bg-white px-20 py-30">
                             <div class="forum-recommended-topics__icon">
-                                <img src="{{ route('media.preview', ['path' => $recommendedTopic->icon]) }}" class="img-cover">
+                         <img src="{{ \App\Helpers\S3Helper::getTemporaryUrl($recommendedTopic->icon) }}" class="img-cover">
+
+                                
                                 {{-- <img src=" {{ $recommendedTopic->icon }}" alt="{{ $recommendedTopic->title }}" class="img-cover"> --}}
                             </div>
 

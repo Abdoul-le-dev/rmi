@@ -4,7 +4,7 @@
             <div class="forums-categories-card__icon p-5">
                
                 <img src="{{ \App\Helpers\S3Helper::getTemporaryUrl($forum->icon) }}" class="img-cover">
-                  {{-- <img src="{{ route('media.preview', ['path' => $forum->icon]) }}" class="img-cover"> --}}
+
                 {{-- <img src="{{ $forum->icon }}" alt="{{ $forum->title }}" class="img-cover"> --}}
             </div>
             <div class="ml-10">
