@@ -87,6 +87,7 @@ class Kernel extends HttpKernel
         'check_mobile_app' => CheckMobileApp::class,
         'check_maintenance' => CheckMaintenance::class,
         'check_restriction' => CheckRestriction::class,
+        'lfm.s3' => \App\Http\Middleware\LfmS3PathMiddleware::class,
         // api
         'api.auth' => \App\Http\Middleware\Api\Authenticate::class,
         'api.guest' => \App\Http\Middleware\Api\RedirectIfAuthenticated::class,
