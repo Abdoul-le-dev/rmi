@@ -643,7 +643,7 @@ class ForumController extends Controller
         $forum = Forum::where('slug', $forumSlug)
             ->where('status', 'active')
             ->first();
-         dd($forum);
+         
         if (!empty($forum)) {
             $topic = ForumTopic::where('slug', $topicSlug)
                 ->where('forum_id', $forum->id)
@@ -653,7 +653,7 @@ class ForumController extends Controller
                 $attachment = ForumTopicAttachment::where('id', $attachmentId)
                     ->where('topic_id', $topic->id)
                     ->first();
-                dd($attachment);
+                
                 // if (!empty($attachment)) {
                 //     $filePath = public_path($attachment->path);
 
@@ -1091,23 +1091,58 @@ class ForumController extends Controller
                     ->where('topic_id', $topic->id)
                     ->first();
 
+                // if (!empty($post)) {
+                //     $filePath = public_path($post->attach);
+
+                //     if (file_exists($filePath)) {
+                //         $fileInfo = pathinfo($filePath);
+                //         $type = (!empty($fileInfo) and !empty($fileInfo['extension'])) ? $fileInfo['extension'] : '';
+
+                //         $fileName = str_replace(' ', '-', "attachment-{$post->id}");
+                //         $fileName = str_replace('.', '-', $fileName);
+                //         $fileName .= '.' . $type;
+
+                //         $headers = array(
+                //             'Content-Type: application/' . $type,
+                //         );
+
+                //         return response()->download($filePath, $fileName, $headers);
+                //     }
+                // }
+
                 if (!empty($post)) {
-                    $filePath = public_path($post->attach);
+                    $disk = Storage::disk('s3');
+                    $path = $post->attach;
+   
+                    // Si c’est une URL complète  on la nettoie
+                    if (Str::startsWith($path, ['http://', 'https://'])) {
+                        $awsBase = rtrim(config('filesystems.disks.s3.url'), '/');
+                        $path = Str::after($path, $awsBase . '/');
 
-                    if (file_exists($filePath)) {
-                        $fileInfo = pathinfo($filePath);
-                        $type = (!empty($fileInfo) and !empty($fileInfo['extension'])) ? $fileInfo['extension'] : '';
-
-                        $fileName = str_replace(' ', '-', "attachment-{$post->id}");
-                        $fileName = str_replace('.', '-', $fileName);
-                        $fileName .= '.' . $type;
-
-                        $headers = array(
-                            'Content-Type: application/' . $type,
-                        );
-
-                        return response()->download($filePath, $fileName, $headers);
+                        // Si un root est défini dans ta config, on s'assure de le retirer aussi
+                        $root = trim(config('filesystems.disks.s3.root', ''), '/');
+                        if ($root && Str::startsWith($path, $root . '/')) {
+                            $path = Str::after($path, $root . '/');
+                        }
                     }
+
+                    if ($disk->exists($path)) {
+                        $extension = pathinfo($path, PATHINFO_EXTENSION);
+                        $fileName = Str::slug("attachment-{$attachment->id}") . ($extension ? ".{$extension}" : '');
+                        $mime = $disk->mimeType($path) ?? 'application/octet-stream';
+
+                        return new StreamedResponse(function () use ($disk, $path) {
+                            echo $disk->get($path);
+                        }, 200, [
+                            'Content-Type' => $mime,
+                            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                        ]);
+                    }else {
+                        abort(404);
+                    }
+                    
+                }else {
+                    abort(404);
                 }
             }
         }
