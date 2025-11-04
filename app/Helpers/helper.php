@@ -2672,23 +2672,16 @@ function updateImagePaths($htmlContent)
         $beforeSrc = $matches[1];
         $src = $matches[2];
         $afterSrc = $matches[3];
+        // dd($src);
+        // Générer l'URL appropriée avec le helper
+        $newSrc = \App\Helpers\S3Helper::getUrl($src);
         
-        // Si c'est un chemin relatif S3 (pas une URL complète et pas /store/)
-        if (strpos($src, 'http') === false && strpos($src, '/store/') === false) {
-            // Utiliser la route media.preview
-            $newSrc = route('media.preview', ['path' => ltrim($src, '/')]);
-            return '<img' . $beforeSrc . 'src="' . $newSrc . '"' . $afterSrc . '>';
+        // Si le helper retourne null, garder l'URL originale
+        if ($newSrc === null) {
+            return $matches[0];
         }
         
-        // Si c'est déjà une URL S3 complète
-        if (strpos($src, 'amazonaws.com') !== false) {
-            $relativePath = \App\Helpers\S3Helper::normalizeS3Path($src);
-            $newSrc = route('media.preview', ['path' => $relativePath]);
-            return '<img' . $beforeSrc . 'src="' . $newSrc . '"' . $afterSrc . '>';
-        }
-        
-        // Sinon retourner inchangé (URLs locales /store/, etc.)
-        return $matches[0];
+        return '<img' . $beforeSrc . 'src="' . $newSrc . '"' . $afterSrc . '>';
     }, $htmlContent);
     
     return $updatedHtml;
