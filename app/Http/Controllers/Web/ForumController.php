@@ -1111,7 +1111,7 @@ class ForumController extends Controller
                 // }
 
                 if (!empty($post)) {
-                    $fileName = Str::slug("attachment-{$attachment->id}");
+                    $fileName = Str::slug("attachment-{$post->id}");
                     return \App\Helpers\S3Helper::downloadFile($post->attach, $fileName);
                 } else {
                     abort(404, 'Post not found');
