@@ -672,38 +672,45 @@ class ForumController extends Controller
                 //         return response()->download($filePath, $fileName, $headers);
                 //     }
                 // }
-                if (!empty($attachment)) {
-                    $disk = Storage::disk('s3');
-                    $path = $attachment->path;
+                // if (!empty($attachment)) {
+                //     $disk = Storage::disk('s3');
+                //     $path = $attachment->path;
 
-                    // Si c’est une URL complète  on la nettoie
-                    if (Str::startsWith($path, ['http://', 'https://'])) {
-                        $awsBase = rtrim(config('filesystems.disks.s3.url'), '/');
-                        $path = Str::after($path, $awsBase . '/');
+                //     // Si c’est une URL complète  on la nettoie
+                //     if (Str::startsWith($path, ['http://', 'https://'])) {
+                //         $awsBase = rtrim(config('filesystems.disks.s3.url'), '/');
+                //         $path = Str::after($path, $awsBase . '/');
 
-                        // Si un root est défini dans ta config, on s'assure de le retirer aussi
-                        $root = trim(config('filesystems.disks.s3.root', ''), '/');
-                        if ($root && Str::startsWith($path, $root . '/')) {
-                            $path = Str::after($path, $root . '/');
-                        }
-                    }
+                //         // Si un root est défini dans ta config, on s'assure de le retirer aussi
+                //         $root = trim(config('filesystems.disks.s3.root', ''), '/');
+                //         if ($root && Str::startsWith($path, $root . '/')) {
+                //             $path = Str::after($path, $root . '/');
+                //         }
+                //     }
 
-                    if ($disk->exists($path)) {
-                        $extension = pathinfo($path, PATHINFO_EXTENSION);
-                        $fileName = Str::slug("attachment-{$attachment->id}") . ($extension ? ".{$extension}" : '');
-                        $mime = $disk->mimeType($path) ?? 'application/octet-stream';
+                //     if ($disk->exists($path)) {
+                //         $extension = pathinfo($path, PATHINFO_EXTENSION);
+                //         $fileName = Str::slug("attachment-{$attachment->id}") . ($extension ? ".{$extension}" : '');
+                //         $mime = $disk->mimeType($path) ?? 'application/octet-stream';
 
-                        return new StreamedResponse(function () use ($disk, $path) {
-                            echo $disk->get($path);
-                        }, 200, [
-                            'Content-Type' => $mime,
-                            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
-                        ]);
-                    } else {
-                        abort(404);
-                    }
+                //         return new StreamedResponse(function () use ($disk, $path) {
+                //             echo $disk->get($path);
+                //         }, 200, [
+                //             'Content-Type' => $mime,
+                //             'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                //         ]);
+                //     } else {
+                //         abort(404);
+                //     }
+                // } else {
+                //     abort(404);
+                // }
+
+                  if (!empty($post)) {
+                    $fileName = Str::slug("attachment-{$attachment->id}");
+                    return \App\Helpers\S3Helper::downloadFile($attachment->path, $fileName);
                 } else {
-                    abort(404);
+                    abort(404, 'Post not found');
                 }
             }
         }
