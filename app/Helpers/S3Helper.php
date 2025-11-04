@@ -235,7 +235,7 @@ class S3Helper
 
         $disk = Storage::disk('s3');
 
-        // Cas 1 : URL S3 complète (avec http/https)
+        // Cas 1 : URL S3 complète
         if (self::isS3Path($path)) {
             $relativePath = self::normalizeS3Path($path);
 
@@ -244,7 +244,15 @@ class S3Helper
             }
 
             $extension = pathinfo($relativePath, PATHINFO_EXTENSION);
-            $fileName = $fileName ?? ('file' . ($extension ? ".{$extension}" : ''));
+
+            // Si fileName fourni mais sans extension, ajouter l'extension
+            if ($fileName && !pathinfo($fileName, PATHINFO_EXTENSION)) {
+                $fileName = $fileName . ($extension ? ".{$extension}" : '');
+            } elseif (!$fileName) {
+                // Si pas de fileName, utiliser le nom original du fichier
+                $fileName = basename($relativePath);
+            }
+
             $mime = $disk->mimeType($relativePath) ?? 'application/octet-stream';
 
             return new \Symfony\Component\HttpFoundation\StreamedResponse(
@@ -255,11 +263,12 @@ class S3Helper
                 [
                     'Content-Type' => $mime,
                     'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                    'Content-Length' => $disk->size($relativePath),
                 ]
             );
         }
 
-        // Cas 2 : Fichier local (/store/, /storage/, etc.)
+        // Cas 2 : Fichier local
         if (self::isLocalPath($path)) {
             $fullPath = public_path($path);
 
@@ -268,7 +277,13 @@ class S3Helper
             }
 
             $extension = pathinfo($fullPath, PATHINFO_EXTENSION);
-            $fileName = $fileName ?? ('file' . ($extension ? ".{$extension}" : ''));
+
+            if ($fileName && !pathinfo($fileName, PATHINFO_EXTENSION)) {
+                $fileName = $fileName . ($extension ? ".{$extension}" : '');
+            } elseif (!$fileName) {
+                $fileName = basename($fullPath);
+            }
+
             $mime = mime_content_type($fullPath) ?? 'application/octet-stream';
 
             return response()->download($fullPath, $fileName, [
@@ -276,13 +291,18 @@ class S3Helper
             ]);
         }
 
-        // Cas 3 : Chemin relatif S3 (déjà normalisé, sans http)
-        // Ex: "9927/uploads/file.png" ou "uploads/document.pdf"
+        // Cas 3 : Chemin relatif S3
         $cleanPath = ltrim($path, '/');
 
         if ($disk->exists($cleanPath)) {
             $extension = pathinfo($cleanPath, PATHINFO_EXTENSION);
-            $fileName = $fileName ?? ('file' . ($extension ? ".{$extension}" : ''));
+
+            if ($fileName && !pathinfo($fileName, PATHINFO_EXTENSION)) {
+                $fileName = $fileName . ($extension ? ".{$extension}" : '');
+            } elseif (!$fileName) {
+                $fileName = basename($cleanPath);
+            }
+
             $mime = $disk->mimeType($cleanPath) ?? 'application/octet-stream';
 
             return new \Symfony\Component\HttpFoundation\StreamedResponse(
@@ -293,11 +313,11 @@ class S3Helper
                 [
                     'Content-Type' => $mime,
                     'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                    'Content-Length' => $disk->size($cleanPath),
                 ]
             );
         }
 
-        // Si rien n'a fonctionné
         abort(404, 'File not found');
     }
 }
