@@ -710,7 +710,7 @@ class ForumController extends Controller
                     $fileName = Str::slug("attachment-{$attachment->id}");
                     return \App\Helpers\S3Helper::downloadFile($attachment->path, $fileName);
                 } else {
-                    abort(404, 'Post not found');
+                    abort(405, 'Post not found');
                 }
             }
         }
