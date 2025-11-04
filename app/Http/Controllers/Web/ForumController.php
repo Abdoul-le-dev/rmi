@@ -653,7 +653,7 @@ class ForumController extends Controller
                 $attachment = ForumTopicAttachment::where('id', $attachmentId)
                     ->where('topic_id', $topic->id)
                     ->first();
-                dd($attachment);
+               
                 // if (!empty($attachment)) {
                 //     $filePath = public_path($attachment->path);
 
@@ -699,7 +699,12 @@ class ForumController extends Controller
                             'Content-Type' => $mime,
                             'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
                         ]);
+                    }else {
+                        abort(404);
                     }
+                    
+                }else {
+                    abort(404);
                 }
             }
         }
