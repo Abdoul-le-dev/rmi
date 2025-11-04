@@ -646,12 +646,12 @@ class ForumController extends Controller
             $topic = ForumTopic::where('slug', $topicSlug)
                 ->where('forum_id', $forum->id)
                 ->first();
-                dd($topic);
+                
             if (!empty($topic)) {
                 $attachment = ForumTopicAttachment::where('id', $attachmentId)
                     ->where('topic_id', $topic->id)
                     ->first();
-
+                    dd($attachment);
                 if (!empty($attachment)) {
                     $filePath = public_path($attachment->path);
 
