@@ -676,7 +676,7 @@ class ForumController extends Controller
                     $disk = Storage::disk('s3');
                     $path = $attachment->path;
 
-                    // Si c’est une URL complète → on la nettoie
+                    // Si c’est une URL complète  on la nettoie
                     if (Str::startsWith($path, ['http://', 'https://'])) {
                         $awsBase = rtrim(config('filesystems.disks.s3.url'), '/');
                         $path = Str::after($path, $awsBase . '/');

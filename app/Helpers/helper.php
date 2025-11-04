@@ -2639,27 +2639,57 @@ function canDeleteContentDirectly()
     return $result;
 }
 
+// function updateImagePaths($htmlContent)
+// {
+//     // Define the base URL for S3
+//     $s3Url = 'https://rmiclass-dev-uploads.s3.eu-north-1.amazonaws.com';
+    
+
+//     // Regular expression to find image paths
+//     $pattern = '/<img[^>]+src="([^"]+)"/i';
+
+//     // Replace the local URLs with the S3 URL
+//     $updatedHtml = preg_replace_callback($pattern, function ($matches) use ($s3Url) {
+//         $src = $matches[1];
+
+//         // If the src doesn't already contain the S3 URL, update it
+//         if (strpos($src, '/store/') !== false) {
+//             $src = $s3Url . $src;
+//         }
+
+//         // Return the updated img tag with the new src
+//         return str_replace($matches[1], $src, $matches[0]);
+//     }, $htmlContent);
+
+//     return $updatedHtml;
+// }
+
 function updateImagePaths($htmlContent)
 {
-    // Define the base URL for S3
-    // $s3Url = 'https://rmiclass-dev-uploads.s3.eu-north-1.amazonaws.com';
-    $s3Url = env('AWS_URL');
-
-    // Regular expression to find image paths
-    $pattern = '/<img[^>]+src="([^"]+)"/i';
-
-    // Replace the local URLs with the S3 URL
-    $updatedHtml = preg_replace_callback($pattern, function ($matches) use ($s3Url) {
-        $src = $matches[1];
-
-        // If the src doesn't already contain the S3 URL, update it
-        if (strpos($src, '/store/') !== false) {
-            $src = $s3Url . $src;
+    $pattern = '/<img([^>]+)src="([^"]+)"([^>]*)>/i';
+    
+    $updatedHtml = preg_replace_callback($pattern, function ($matches) {
+        $beforeSrc = $matches[1];
+        $src = $matches[2];
+        $afterSrc = $matches[3];
+        
+        // Si c'est un chemin relatif S3 (pas une URL complète et pas /store/)
+        if (strpos($src, 'http') === false && strpos($src, '/store/') === false) {
+            // Utiliser la route media.preview
+            $newSrc = route('media.preview', ['path' => ltrim($src, '/')]);
+            return '<img' . $beforeSrc . 'src="' . $newSrc . '"' . $afterSrc . '>';
         }
-
-        // Return the updated img tag with the new src
-        return str_replace($matches[1], $src, $matches[0]);
+        
+        // Si c'est déjà une URL S3 complète
+        if (strpos($src, 'amazonaws.com') !== false) {
+            $relativePath = \App\Helpers\S3Helper::normalizeS3Path($src);
+            $newSrc = route('media.preview', ['path' => $relativePath]);
+            return '<img' . $beforeSrc . 'src="' . $newSrc . '"' . $afterSrc . '>';
+        }
+        
+        // Sinon retourner inchangé (URLs locales /store/, etc.)
+        return $matches[0];
     }, $htmlContent);
-
+    
     return $updatedHtml;
 }
