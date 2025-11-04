@@ -233,10 +233,11 @@ class S3Helper
             abort(404, 'File path is empty');
         }
 
-        // Fichier S3
+        $disk = Storage::disk('s3');
+
+        // Cas 1 : URL S3 complète (avec http/https)
         if (self::isS3Path($path)) {
             $relativePath = self::normalizeS3Path($path);
-            $disk = Storage::disk('s3');
 
             if (!$disk->exists($relativePath)) {
                 abort(404, 'File not found on S3');
@@ -258,7 +259,7 @@ class S3Helper
             );
         }
 
-        // Fichier local
+        // Cas 2 : Fichier local (/store/, /storage/, etc.)
         if (self::isLocalPath($path)) {
             $fullPath = public_path($path);
 
@@ -275,6 +276,28 @@ class S3Helper
             ]);
         }
 
-        dd('rin');
+        // Cas 3 : Chemin relatif S3 (déjà normalisé, sans http)
+        // Ex: "9927/uploads/file.png" ou "uploads/document.pdf"
+        $cleanPath = ltrim($path, '/');
+
+        if ($disk->exists($cleanPath)) {
+            $extension = pathinfo($cleanPath, PATHINFO_EXTENSION);
+            $fileName = $fileName ?? ('file' . ($extension ? ".{$extension}" : ''));
+            $mime = $disk->mimeType($cleanPath) ?? 'application/octet-stream';
+
+            return new \Symfony\Component\HttpFoundation\StreamedResponse(
+                function () use ($disk, $cleanPath) {
+                    echo $disk->get($cleanPath);
+                },
+                200,
+                [
+                    'Content-Type' => $mime,
+                    'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                ]
+            );
+        }
+
+        // Si rien n'a fonctionné
+        abort(404, 'File not found');
     }
 }
