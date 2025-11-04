@@ -275,6 +275,6 @@ class S3Helper
             ]);
         }
 
-        abort(404, 'Invalid file path');
+        dd('rin');
     }
 }
