@@ -19,6 +19,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\Storage;
 
 class ForumController extends Controller
 {
@@ -277,7 +280,7 @@ class ForumController extends Controller
 
     public function createTopic(Request $request)
     {
-        try{
+        try {
             $user = auth()->user();
 
             if (empty($user)) {
@@ -301,8 +304,8 @@ class ForumController extends Controller
             ];
 
             return view('web.default.forum.create_topic', $data);
-        }catch(\Exception $e){
-            Log::info('error',['data'=>$e->getMessage()]);
+        } catch (\Exception $e) {
+            Log::info('error', ['data' => $e->getMessage()]);
         }
     }
 
@@ -431,7 +434,6 @@ class ForumController extends Controller
             }
 
             abort(403);
-
         } catch (\Illuminate\Http\Client\RequestException $e) {
             // Log the timeout error specifically
             if ($e->getCode() == 504) {
@@ -646,28 +648,57 @@ class ForumController extends Controller
             $topic = ForumTopic::where('slug', $topicSlug)
                 ->where('forum_id', $forum->id)
                 ->first();
-                
+
             if (!empty($topic)) {
                 $attachment = ForumTopicAttachment::where('id', $attachmentId)
                     ->where('topic_id', $topic->id)
                     ->first();
-                    dd($attachment);
+
+                // if (!empty($attachment)) {
+                //     $filePath = public_path($attachment->path);
+
+                //     if (file_exists($filePath)) {
+                //         $fileInfo = pathinfo($filePath);
+                //         $type = (!empty($fileInfo) and !empty($fileInfo['extension'])) ? $fileInfo['extension'] : '';
+
+                //         $fileName = str_replace(' ', '-', "attachment-{$attachment->id}");
+                //         $fileName = str_replace('.', '-', $fileName);
+                //         $fileName .= '.' . $type;
+
+                //         $headers = array(
+                //             'Content-Type: application/' . $type,
+                //         );
+
+                //         return response()->download($filePath, $fileName, $headers);
+                //     }
+                // }
                 if (!empty($attachment)) {
-                    $filePath = public_path($attachment->path);
+                    $disk = Storage::disk('s3');
+                    $path = $attachment->path;
 
-                    if (file_exists($filePath)) {
-                        $fileInfo = pathinfo($filePath);
-                        $type = (!empty($fileInfo) and !empty($fileInfo['extension'])) ? $fileInfo['extension'] : '';
+                    // Si c’est une URL complète → on la nettoie
+                    if (Str::startsWith($path, ['http://', 'https://'])) {
+                        $awsBase = rtrim(config('filesystems.disks.s3.url'), '/');
+                        $path = Str::after($path, $awsBase . '/');
 
-                        $fileName = str_replace(' ', '-', "attachment-{$attachment->id}");
-                        $fileName = str_replace('.', '-', $fileName);
-                        $fileName .= '.' . $type;
+                        // Si un root est défini dans ta config, on s'assure de le retirer aussi
+                        $root = trim(config('filesystems.disks.s3.root', ''), '/');
+                        if ($root && Str::startsWith($path, $root . '/')) {
+                            $path = Str::after($path, $root . '/');
+                        }
+                    }
 
-                        $headers = array(
-                            'Content-Type: application/' . $type,
-                        );
+                    if ($disk->exists($path)) {
+                        $extension = pathinfo($path, PATHINFO_EXTENSION);
+                        $fileName = Str::slug("attachment-{$attachment->id}") . ($extension ? ".{$extension}" : '');
+                        $mime = $disk->mimeType($path) ?? 'application/octet-stream';
 
-                        return response()->download($filePath, $fileName, $headers);
+                        return new StreamedResponse(function () use ($disk, $path) {
+                            echo $disk->get($path);
+                        }, 200, [
+                            'Content-Type' => $mime,
+                            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                        ]);
                     }
                 }
             }
