@@ -706,7 +706,7 @@ class ForumController extends Controller
                 //     abort(404);
                 // }
 
-                  if (!empty($post)) {
+                  if (!empty($attachment)) {
                     $fileName = Str::slug("attachment-{$attachment->id}");
                     return \App\Helpers\S3Helper::downloadFile($attachment->path, $fileName);
                 } else {
