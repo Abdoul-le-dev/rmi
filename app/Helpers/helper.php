@@ -2672,10 +2672,10 @@ function updateImagePaths($htmlContent)
         $beforeSrc = $matches[1];
         $src = $matches[2];
         $afterSrc = $matches[3];
-        dd($src);
+       
         // Générer l'URL appropriée avec le helper
         $newSrc = \App\Helpers\S3Helper::getUrl($src);
-        
+         dd($newSrc);
         // Si le helper retourne null, garder l'URL originale
         if ($newSrc === null) {
             return $matches[0];
