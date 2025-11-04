@@ -653,7 +653,7 @@ class ForumController extends Controller
                 $attachment = ForumTopicAttachment::where('id', $attachmentId)
                     ->where('topic_id', $topic->id)
                     ->first();
-               
+                dd($attachment);
                 // if (!empty($attachment)) {
                 //     $filePath = public_path($attachment->path);
 
