@@ -142,7 +142,8 @@
                                         <td class="text-left align-middle">
                                             <div class="user-inline-avatar d-flex align-items-center">
                                                 <div class="avatar bg-gray200">
-                                                    <img src="{{ $topic->forum->icon }}" class="img-cover" alt="">
+                                                    {{-- <img src="{{ $topic->forum->icon }}" class="img-cover" alt=""> --}}
+                                                    <img src=" {{ \App\Helpers\S3Helper::getTemporaryUrl($topic->forum->icon ) }}" class="img-cover" alt="">
                                                 </div>
                                                 <a href="{{ $topic->getPostsUrl() }}" target="_blank" class="">
                                                     <div class=" ml-5">
