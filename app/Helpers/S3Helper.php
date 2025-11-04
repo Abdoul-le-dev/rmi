@@ -23,7 +23,7 @@ class S3Helper
 
         // Normaliser le chemin S3
         $relativePath = self::normalizeS3Path($path);
-        
+
         if (empty($relativePath)) {
             return null;
         }
@@ -63,9 +63,9 @@ class S3Helper
         // 1. Commence par /store, /storage, /public, etc.
         // 2. Ne contient pas amazonaws.com
         // 3. Commence par / mais n'est pas une URL S3
-        
+
         $localPrefixes = ['/store', '/storage', '/public', '/uploads'];
-        
+
         foreach ($localPrefixes as $prefix) {
             if (Str::startsWith($path, $prefix)) {
                 return true;
@@ -104,13 +104,13 @@ class S3Helper
         $patterns = [
             // Format 1: https://bucket.s3.region.amazonaws.com/bucket-root/path
             "#https?://{$bucket}\.s3\.[^/]+\.amazonaws\.com/(.+)$#",
-            
+
             // Format 2: https://s3.region.amazonaws.com/bucket/bucket-root/path
             "#https?://s3\.[^/]+\.amazonaws\.com/{$bucket}/(.+)$#",
-            
+
             // Format 3: https://bucket.s3.amazonaws.com/bucket-root/path
             "#https?://{$bucket}\.s3\.amazonaws\.com/(.+)$#",
-            
+
             // Format générique: tout après amazonaws.com/
             "#amazonaws\.com/(.+)$#",
         ];
@@ -130,7 +130,7 @@ class S3Helper
             $parsedUrl = parse_url($path);
             if (isset($parsedUrl['path'])) {
                 $relativePath = ltrim($parsedUrl['path'], '/');
-                
+
                 // Enlever le nom du bucket s'il est présent au début du path
                 if (Str::startsWith($relativePath, $bucket . '/')) {
                     $relativePath = Str::after($relativePath, $bucket . '/');
@@ -160,8 +160,8 @@ class S3Helper
             return false;
         }
 
-        return Str::contains($path, 'amazonaws.com') || 
-               Str::contains($path, 's3.');
+        return Str::contains($path, 'amazonaws.com') ||
+            Str::contains($path, 's3.');
     }
 
     /**
@@ -216,5 +216,65 @@ class S3Helper
 
         // Sinon, considérer comme S3
         return self::getTemporaryUrl($path, $expiration);
+    }
+
+    // app/Helpers/S3Helper.php
+
+    /**
+     * Télécharge un fichier (S3 ou local)
+     * 
+     * @param string $path
+     * @param string $fileName
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public static function downloadFile($path, $fileName = null)
+    {
+        if (empty($path)) {
+            abort(404, 'File path is empty');
+        }
+
+        // Fichier S3
+        if (self::isS3Path($path)) {
+            $relativePath = self::normalizeS3Path($path);
+            $disk = Storage::disk('s3');
+
+            if (!$disk->exists($relativePath)) {
+                abort(404, 'File not found on S3');
+            }
+
+            $extension = pathinfo($relativePath, PATHINFO_EXTENSION);
+            $fileName = $fileName ?? ('file' . ($extension ? ".{$extension}" : ''));
+            $mime = $disk->mimeType($relativePath) ?? 'application/octet-stream';
+
+            return new \Symfony\Component\HttpFoundation\StreamedResponse(
+                function () use ($disk, $relativePath) {
+                    echo $disk->get($relativePath);
+                },
+                200,
+                [
+                    'Content-Type' => $mime,
+                    'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                ]
+            );
+        }
+
+        // Fichier local
+        if (self::isLocalPath($path)) {
+            $fullPath = public_path($path);
+
+            if (!file_exists($fullPath)) {
+                abort(404, 'File not found locally');
+            }
+
+            $extension = pathinfo($fullPath, PATHINFO_EXTENSION);
+            $fileName = $fileName ?? ('file' . ($extension ? ".{$extension}" : ''));
+            $mime = mime_content_type($fullPath) ?? 'application/octet-stream';
+
+            return response()->download($fullPath, $fileName, [
+                'Content-Type' => $mime,
+            ]);
+        }
+
+        abort(404, 'Invalid file path');
     }
 }

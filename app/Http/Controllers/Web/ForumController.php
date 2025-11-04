@@ -643,17 +643,17 @@ class ForumController extends Controller
         $forum = Forum::where('slug', $forumSlug)
             ->where('status', 'active')
             ->first();
-         
+
         if (!empty($forum)) {
             $topic = ForumTopic::where('slug', $topicSlug)
                 ->where('forum_id', $forum->id)
                 ->first();
-           
+
             if (!empty($topic)) {
                 $attachment = ForumTopicAttachment::where('id', $attachmentId)
                     ->where('topic_id', $topic->id)
                     ->first();
-                
+
                 // if (!empty($attachment)) {
                 //     $filePath = public_path($attachment->path);
 
@@ -675,7 +675,7 @@ class ForumController extends Controller
                 if (!empty($attachment)) {
                     $disk = Storage::disk('s3');
                     $path = $attachment->path;
-   
+
                     // Si c’est une URL complète  on la nettoie
                     if (Str::startsWith($path, ['http://', 'https://'])) {
                         $awsBase = rtrim(config('filesystems.disks.s3.url'), '/');
@@ -699,11 +699,10 @@ class ForumController extends Controller
                             'Content-Type' => $mime,
                             'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
                         ]);
-                    }else {
+                    } else {
                         abort(404);
                     }
-                    
-                }else {
+                } else {
                     abort(404);
                 }
             }
@@ -1090,7 +1089,7 @@ class ForumController extends Controller
                 $post = ForumTopicPost::where('id', $postId)
                     ->where('topic_id', $topic->id)
                     ->first();
-                 dd($post);
+                dd($post);
 
                 // if (!empty($post)) {
                 //     $filePath = public_path($post->attach);
@@ -1112,38 +1111,10 @@ class ForumController extends Controller
                 // }
 
                 if (!empty($post)) {
-                    $disk = Storage::disk('s3');
-                    $path = $post->attach;
-   
-                    // Si c’est une URL complète  on la nettoie
-                    if (Str::startsWith($path, ['http://', 'https://'])) {
-                        $awsBase = rtrim(config('filesystems.disks.s3.url'), '/');
-                        $path = Str::after($path, $awsBase . '/');
-
-                        // Si un root est défini dans ta config, on s'assure de le retirer aussi
-                        $root = trim(config('filesystems.disks.s3.root', ''), '/');
-                        if ($root && Str::startsWith($path, $root . '/')) {
-                            $path = Str::after($path, $root . '/');
-                        }
-                    }
-
-                    if ($disk->exists($path)) {
-                        $extension = pathinfo($path, PATHINFO_EXTENSION);
-                        $fileName = Str::slug("attachment-{$attachment->id}") . ($extension ? ".{$extension}" : '');
-                        $mime = $disk->mimeType($path) ?? 'application/octet-stream';
-
-                        return new StreamedResponse(function () use ($disk, $path) {
-                            echo $disk->get($path);
-                        }, 200, [
-                            'Content-Type' => $mime,
-                            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
-                        ]);
-                    }else {
-                        abort(404);
-                    }
-                    
-                }else {
-                    abort(404);
+                    $fileName = Str::slug("attachment-{$attachment->id}");
+                    return \App\Helpers\S3Helper::downloadFile($post->attach, $fileName);
+                } else {
+                    abort(404, 'Post not found');
                 }
             }
         }
