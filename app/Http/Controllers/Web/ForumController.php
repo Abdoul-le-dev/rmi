@@ -653,7 +653,7 @@ class ForumController extends Controller
                 $attachment = ForumTopicAttachment::where('id', $attachmentId)
                     ->where('topic_id', $topic->id)
                     ->first();
-
+                dd($attachment);
                 // if (!empty($attachment)) {
                 //     $filePath = public_path($attachment->path);
 
@@ -675,7 +675,7 @@ class ForumController extends Controller
                 if (!empty($attachment)) {
                     $disk = Storage::disk('s3');
                     $path = $attachment->path;
-
+   
                     // Si c’est une URL complète  on la nettoie
                     if (Str::startsWith($path, ['http://', 'https://'])) {
                         $awsBase = rtrim(config('filesystems.disks.s3.url'), '/');
