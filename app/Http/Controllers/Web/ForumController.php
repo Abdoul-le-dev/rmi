@@ -643,12 +643,12 @@ class ForumController extends Controller
         $forum = Forum::where('slug', $forumSlug)
             ->where('status', 'active')
             ->first();
-
+         dd($forum);
         if (!empty($forum)) {
             $topic = ForumTopic::where('slug', $topicSlug)
                 ->where('forum_id', $forum->id)
                 ->first();
-            dd($topic);
+           
             if (!empty($topic)) {
                 $attachment = ForumTopicAttachment::where('id', $attachmentId)
                     ->where('topic_id', $topic->id)
