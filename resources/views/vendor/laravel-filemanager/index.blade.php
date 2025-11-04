@@ -210,36 +210,36 @@
         label: lang['menu-rename'],
         multiple: false
       },
-      {
-        name: 'download',
-        icon: 'download',
-        label: lang['menu-download'],
-        multiple: true
-      },
+      // {
+      //   name: 'download',
+      //   icon: 'download',
+      //   label: lang['menu-download'],
+      //   multiple: true
+      // },
       // {
       //   name: 'preview',
       //   icon: 'image',
       //   label: lang['menu-view'],
       //   multiple: true
       // },
-      {
-        name: 'move',
-        icon: 'paste',
-        label: lang['menu-move'],
-        multiple: true
-      },
-      {
-        name: 'resize',
-        icon: 'arrows-alt',
-        label: lang['menu-resize'],
-        multiple: false
-      },
-      {
-        name: 'crop',
-        icon: 'crop',
-        label: lang['menu-crop'],
-        multiple: false
-      },
+      // {
+      //   name: 'move',
+      //   icon: 'paste',
+      //   label: lang['menu-move'],
+      //   multiple: true
+      // },
+      // {
+      //   name: 'resize',
+      //   icon: 'arrows-alt',
+      //   label: lang['menu-resize'],
+      //   multiple: false
+      // },
+      // {
+      //   name: 'crop',
+      //   icon: 'crop',
+      //   label: lang['menu-crop'],
+      //   multiple: false
+      // },
       {
         name: 'trash',
         icon: 'trash',
