@@ -182,7 +182,8 @@
                         @endif
 
                         <div class="plan-icon">
-                            <img src="{{ $subscribe->icon }}" class="img-cover" alt="">
+                            <img src="{{ \App\Helpers\S3Helper::getTemporaryUrl($subscribe->icon) }}" class="img-cover" alt="">
+                            {{-- <img src="{{ $subscribe->icon }}" class="img-cover" alt=""> --}}
                         </div>
 
                         <h3 class="mt-20 font-30 text-secondary">{{ $subscribe->title }}</h3>
