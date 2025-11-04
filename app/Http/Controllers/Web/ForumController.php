@@ -1090,6 +1090,7 @@ class ForumController extends Controller
                 $post = ForumTopicPost::where('id', $postId)
                     ->where('topic_id', $topic->id)
                     ->first();
+                 dd($post);
 
                 // if (!empty($post)) {
                 //     $filePath = public_path($post->attach);
