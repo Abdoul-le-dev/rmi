@@ -88,7 +88,8 @@ class Product extends Model implements TranslatableContract
 
     public function getImage()
     {
-        return $this->thumbnail;
+        // return $this->thumbnail;
+         return \App\Helpers\S3Helper::getTemporaryUrl($this->thumbnail);
     }
 
 
