@@ -743,12 +743,14 @@ class Webinar extends Model implements TranslatableContract
 
     public function getImageCover()
     {
-        return $this->image_cover;
+        // return $this->image_cover;
+         return \App\Helpers\S3Helper::getTemporaryUrl($this->image_cover);
     }
 
     public function getImage()
     {
-        return $this->thumbnail;
+        // return $this->thumbnail;
+        return \App\Helpers\S3Helper::getTemporaryUrl($this->thumbnail);
     }
 
     public function getUrl()
