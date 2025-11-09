@@ -48,6 +48,16 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             Route::get('/admin/users-with-webinar-only/export', 'DashboardController@exportUsersWithWebinarOnly')->name('users_with_webinar_only.export');
         });
 
+        // teams add
+
+        Route::group(['prefix' => 'suscriber'], function () {
+            Route::get('/', 'DashboardController@suscriber_index');
+            
+        
+        });
+
+        //teams end
+
         Route::group(['prefix' => 'roles'], function () {
             Route::get('/', 'RoleController@index');
             Route::get('/create', 'RoleController@create');

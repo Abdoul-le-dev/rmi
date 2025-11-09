@@ -621,4 +621,9 @@ public function indexs()
     {
         return Excel::download(new UsersWithWebinarOnlyExport, 'users_with_webinar_only.xlsx');
     }
+
+    public function suscriber_index()
+    {
+        return view('admin/teams/suscriber');
+    }
 }

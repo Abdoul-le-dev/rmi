@@ -35,6 +35,9 @@
 
         {!! getThemeColorsSettings(true) !!}
     </style>
+
+    <!-- team-->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body class="@if($isRtl) rtl @endif">
 {{-- <body class=""> --}}

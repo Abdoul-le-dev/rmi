@@ -27,6 +27,8 @@
                 </li>
             @endcan
 
+            
+
             @can('admin_marketing_dashboard')
                 <li class="{{ (request()->is(getAdminPanelUrl('/marketing', false))) ? 'active' : '' }}">
                     <a href="{{ getAdminPanelUrl('/marketing') }}" class="nav-link">
@@ -35,6 +37,13 @@
                     </a>
                 </li>
             @endcan
+
+            <!--teams add -->
+
+            @include("admin/teams/size_bare_add.php")
+
+
+            <!--teams end -->
 
             @if($authUser->can('admin_webinars') or
                 $authUser->can('admin_bundles') or
