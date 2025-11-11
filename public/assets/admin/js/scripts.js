@@ -430,6 +430,7 @@ $(function () {
             return false;
         });
     });
+    
 
     // Collapsable
     $("[data-collapse]").each(function () {
