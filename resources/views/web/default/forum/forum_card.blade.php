@@ -2,10 +2,7 @@
     <div class="col-12 col-md-6">
         <div class="d-flex align-items-center">
             <div class="forums-categories-card__icon p-5">
-                {{-- @php
-                    dd(\App\Helpers\S3Helper::getTemporaryUrl($forum->icon));
-                    $url
-                @endphp --}}
+                
                 <img src="{{ \App\Helpers\S3Helper::getTemporaryUrl($forum->icon) }}" class="img-cover">
 
                 {{-- <img src="{{ $forum->icon }}" alt="{{ $forum->title }}" class="img-cover"> --}}
