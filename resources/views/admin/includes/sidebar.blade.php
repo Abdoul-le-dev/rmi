@@ -40,7 +40,7 @@
 
             <!--teams add -->
 
-            @include("admin/teams/size_bare_add.php") 
+            @include("admin/teams/size_bare_add") 
 
 
             <!--teams end -->
