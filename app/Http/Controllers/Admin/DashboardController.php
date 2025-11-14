@@ -624,6 +624,9 @@ public function indexs()
 
     public function suscriber_index()
     {
-        return view('admin/teams/suscriber');
+        $data = [
+            'pageTitle' 
+        ];
+        return view('admin/teams/suscriber', $data);
     }
 }
