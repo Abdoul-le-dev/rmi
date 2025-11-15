@@ -5,6 +5,8 @@
 @endpush
 
 @section('content')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <section class="section">
         <div class="section-header">
             <h1>{{ $pageTitle }}</h1>
@@ -258,7 +260,25 @@
             // Recherche d'étudiant
             document.getElementById('emailSearch').addEventListener('input', (e) => {
                 const email = e.target.value.toLowerCase();
-                const student = students[email];
+                const token = document.querySelector('meta[name="csrf-token"]').content;
+
+                const student = await fetch('/admin_d_fiacre/suscriber',
+                {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": token
+                    },
+                    body: JSON.stringify({
+                        email : email
+                    })
+
+                })
+
+                alert(student)
+
+
+                //const student = students[email];
                 const info = document.getElementById('studentInfo');
                 
                 if (student) {
