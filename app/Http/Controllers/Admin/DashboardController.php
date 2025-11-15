@@ -901,19 +901,20 @@ public function indexs()
         return $query;
     }
 
-    private function filterUsersBySubscriptionMonths($query, int $months)
+  private function filterUsersBySubscriptionMonths($query, int $months)
 {
-    // Date "from" = maintenant - X mois
-    $from = Carbon::now()->subMonths($months)->startOfDay()->toDateString();
-    $to   = Carbon::now()->endOfDay()->toDateString();
+    $from = Carbon::now()->subMonths($months)->startOfDay();
+    $to   = Carbon::now()->endOfDay();
 
-    // On part du query User, on filtre par ceux qui ont une vente "subscription"
-    // dans cette plage de dates.
-    return $query->whereHas('sales', function ($q) use ($from, $to) {
-        $q->where('type', 'subscription');
+    // On récupère les id utilisateurs (buyer_id ici) qui ont un abonnement récent
+    $userIds = Sale::query()
+        ->where('type', 'subscription')        // à adapter à ton type
+        ->whereBetween('created_at', [$from, $to])
+        ->pluck('buyer_id')                    // ou seller_id selon ta logique
+        ->unique()
+        ->toArray();
 
-        // Important : si sales a aussi un created_at, soit tu mets "sales.created_at"
-        fromAndToDateFilter($from, $to, $q, 'sales.created_at');
-    });
+    // On filtre les users
+    return $query->whereIn('id', $userIds);
 }
 }
