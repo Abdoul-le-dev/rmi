@@ -320,9 +320,9 @@
                     // Adapte ici si ta réponse n'est pas exactement { user: { data: [...] } }
                     const student = json?.user?.data?.[0] ?? null;
 
-                    alert(student);
+                    
                     // Juste pour debug si tu veux
-                    // alert(JSON.stringify(student, null, 2));
+                    alert(JSON.stringify(student, null, 2));
 
                     if (student) {
                         // Construire un nom propre
