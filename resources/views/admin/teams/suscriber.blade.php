@@ -260,7 +260,7 @@
             });
 
             // Recherche d'étudiant
-            document.getElementById('emailSearch').addEventListener('input', (e) => {
+            document.getElementById('emailSearch').addEventListener('input', async(e) => {
                 const email = e.target.value.toLowerCase();
                 console.log('yes');
                 const token = document.querySelector('meta[name="csrf-token"]').content;
@@ -330,7 +330,7 @@
                 updateAddButton();
             });
 
-            document.getElementById('searchbtn').addEventListener('click',()=>
+            document.getElementById('searchbtn').addEventListener('click',async()=>
             {
                 alert('yes');
                 const student = await fetch('/admin_d_fiacre/suscriber',
