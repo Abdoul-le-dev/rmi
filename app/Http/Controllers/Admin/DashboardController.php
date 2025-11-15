@@ -634,7 +634,7 @@ public function indexs()
 
     public function suscriber_search(Request $request)
     {
-        dd($request);
+        //dd($request);
         $this->authorize('admin_users_list');
         $query = User::where('role_name', Role::$user);
         $query = $this->filters($query, $request);
