@@ -634,6 +634,31 @@ public function indexs()
         return view('admin/teams/suscriber', $data);
     }
 
+    public function subscribedUsers(Request $request)
+    {
+    $this->authorize('admin_users_list');
+
+    // On récupère le param `month` envoyé (1, 2, 3, ...)
+    $months = (int) $request->get('month', 1); // par défaut 1 mois
+
+    // Base : tous les users "user"
+    $query = User::where('role_name', Role::$user);
+
+    // Appliquer les filtres existants (from/to, email, mobile, etc.)
+    $query = $this->filters($query, $request);
+
+    // Appliquer notre filtre "moins de X mois d'abonnement"
+    $query = $this->filterUsersBySubscriptionMonths($query, $months);
+
+    // Paginer ou récupérer tout
+    $users = $query->orderBy('created_at', 'desc')->paginate(10);
+
+    return response()->json([
+        'users' => $users,
+    ]);
+    }
+
+
     public function suscriber_search(Request $request)
     {
         //dd($request);
@@ -875,4 +900,20 @@ public function indexs()
         //dd($query->get());
         return $query;
     }
+
+    private function filterUsersBySubscriptionMonths($query, int $months)
+{
+    // Date "from" = maintenant - X mois
+    $from = Carbon::now()->subMonths($months)->startOfDay()->toDateString();
+    $to   = Carbon::now()->endOfDay()->toDateString();
+
+    // On part du query User, on filtre par ceux qui ont une vente "subscription"
+    // dans cette plage de dates.
+    return $query->whereHas('sales', function ($q) use ($from, $to) {
+        $q->where('type', 'subscription');
+
+        // Important : si sales a aussi un created_at, soit tu mets "sales.created_at"
+        fromAndToDateFilter($from, $to, $q, 'sales.created_at');
+    });
+}
 }
