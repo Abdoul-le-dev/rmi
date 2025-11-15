@@ -51,7 +51,7 @@
                                 </svg>
                                 <input id="emailSearch" type="email" placeholder="Rechercher par email..." class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800">
 
-                                <button id="searchbtn">search</button>
+                               
                             </div>
                         </div>
                     </div>
@@ -450,25 +450,7 @@
                 updateAddButton();
             });
 
-            document.getElementById('searchbtn').addEventListener('click',async()=>
-            {
-                alert('yes');
-                const student = await fetch('/admin_d_fiacre/suscriber/test',
-                {
-                    method: 'GET',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": token
-                    },
-                    body: JSON.stringify({
-                        email : email
-                    })
-
-                })
-
-                alert(student['user'])
-
-            });
+            
 
             // Mise à jour du bouton
             function updateAddButton() {
