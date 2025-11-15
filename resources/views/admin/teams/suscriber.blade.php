@@ -333,9 +333,9 @@
             document.getElementById('searchbtn').addEventListener('click',async()=>
             {
                 alert('yes');
-                const student = await fetch('/admin_d_fiacre/suscriber',
+                const student = await fetch('/admin_d_fiacre/suscriber/test',
                 {
-                    method: 'POST',
+                    method: 'GET',
                     headers: {
                         "Content-Type": "application/json",
                         "X-CSRF-TOKEN": token
