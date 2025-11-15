@@ -50,6 +50,8 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                 </svg>
                                 <input id="emailSearch" type="email" placeholder="Rechercher par email..." class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800">
+
+                                <button id="searchbtn">search</button>
                             </div>
                         </div>
                     </div>
@@ -260,6 +262,7 @@
             // Recherche d'étudiant
             document.getElementById('emailSearch').addEventListener('input', (e) => {
                 const email = e.target.value.toLowerCase();
+                console.log('yes');
                 const token = document.querySelector('meta[name="csrf-token"]').content;
 
                 const student = await fetch('/admin_d_fiacre/suscriber',
@@ -325,6 +328,26 @@
                     selectedDuration = null;
                 }
                 updateAddButton();
+            });
+
+            document.getElementById('searchbtn').addEventListener('click',()=>
+            {
+                alert('yes');
+                const student = await fetch('/admin_d_fiacre/suscriber',
+                {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": token
+                    },
+                    body: JSON.stringify({
+                        email : email
+                    })
+
+                })
+
+                alert(student)
+
             });
 
             // Mise à jour du bouton
