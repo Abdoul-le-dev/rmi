@@ -287,37 +287,44 @@
                 });
             });
 
+            // Élément global de la fiche étudiant
+            const info = document.getElementById('studentInfo');
+            let currentStudent = null;
+
             // Recherche d'étudiant
-            document.getElementById('emailSearch').addEventListener('input', async(e) => {
-                const email = e.target.value.toLowerCase();
-                console.log('yes');
+            document.getElementById('emailSearch').addEventListener('input', async (e) => {
+                const email = e.target.value.toLowerCase().trim();
+
+                // Si l'input est vide, on cache la fiche
+                if (!email) {
+                    info.classList.add('hidden');
+                    currentStudent = null;
+                    updateAddButton();
+                    return;
+                }
+
                 const token = document.querySelector('meta[name="csrf-token"]').content;
 
-                try{
-                    const response = await fetch('/admin_d_fiacre/suscriber',
-                    {
+                try {
+                    const response = await fetch('/admin_d_fiacre/suscriber', {
                         method: 'POST',
                         headers: {
                             "Content-Type": "application/json",
                             "X-CSRF-TOKEN": token
                         },
-                        body: JSON.stringify({
-                            email : email
-                        })
-
-                    })
-
-                    alert(student)
+                        body: JSON.stringify({ email })
+                    });
 
                     const json = await response.json();
 
                     // Adapte ici si ta réponse n'est pas exactement { user: { data: [...] } }
                     const student = json?.user?.data?.[0] ?? null;
-                
-                    const info = document.getElementById('studentInfo');
+
+                    // Juste pour debug si tu veux
+                    // alert(JSON.stringify(student, null, 2));
 
                     if (student) {
-                        // Construire un objet "propre"
+                        // Construire un nom propre
                         const displayNameRaw = (student.full_name && student.full_name.trim()) || '';
                         const displayName = displayNameRaw || student.email || `Utilisateur #${student.id}`;
 
@@ -334,7 +341,7 @@
                         const avatarEl = document.getElementById('studentAvatar');
                         avatarEl.textContent = initials || '?';
 
-                    // Si tu veux utiliser avatar_settings pour la couleur de fond :
+                        // Couleurs de l’avatar si disponible
                         if (student.avatar_settings) {
                             try {
                                 const avatarSettings = JSON.parse(student.avatar_settings);
@@ -344,12 +351,12 @@
                                 if (avatarSettings.color) {
                                     avatarEl.style.color = `#${avatarSettings.color}`;
                                 }
-                            } catch (e) {
-                                console.warn('avatar_settings invalide', e);
+                            } catch (err) {
+                                console.warn('avatar_settings invalide', err);
                             }
                         }
 
-                        // Remplissage des champs
+                        // Remplissage des champs texte
                         document.getElementById('studentName').textContent = displayName;
                         document.getElementById('studentEmail').textContent = student.email || '-';
 
@@ -365,16 +372,16 @@
                         document.getElementById('studentTimezone').textContent =
                             `Fuseau horaire: ${student.timezone || '-'}`;
 
-                        // created_at est visiblement un timestamp (en secondes)
+                        // Date d'inscription
                         const createdAtEl = document.getElementById('studentCreatedAt');
                         if (student.created_at) {
-                            const date = new Date(student.created_at * 1000);
+                            const date = new Date(student.created_at * 1000); // timestamp en secondes
                             createdAtEl.textContent = `Inscrit le: ${date.toLocaleDateString('fr-FR')}`;
                         } else {
                             createdAtEl.textContent = 'Inscrit le: -';
                         }
 
-                        // Si un jour tu ajoutes ces infos côté backend :
+                        // Gestion abonnement si dispo
                         const currentSubEl = document.getElementById('currentSub');
                         const expiryInfoEl = document.getElementById('expiryInfo');
 
@@ -392,33 +399,24 @@
                             expiryInfoEl.classList.add('hidden');
                         }
 
-                        info.classList.remove('hidden');
-                    } 
+                        // Stocker l’étudiant actuel pour d’autres actions (bouton "ajouter")
+                        currentStudent = { email, ...student };
 
-                    else 
-                    {
+                        info.classList.remove('hidden');
+                    } else {
                         info.classList.add('hidden');
+                        currentStudent = null;
                     }
                 } catch (error) {
                     console.error('Erreur lors de la récupération du student', error);
                     info.classList.add('hidden');
-                }
-                
-                if (student) {
-                    currentStudent = { email, ...student };
-                    const initials = student.name.split(' ').map(n => n[0]).join('');
-                    document.getElementById('studentAvatar').textContent = initials;
-                    document.getElementById('studentName').textContent = student.name;
-                    document.getElementById('studentEmail').textContent = email;
-                    document.getElementById('currentSub').textContent = `Abonnement actuel: ${student.currentSub}`;
-                    document.getElementById('expiryInfo').textContent = `Expire dans ${student.expiry} jours`;
-                    info.classList.remove('hidden');
-                } else {
-                    info.classList.add('hidden');
                     currentStudent = null;
                 }
+
+                // Mise à jour de ton bouton (ou autre logique)
                 updateAddButton();
             });
+
 
             // Sélection de durée
             document.querySelectorAll('.duration-btn').forEach(btn => {
