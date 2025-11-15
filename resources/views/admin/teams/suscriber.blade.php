@@ -111,12 +111,7 @@
                                     <div class="text-sm mt-1 text-gray-600">jours</div>
                                 </div>
                             </button>
-                            <button class="duration-btn p-6 rounded-xl border-2 border-gray-200 hover:border-indigo-300 bg-white transition-all" data-days="60">
-                                <div class="text-center">
-                                    <div class="text-3xl font-bold text-gray-800">60</div>
-                                    <div class="text-sm mt-1 text-gray-600">jours</div>
-                                </div>
-                            </button>
+                            
                             <button class="duration-btn p-6 rounded-xl border-2 border-gray-200 hover:border-indigo-300 bg-white transition-all" data-days="90">
                                 <div class="text-center">
                                     <div class="text-3xl font-bold text-gray-800">90</div>
@@ -156,9 +151,7 @@
                             <h3 class="text-sm font-medium text-gray-700">Filtrer par abonnement actuel</h3>
                         </div>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                            <button class="filter-btn active px-4 py-3 rounded-lg border-2 border-indigo-600 bg-indigo-50 text-indigo-700 font-medium text-sm transition" data-filter="all">
-                                Tous les étudiants
-                            </button>
+                           
                             <button class="filter-btn px-4 py-3 rounded-lg border-2 border-gray-200 bg-white text-gray-700 font-medium text-sm hover:border-gray-300 transition" data-filter="1">
                                 Abonnés 1 mois
                             </button>
@@ -177,9 +170,6 @@
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                             <button class="bulk-duration-btn px-4 py-3 rounded-lg border-2 border-gray-200 bg-white text-gray-700 font-medium text-sm hover:border-gray-300 transition" data-days="30">
                                 30 jours
-                            </button>
-                            <button class="bulk-duration-btn px-4 py-3 rounded-lg border-2 border-gray-200 bg-white text-gray-700 font-medium text-sm hover:border-gray-300 transition" data-days="60">
-                                60 jours
                             </button>
                             <button class="bulk-duration-btn px-4 py-3 rounded-lg border-2 border-gray-200 bg-white text-gray-700 font-medium text-sm hover:border-gray-300 transition" data-days="90">
                                 90 jours
