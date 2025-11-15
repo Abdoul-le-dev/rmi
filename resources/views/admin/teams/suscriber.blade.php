@@ -56,18 +56,46 @@
                         </div>
                     </div>
 
-                    <!-- Info étudiant trouvé -->
+                   <!-- Info étudiant trouvé -->
                     <div id="studentInfo" class="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg p-6 border border-indigo-200 hidden">
                         <div class="flex items-center gap-4">
+                            <!-- Avatar -->
                             <div id="studentAvatar" class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-blue-500 rounded-full flex items-center justify-center text-white text-xl font-bold">
-                                JD
+                                ?
                             </div>
+
                             <div class="flex-1">
-                                <h3 id="studentName" class="font-bold text-gray-900 text-lg">Jean Dupont</h3>
-                                <p id="studentEmail" class="text-sm text-gray-600">jean.dupont@email.com</p>
-                                <div class="flex items-center gap-4 mt-2">
-                                    <span id="currentSub" class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-medium">Abonnement actuel: 1 mois</span>
-                                    <span id="expiryInfo" class="text-xs text-gray-500">Expire dans 15 jours</span>
+                                <!-- Nom + email -->
+                                <h3 id="studentName" class="font-bold text-gray-900 text-lg">Utilisateur inconnu</h3>
+                                <p id="studentEmail" class="text-sm text-gray-600">email@example.com</p>
+
+                                <!-- Ligne 1 : rôle, statut, connexions -->
+                                <div class="flex flex-wrap items-center gap-2 mt-2">
+                                    <span id="studentRole" class="text-xs bg-slate-100 text-slate-700 px-3 py-1 rounded-full font-medium">
+                                        Rôle: user
+                                    </span>
+                                    <span id="studentStatus" class="text-xs bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium">
+                                        Statut: Actif
+                                    </span>
+                                    <span id="studentLogins" class="text-xs text-gray-500">
+                                        Connexions: 0
+                                    </span>
+                                </div>
+
+                                <!-- Ligne 2 : fuseau horaire, date de création -->
+                                <div class="flex flex-wrap items-center gap-2 mt-2 text-xs text-gray-500">
+                                    <span id="studentTimezone">Fuseau horaire: -</span>
+                                    <span id="studentCreatedAt">Inscrit le: -</span>
+                                </div>
+
+                                <!-- Ligne 3 : abonnement (si tu veux garder l’idée) -->
+                                <div class="flex flex-wrap items-center gap-2 mt-2">
+                                    <span id="currentSub" class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-medium hidden">
+                                        Abonnement actuel: -
+                                    </span>
+                                    <span id="expiryInfo" class="text-xs text-gray-500 hidden">
+                                        Expire dans - jours
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -265,24 +293,116 @@
                 console.log('yes');
                 const token = document.querySelector('meta[name="csrf-token"]').content;
 
-                const student = await fetch('/admin_d_fiacre/suscriber',
-                {
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": token
-                    },
-                    body: JSON.stringify({
-                        email : email
+                try{
+                    const response = await fetch('/admin_d_fiacre/suscriber',
+                    {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": token
+                        },
+                        body: JSON.stringify({
+                            email : email
+                        })
+
                     })
 
-                })
+                    alert(student)
 
-                alert(student)
+                    const json = await response.json();
 
+                    // Adapte ici si ta réponse n'est pas exactement { user: { data: [...] } }
+                    const student = json?.user?.data?.[0] ?? null;
+                
+                    const info = document.getElementById('studentInfo');
 
-                //const student = students[email];
-                const info = document.getElementById('studentInfo');
+                    if (student) {
+                        // Construire un objet "propre"
+                        const displayNameRaw = (student.full_name && student.full_name.trim()) || '';
+                        const displayName = displayNameRaw || student.email || `Utilisateur #${student.id}`;
+
+                        // Initiales (évite l'erreur split sur undefined)
+                        const initials = displayName
+                            .trim()
+                            .split(/\s+/)
+                            .map(part => part[0])
+                            .join('')
+                            .slice(0, 2)
+                            .toUpperCase();
+
+                        // Avatar
+                        const avatarEl = document.getElementById('studentAvatar');
+                        avatarEl.textContent = initials || '?';
+
+                    // Si tu veux utiliser avatar_settings pour la couleur de fond :
+                        if (student.avatar_settings) {
+                            try {
+                                const avatarSettings = JSON.parse(student.avatar_settings);
+                                if (avatarSettings.background) {
+                                    avatarEl.style.background = `#${avatarSettings.background}`;
+                                }
+                                if (avatarSettings.color) {
+                                    avatarEl.style.color = `#${avatarSettings.color}`;
+                                }
+                            } catch (e) {
+                                console.warn('avatar_settings invalide', e);
+                            }
+                        }
+
+                        // Remplissage des champs
+                        document.getElementById('studentName').textContent = displayName;
+                        document.getElementById('studentEmail').textContent = student.email || '-';
+
+                        document.getElementById('studentRole').textContent =
+                            `Rôle: ${student.role_name || 'user'}`;
+
+                        document.getElementById('studentStatus').textContent =
+                            `Statut: ${student.status === 'active' ? 'Actif' : (student.status || '-')}`;
+
+                        document.getElementById('studentLogins').textContent =
+                            `Connexions: ${student.logged_count ?? 0}`;
+
+                        document.getElementById('studentTimezone').textContent =
+                            `Fuseau horaire: ${student.timezone || '-'}`;
+
+                        // created_at est visiblement un timestamp (en secondes)
+                        const createdAtEl = document.getElementById('studentCreatedAt');
+                        if (student.created_at) {
+                            const date = new Date(student.created_at * 1000);
+                            createdAtEl.textContent = `Inscrit le: ${date.toLocaleDateString('fr-FR')}`;
+                        } else {
+                            createdAtEl.textContent = 'Inscrit le: -';
+                        }
+
+                        // Si un jour tu ajoutes ces infos côté backend :
+                        const currentSubEl = document.getElementById('currentSub');
+                        const expiryInfoEl = document.getElementById('expiryInfo');
+
+                        if (student.currentSub) {
+                            currentSubEl.textContent = `Abonnement actuel: ${student.currentSub}`;
+                            currentSubEl.classList.remove('hidden');
+                        } else {
+                            currentSubEl.classList.add('hidden');
+                        }
+
+                        if (student.expiry) {
+                            expiryInfoEl.textContent = `Expire dans ${student.expiry} jours`;
+                            expiryInfoEl.classList.remove('hidden');
+                        } else {
+                            expiryInfoEl.classList.add('hidden');
+                        }
+
+                        info.classList.remove('hidden');
+                    } 
+
+                    else 
+                    {
+                        info.classList.add('hidden');
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la récupération du student', error);
+                    info.classList.add('hidden');
+                }
                 
                 if (student) {
                     currentStudent = { email, ...student };
@@ -346,7 +466,7 @@
 
                 })
 
-                alert(student)
+                alert(student['user'])
 
             });
 

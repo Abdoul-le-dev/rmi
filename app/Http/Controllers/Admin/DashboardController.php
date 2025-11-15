@@ -648,7 +648,7 @@ public function indexs()
         
 
         return response()->json([
-            'user'=> $users
+            'users'=> $users
         ]);
     }
 
