@@ -54,6 +54,7 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             Route::get('/', 'DashboardController@suscriber_index');
             Route::post('/', 'DashboardController@suscriber_search');
             Route::get('/test', 'DashboardController@subscribedUsers');
+            Route::get('/try', 'DashboardController@suscriber_search');
             
         
         });
