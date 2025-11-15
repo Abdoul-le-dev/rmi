@@ -632,7 +632,7 @@ public function indexs()
         return view('admin/teams/suscriber', $data);
     }
 
-    public function sucriber_search(Request $request)
+    public function suscriber_search(Request $request)
     {
         dd($request);
         $this->authorize('admin_users_list');
