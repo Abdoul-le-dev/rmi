@@ -289,7 +289,7 @@
 
             // Élément global de la fiche étudiant
             const info = document.getElementById('studentInfo');
-            let currentStudent = null;
+           
 
             // Recherche d'étudiant
             document.getElementById('emailSearch').addEventListener('input', async (e) => {
