@@ -645,12 +645,11 @@ public function indexs()
 
         $users = $this->addUsersExtraInfo($users);
 
-        $data = [
-            'pageTitle' => 'suscriber',
-            "user" =>$users
-        ];
+        
 
-        return view('admin/teams/suscriber', $data);
+        return response()->json([
+            'user'=> $users
+        ]);
     }
 
      private function addUsersExtraInfo($users)
