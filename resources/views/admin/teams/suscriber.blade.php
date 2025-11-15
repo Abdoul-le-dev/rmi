@@ -315,6 +315,7 @@
                         body: JSON.stringify({ email })
                     });
 
+                    alert(response)
                     const json = await response.json();
 
                     // Adapte ici si ta réponse n'est pas exactement { user: { data: [...] } }
