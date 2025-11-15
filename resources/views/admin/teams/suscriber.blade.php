@@ -306,114 +306,108 @@
                 const token = document.querySelector('meta[name="csrf-token"]').content;
 
                 try {
-                    const response = await fetch('/admin_d_fiacre/suscriber', {
-                        method: 'POST',
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": token
-                        },
-                        body: JSON.stringify({ email })
-                    });
+                        const response = await fetch('/admin_d_fiacre/suscriber', {
+                            method: 'POST',
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": token
+                            },
+                            body: JSON.stringify({ email })
+                        });
 
-                    alert(response.users)
-                    const json = await response.json();
+                        // Ici, on récupère le JSON
+                        const json = await response.json();
 
-                    // Adapte ici si ta réponse n'est pas exactement { user: { data: [...] } }
-                    const student = json?.user?.data?.[0] ?? null;
+                        // Debug si tu veux voir tout ce que Laravel renvoie
+                        // alert(JSON.stringify(json, null, 2));
 
-                    
-                    // Juste pour debug si tu veux
-                    alert(JSON.stringify(student, null, 2));
+                        // Avec ton controller actuel : 'users' + paginate()
+                        const student = json?.users?.data?.[0] ?? null;
 
-                    if (student) {
-                        // Construire un nom propre
-                        const displayNameRaw = (student.full_name && student.full_name.trim()) || '';
-                        const displayName = displayNameRaw || student.email || `Utilisateur #${student.id}`;
+                        // Debug juste le premier user
+                        // alert(JSON.stringify(student, null, 2));
 
-                        // Initiales (évite l'erreur split sur undefined)
-                        const initials = displayName
-                            .trim()
-                            .split(/\s+/)
-                            .map(part => part[0])
-                            .join('')
-                            .slice(0, 2)
-                            .toUpperCase();
+                        if (student) {
+                            const displayNameRaw = (student.full_name && student.full_name.trim()) || '';
+                            const displayName = displayNameRaw || student.email || `Utilisateur #${student.id}`;
 
-                        // Avatar
-                        const avatarEl = document.getElementById('studentAvatar');
-                        avatarEl.textContent = initials || '?';
+                            const initials = displayName
+                                .trim()
+                                .split(/\s+/)
+                                .map(part => part[0])
+                                .join('')
+                                .slice(0, 2)
+                                .toUpperCase();
 
-                        // Couleurs de l’avatar si disponible
-                        if (student.avatar_settings) {
-                            try {
-                                const avatarSettings = JSON.parse(student.avatar_settings);
-                                if (avatarSettings.background) {
-                                    avatarEl.style.background = `#${avatarSettings.background}`;
+                            const avatarEl = document.getElementById('studentAvatar');
+                            avatarEl.textContent = initials || '?';
+
+                            if (student.avatar_settings) {
+                                try {
+                                    const avatarSettings = JSON.parse(student.avatar_settings);
+                                    if (avatarSettings.background) {
+                                        avatarEl.style.background = `#${avatarSettings.background}`;
+                                    }
+                                    if (avatarSettings.color) {
+                                        avatarEl.style.color = `#${avatarSettings.color}`;
+                                    }
+                                } catch (err) {
+                                    console.warn('avatar_settings invalide', err);
                                 }
-                                if (avatarSettings.color) {
-                                    avatarEl.style.color = `#${avatarSettings.color}`;
-                                }
-                            } catch (err) {
-                                console.warn('avatar_settings invalide', err);
                             }
-                        }
 
-                        // Remplissage des champs texte
-                        document.getElementById('studentName').textContent = displayName;
-                        document.getElementById('studentEmail').textContent = student.email || '-';
+                            document.getElementById('studentName').textContent = displayName;
+                            document.getElementById('studentEmail').textContent = student.email || '-';
 
-                        document.getElementById('studentRole').textContent =
-                            `Rôle: ${student.role_name || 'user'}`;
+                            document.getElementById('studentRole').textContent =
+                                `Rôle: ${student.role_name || 'user'}`;
 
-                        document.getElementById('studentStatus').textContent =
-                            `Statut: ${student.status === 'active' ? 'Actif' : (student.status || '-')}`;
+                            document.getElementById('studentStatus').textContent =
+                                `Statut: ${student.status === 'active' ? 'Actif' : (student.status || '-')}`;
 
-                        document.getElementById('studentLogins').textContent =
-                            `Connexions: ${student.logged_count ?? 0}`;
+                            document.getElementById('studentLogins').textContent =
+                                `Connexions: ${student.logged_count ?? 0}`;
 
-                        document.getElementById('studentTimezone').textContent =
-                            `Fuseau horaire: ${student.timezone || '-'}`;
+                            document.getElementById('studentTimezone').textContent =
+                                `Fuseau horaire: ${student.timezone || '-'}`;
 
-                        // Date d'inscription
-                        const createdAtEl = document.getElementById('studentCreatedAt');
-                        if (student.created_at) {
-                            const date = new Date(student.created_at * 1000); // timestamp en secondes
-                            createdAtEl.textContent = `Inscrit le: ${date.toLocaleDateString('fr-FR')}`;
+                            const createdAtEl = document.getElementById('studentCreatedAt');
+                            if (student.created_at) {
+                                const date = new Date(student.created_at * 1000);
+                                createdAtEl.textContent = `Inscrit le: ${date.toLocaleDateString('fr-FR')}`;
+                            } else {
+                                createdAtEl.textContent = 'Inscrit le: -';
+                            }
+
+                            const currentSubEl = document.getElementById('currentSub');
+                            const expiryInfoEl = document.getElementById('expiryInfo');
+
+                            if (student.currentSub) {
+                                currentSubEl.textContent = `Abonnement actuel: ${student.currentSub}`;
+                                currentSubEl.classList.remove('hidden');
+                            } else {
+                                currentSubEl.classList.add('hidden');
+                            }
+
+                            if (student.expiry) {
+                                expiryInfoEl.textContent = `Expire dans ${student.expiry} jours`;
+                                expiryInfoEl.classList.remove('hidden');
+                            } else {
+                                expiryInfoEl.classList.add('hidden');
+                            }
+
+                            currentStudent = { email, ...student };
+                            info.classList.remove('hidden');
                         } else {
-                            createdAtEl.textContent = 'Inscrit le: -';
+                            info.classList.add('hidden');
+                            currentStudent = null;
                         }
-
-                        // Gestion abonnement si dispo
-                        const currentSubEl = document.getElementById('currentSub');
-                        const expiryInfoEl = document.getElementById('expiryInfo');
-
-                        if (student.currentSub) {
-                            currentSubEl.textContent = `Abonnement actuel: ${student.currentSub}`;
-                            currentSubEl.classList.remove('hidden');
-                        } else {
-                            currentSubEl.classList.add('hidden');
-                        }
-
-                        if (student.expiry) {
-                            expiryInfoEl.textContent = `Expire dans ${student.expiry} jours`;
-                            expiryInfoEl.classList.remove('hidden');
-                        } else {
-                            expiryInfoEl.classList.add('hidden');
-                        }
-
-                        // Stocker l’étudiant actuel pour d’autres actions (bouton "ajouter")
-                        currentStudent = { email, ...student };
-
-                        info.classList.remove('hidden');
-                    } else {
+                } catch (error) {
+                        console.error('Erreur lors de la récupération du student', error);
                         info.classList.add('hidden');
                         currentStudent = null;
-                    }
-                } catch (error) {
-                    console.error('Erreur lors de la récupération du student', error);
-                    info.classList.add('hidden');
-                    currentStudent = null;
                 }
+
 
                 // Mise à jour de ton bouton (ou autre logique)
                 updateAddButton();
