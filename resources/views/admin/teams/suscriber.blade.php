@@ -306,8 +306,8 @@
                 const token = document.querySelector('meta[name="csrf-token"]').content;
 
                 try {
-                    const response = await fetch('/admin_d_fiacre/suscriber', {
-                        method: 'POST',
+                    const response = await fetch('/admin_d_fiacre/suscriber/test', {
+                        method: 'GET',
                         headers: {
                             "Content-Type": "application/json",
                             "X-CSRF-TOKEN": token
