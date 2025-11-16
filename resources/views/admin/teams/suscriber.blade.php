@@ -456,7 +456,10 @@
                 const email = e.target.value.toLowerCase().trim();
                 const id = document.getElementById('studentId').textContent;
                 const duration = selectedDuration;
-                alert(token,email, id, duration);
+                alert(token);
+                alert(email);
+                alert(id);
+                alert(duration);
                 
 
                 const response = await fetch('/admin_d_fiacre/suscriber', {
