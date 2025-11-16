@@ -471,12 +471,8 @@
 
                 const responses = json?.response? null;
 
-                showNotification(response);
+                showNotification(${response});
         
-
-
-
-
 
                 if (currentStudent && selectedDuration) {
                     showNotification(`${selectedDuration} jours ajoutés à ${currentStudent.name}`);
