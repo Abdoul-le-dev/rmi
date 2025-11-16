@@ -464,14 +464,14 @@
                                 "Content-Type": "application/json",
                                 "X-CSRF-TOKEN": token
                             },
-                            body: JSON.stringify({ email, id, duration,email })
+                            body: JSON.stringify({ email, id, duration })
                         });
+                
+                        const json = await response.json();
+                        const serverResponse = json?.response ?? null;
 
-                const json = await response.json();
-
-                const responses = json?.response? null;
-
-                showNotification(${response});
+                        showNotification(serverResponse);
+                
         
 
                 if (currentStudent && selectedDuration) {
