@@ -453,7 +453,7 @@
 
 
                 const token = document.querySelector('meta[name="csrf-token"]').content;
-                const email = document.getElementById('emailSearch').textContent;
+                const email = document.getElementById('studentEmail').textContent;
                 const id = document.getElementById('studentId').textContent;
                 const duration = selectedDuration;
                 alert(token);
