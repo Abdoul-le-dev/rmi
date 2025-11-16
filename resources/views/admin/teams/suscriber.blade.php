@@ -68,6 +68,7 @@
                                 <!-- Nom + email -->
                                 <h3 id="studentName" class="font-bold text-gray-900 text-lg">Utilisateur inconnu</h3>
                                 <p id="studentEmail" class="text-sm text-gray-600">email@example.com</p>
+                                <p id="studentId" class="text-sm text-gray-600 hidden"></p>
 
                                 <!-- Ligne 1 : rôle, statut, connexions -->
                                 <div class="flex flex-wrap items-center gap-2 mt-2">
@@ -296,6 +297,9 @@
                 const token = document.querySelector('meta[name="csrf-token"]').content;
 
                 try {
+
+                        
+
                         const response = await fetch('/admin_d_fiacre/suscriber', {
                             method: 'POST',
                             headers: {
@@ -348,6 +352,8 @@
 
                             document.getElementById('studentName').textContent = displayName;
                             document.getElementById('studentEmail').textContent = student.email || '-';
+                            document.getElementById('studentId').textContent = student.id 
+                            
 
                             document.getElementById('studentRole').textContent =
                                 `Rôle: ${student.role_name || 'user'}`;
@@ -444,6 +450,29 @@
 
             // Ajout d'abonnement
             document.getElementById('addSubBtn').addEventListener('click', () => {
+
+
+                const token = document.querySelector('meta[name="csrf-token"]').content;
+                const email = e.target.value.toLowerCase().trim();
+                const id = document.getElementById('studentId').textContent;
+                const duration = selectedDuration;
+                alert(token,email, id, duration);
+                try
+                {
+
+                }
+
+                const response = await fetch('/admin_d_fiacre/suscriber', {
+                            method: 'POST',
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": token
+                            },
+                            body: JSON.stringify({ email, id, duration })
+                        });
+
+
+
                 if (currentStudent && selectedDuration) {
                     showNotification(`${selectedDuration} jours ajoutés à ${currentStudent.name}`);
                     
