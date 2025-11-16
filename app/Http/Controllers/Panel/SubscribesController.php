@@ -81,6 +81,8 @@ class SubscribesController extends Controller
             'promo' => $promo,
         ];
 
+        dd($data);
+
         return view(getTemplate() . '.panel.financial.subscribes', $data);
     }
 
