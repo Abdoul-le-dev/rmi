@@ -16,8 +16,10 @@ return new class extends Migration
         Schema::create('suscriber_team', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id')->unsigned();
+            $table->string('email');
+            $table->string('who');
             $table->integer('nbr_jours');
-            $table->bool('valide')->default(false);
+            $table->boolean('valide')->default(false);
             $table->timestamps();
         });
     }

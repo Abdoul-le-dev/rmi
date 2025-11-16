@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\traits\DashboardTrait;
 use App\Http\Controllers\Controller;
 use App\Models\FeatureWebinar;
 use App\Models\Role;
+use App\Models\SuscriberTeam;
 use App\Models\Sale;
 use App\Models\Ticket;
 use App\Models\Webinar;
@@ -676,6 +677,40 @@ public function indexs()
             'users'=> $users
         ]);
     }
+
+   public function suscriber_add(Request $request)
+{
+    $this->authorize('admin_users_list');
+
+    $id_user  = $request->get('id');
+    $email    = $request->get('email');
+    $duration = $request->get('duration');
+
+    // utilisateur en cours
+    $who = auth()->user()->id;   // ou ->email si tu veux l'email
+
+    if ($id_user && $email && $duration)
+    {   
+        return response()->json([
+            'response' => 'Nice'
+        ]);
+
+        /*SuscriberTeam::create([
+            'user_id'   => $id_user,
+            'email'     => $email,
+            'who'       => $who,
+            'nbr_jours' => $duration,
+            'valide'    => true,
+        ]);*/
+
+        
+    }
+
+    return response()->json([
+        'response' => 'Bad'
+    ]);
+}
+
 
      private function addUsersExtraInfo($users)
     {

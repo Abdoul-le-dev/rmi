@@ -456,20 +456,25 @@
                 const email = document.getElementById('studentEmail').textContent;
                 const id = document.getElementById('studentId').textContent;
                 const duration = selectedDuration;
-                alert(token);
-                alert(email);
-                alert(id);
-                alert(duration);
                 
 
-                const response = await fetch('/admin_d_fiacre/suscriber', {
+                const response = await fetch('/admin_d_fiacre/suscriber/add', {
                             method: 'POST',
                             headers: {
                                 "Content-Type": "application/json",
                                 "X-CSRF-TOKEN": token
                             },
-                            body: JSON.stringify({ email, id, duration })
+                            body: JSON.stringify({ email, id, duration,email })
                         });
+
+                const json = await response.json();
+
+                const response = json?.response? null;
+
+                showNotification(response)
+        
+
+
 
 
 
