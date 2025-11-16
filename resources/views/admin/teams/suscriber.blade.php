@@ -449,7 +449,7 @@
             }
 
             // Ajout d'abonnement
-            document.getElementById('addSubBtn').addEventListener('click', async () => {
+            document.getElementById('addSubBtn').addEventListener('click', async (e) => {
 
 
                 const token = document.querySelector('meta[name="csrf-token"]').content;
