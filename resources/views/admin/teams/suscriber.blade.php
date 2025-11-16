@@ -457,10 +457,7 @@
                 const id = document.getElementById('studentId').textContent;
                 const duration = selectedDuration;
                 alert(token,email, id, duration);
-                try
-                {
-
-                }
+                
 
                 const response = await fetch('/admin_d_fiacre/suscriber', {
                             method: 'POST',
