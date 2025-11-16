@@ -18,8 +18,7 @@ class CategoriesController extends Controller
 {
     public function index(Request $request, $categorySlug, $subCategorySlug = null)
     {
-
-        dd($request);
+        
 
         $user = auth()->user();
         if (!empty($categorySlug) and auth()->check()) {
