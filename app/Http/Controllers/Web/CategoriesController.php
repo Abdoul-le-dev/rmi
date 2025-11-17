@@ -119,7 +119,7 @@ class CategoriesController extends Controller
                 })
                 ->exists();
 
-                $hasPurchasedCourse = true;
+                $hasPurchasedCourse = false;
 
                 if (!$hasPurchasedCourse and ($user->role_name !== 'teacher' and $user->email !== 'tossouericcodjo@gmail.com')) {
                     $toastData = [
