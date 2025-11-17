@@ -14,6 +14,7 @@ class CategoryController extends Controller
         removeContentLocale();
 
         $this->authorize('admin_categories_list');
+        dd('yes');
 
         $categories = Category::where('parent_id', null)
             ->with([
