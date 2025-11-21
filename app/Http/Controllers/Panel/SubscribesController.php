@@ -56,6 +56,11 @@ class SubscribesController extends Controller
 
         $hasPurchasedCourse = true;
 
+        if ($hasPurchasedCourse)
+        {
+            
+        }
+
         //teams end 
 
         if (!$hasPurchasedCourse and ($user->role_name !== 'teacher' and $user->email !== 'tossouericcodjo@gmail.com')) {
