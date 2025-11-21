@@ -5,7 +5,7 @@
 /public/contents
 /uploads
 /storage/laravel-backups/*
-# /storage/*.key
+/storage/*.key
 /vendor
 /design
 /vendor/composer/*.php
@@ -20,11 +20,10 @@ npm-debug.log
 yarn-error.log
 robots.txt
 terminat
-# .env
 .phpunit.result.cache
 .rnd
 .env
-
+!.gitignore
 #git 
 
 /storage/*
