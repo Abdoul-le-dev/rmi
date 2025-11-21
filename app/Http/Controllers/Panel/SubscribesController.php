@@ -54,12 +54,12 @@ class SubscribesController extends Controller
 
         //teams add
 
-        $hasPurchasedCourse = true;
+        //$hasPurchasedCourse = true;
 
-        if ($hasPurchasedCourse)
-        {
+        //if ($hasPurchasedCourse)
+        //{
             
-        }
+        //}
 
         //teams end 
 
@@ -86,7 +86,7 @@ class SubscribesController extends Controller
             'promo' => $promo,
         ];
 
-        dd($data);
+       // dd($data);
         return view(getTemplate() . '.panel.financial.subscribes', $data);
     }
 
