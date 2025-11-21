@@ -88,6 +88,7 @@ class SubscribesController extends Controller
 
        // dd($data);
        //comments
+       //yes
         return view(getTemplate() . '.panel.financial.subscribes', $data);
     }
 
