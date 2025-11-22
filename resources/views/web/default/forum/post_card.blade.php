@@ -103,9 +103,9 @@
                             ? updateImagePaths($post->description)
                             : updateImagePaths($topic->description) !!}
                     </div>
-                    {{-- @php
+                    @php
                         dd(updateImagePaths($topic->description));
-                    @endphp --}}
+                    @endphp
 
                     @if(!empty($post) and !empty($post->attach))
                         <div class="mt-auto d-inline-flex">
