@@ -104,7 +104,7 @@
                             : updateImagePaths($topic->description) !!}
                     </div>
                     @php
-                        dd($topic->description);
+                        dd(updateImagePaths($topic->description));
                     @endphp
 
                     @if(!empty($post) and !empty($post->attach))
