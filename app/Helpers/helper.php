@@ -2666,40 +2666,46 @@ function canDeleteContentDirectly()
 
 function updateImagePaths($htmlContent)
 {
-    $pattern = '/<img([^>]*)src="([^"]*)"([^>]*)>/i';
-
-$updatedHtml = preg_replace_callback($pattern, function ($matches) {
-    $beforeSrc = $matches[1];
-    $src = $matches[2];
-    $afterSrc = $matches[3];
+    public function updateImageUrls($htmlContent)
+{
+    // Créer un document DOM
+    $dom = new \DOMDocument();
     
-    // DEBUG : afficher ce qui est capturé
-    \Log::info('Image trouvée:', [
-        'matches_complet' => $matches[0],
-        'beforeSrc' => $beforeSrc,
-        'src' => $src,
-        'afterSrc' => $afterSrc,
-    ]);
+    // Supprimer les erreurs HTML (pour du HTML mal formé)
+    libxml_use_internal_errors(true);
     
-    // Ignorer les images déjà en base64
-    if (strpos($src, 'data:') === 0) {
-        \Log::info('Image base64 détectée, ignorée');
-        return $matches[0];
+    // Charger le HTML (avec encodage UTF-8)
+    $dom->loadHTML('<?xml encoding="UTF-8">' . $htmlContent, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    
+    // Récupérer toutes les images
+    $images = $dom->getElementsByTagName('img');
+    
+    foreach ($images as $img) {
+        $src = $img->getAttribute('src');
+        
+        // Ignorer les images base64
+        if (strpos($src, 'data:') === 0) {
+            continue;
+        }
+        
+        // Générer la nouvelle URL
+        $newSrc = \App\Helpers\S3Helper::getUrl($src);
+        
+        if ($newSrc !== null) {
+            $img->setAttribute('src', $newSrc);
+        }
     }
     
-    $newSrc = \App\Helpers\S3Helper::getUrl($src);
+    // Restaurer les erreurs
+    libxml_clear_errors();
+    libxml_use_internal_errors(false);
     
-    \Log::info('S3Helper résultat:', ['newSrc' => $newSrc]);
+    // Retourner le HTML modifié
+    $updatedHtml = $dom->saveHTML();
     
-    if ($newSrc === null) {
-        return $matches[0];
-    }
+    // Nettoyer les balises XML ajoutées
+    $updatedHtml = str_replace('<?xml encoding="UTF-8">', '', $updatedHtml);
     
-    return '<img' . $beforeSrc . 'src="' . $newSrc . '"' . $afterSrc . '>';
-}, $htmlContent);
-
-// DEBUG : vérifier le résultat final
-\Log::info('HTML mis à jour:', ['result' => $updatedHtml]);
-
-return $updatedHtml;
+    return $updatedHtml;
+}
 }
