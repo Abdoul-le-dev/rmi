@@ -2685,5 +2685,5 @@ function updateImagePaths($htmlContent)
         return '<img' . $beforeSrc . 'src="' . $newSrc . '"' . $afterSrc . '>';
     }, $htmlContent);
     
-    return $updatedHtml;
+    return 'la';
 }
