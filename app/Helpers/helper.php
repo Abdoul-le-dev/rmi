@@ -2666,30 +2666,23 @@ function canDeleteContentDirectly()
 
 function updateImagePaths($htmlContent)
 {
-    $pattern = '/<img([^>]*)src="([^"]*)"([^>]*)>/i';
+   // Augmenter les limites PCRE avant d'exécuter la regex
+ini_set('pcre.backtrack_limit', '10000000');
+ini_set('pcre.recursion_limit', '10000000');
+
+$pattern = '/<img([^>]*)src="([^"]*)"([^>]*)>/i';
 
 $updatedHtml = preg_replace_callback($pattern, function ($matches) {
     $beforeSrc = $matches[1];
     $src = $matches[2];
     $afterSrc = $matches[3];
     
-    // DEBUG : afficher ce qui est capturé
-    \Log::info('Image trouvée:', [
-        'matches_complet' => $matches[0],
-        'beforeSrc' => $beforeSrc,
-        'src' => $src,
-        'afterSrc' => $afterSrc,
-    ]);
-    
     // Ignorer les images déjà en base64
     if (strpos($src, 'data:') === 0) {
-        \Log::info('Image base64 détectée, ignorée');
         return $matches[0];
     }
     
     $newSrc = \App\Helpers\S3Helper::getUrl($src);
-    
-    \Log::info('S3Helper résultat:', ['newSrc' => $newSrc]);
     
     if ($newSrc === null) {
         return $matches[0];
@@ -2698,8 +2691,14 @@ $updatedHtml = preg_replace_callback($pattern, function ($matches) {
     return '<img' . $beforeSrc . 'src="' . $newSrc . '"' . $afterSrc . '>';
 }, $htmlContent);
 
-// DEBUG : vérifier le résultat final
-\Log::info('HTML mis à jour:', ['result' => $updatedHtml]);
+// Vérifier si preg_replace_callback a échoué
+if ($updatedHtml === null) {
+    \Log::error('preg_replace_callback a échoué', [
+        'preg_last_error' => preg_last_error(),
+        'error_message' => array_flip(get_defined_constants(true)['pcre'])[preg_last_error()]
+    ]);
+    return $htmlContent; // Retourner le contenu original en cas d'erreur
+}
 
 return $updatedHtml;
 }
