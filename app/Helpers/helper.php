@@ -2666,24 +2666,29 @@ function canDeleteContentDirectly()
 
 function updateImagePaths($htmlContent)
 {
-    $pattern = '/<img([^>]+)src="([^"]+)"([^>]*)>/i';
+    // Regex améliorée qui capture correctement les data URIs (base64)
+$pattern = '/<img([^>]*)src="([^"]*)"([^>]*)>/i';
+
+$updatedHtml = preg_replace_callback($pattern, function ($matches) {
+    $beforeSrc = $matches[1];
+    $src = $matches[2];
+    $afterSrc = $matches[3];
     
-    $updatedHtml = preg_replace_callback($pattern, function ($matches) {
-        $beforeSrc = $matches[1];
-        $src = $matches[2];
-        $afterSrc = $matches[3];
-        // dd($src);
-        // Générer l'URL appropriée avec le helper
-        $newSrc = \App\Helpers\S3Helper::getUrl($src);
-       
-        
-        // Si le helper retourne null, garder l'URL originale
-        if ($newSrc === null) {
-            return 'ici';
-        }
-        
-        return '<img' . $beforeSrc . 'src="' . $newSrc . '"' . $afterSrc . '>';
-    }, $htmlContent);
+    // Ignorer les images déjà en base64 (data URIs)
+    if (strpos($src, 'data:') === 0) {
+        return $matches[0]; // Garder l'image base64 telle quelle
+    }
     
-    return 'la';
+    // Générer l'URL appropriée avec le helper
+    $newSrc = \App\Helpers\S3Helper::getUrl($src);
+    
+    // Si le helper retourne null, garder l'URL originale
+    if ($newSrc === null) {
+        return $matches[0];
+    }
+    
+    return '<img' . $beforeSrc . 'src="' . $newSrc . '"' . $afterSrc . '>';
+}, $htmlContent);
+
+return $updatedHtml;
 }
