@@ -2,6 +2,7 @@
 
 use App\Mixins\Financial\MultiCurrency;
 use Illuminate\Support\Facades\Cookie;
+use Carbon\Carbon;
 
 function getTemplate()
 {
@@ -52,7 +53,7 @@ function dateTimeFormat($timestamp, $format = 'H:i', $useAdminSetting = true, $a
         $timezone = "UTC";
     }
 
-    $carbon = (new Carbon\Carbon())
+    $carbon = (new Carbon())
         ->setTimezone($timezone)
         ->setTimestamp($timestamp);
 
@@ -69,7 +70,7 @@ function dateTimeFormatForHumans($timestamp, $applyTimezone = true, $timezone = 
         $timezone = "UTC";
     }
 
-    $carbon = (new Carbon\Carbon())
+    $carbon = (new Carbon())
         ->setTimezone($timezone)
         ->setTimestamp($timestamp);
 
@@ -2701,4 +2702,44 @@ if ($updatedHtml === null) {
 }
 
 return $updatedHtml;
+}
+
+
+function suscriber_add_days($user_id)
+{
+    $data = json_decode(file_get_contents("../team/database.json"), true);
+
+    foreach($data as $user)
+    {
+
+        if ($user["id"] == $user_id )
+        {
+
+            
+            $start = Carbon::parse($user["start_days"]);
+            $end = $start->copy()->addDays($user["nbr_jours"]);
+
+            $today = Carbon::now();
+
+            if ( $today->greaterThanOrEqualTo($start) && $today->lessThanOrEqualTo($end))
+            {
+                return true;
+            }else
+            {
+                return false;
+            }
+
+            
+
+
+
+        } 
+
+       
+
+    }
+
+    return false;
+
+
 }

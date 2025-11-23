@@ -86,8 +86,10 @@ class SubscribesController extends Controller
             'promo' => $promo,
         ];
 
-       // dd($data);
+       //dd($data);
        //comments
+       //https://fiacrekpanoud.com/categories/live-class
+       //
        //yes
         return view(getTemplate() . '.panel.financial.subscribes', $data);
     }

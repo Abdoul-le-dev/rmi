@@ -17,6 +17,21 @@
             </div>
         </div>
 
+        <!-- Notification -->
+        <div id="notification" 
+            class="hidden fixed top-8 right-8 bg-white rounded-lg shadow-2xl p-4 border-l-4 border-green-500 
+                    transform translate-x-full opacity-0 scale-95 transition-all duration-500 ease-out max-w-md z-50">
+            <div class="flex items-center gap-3">
+                <svg class="w-6 h-6 text-green-500 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <div>
+                    <p class="font-medium text-gray-900">Abonnement ajouté</p>
+                    <p id="notificationText" class="text-sm text-gray-600"></p>
+                </div>
+            </div>
+        </div>
+
 
         <div class="min-h-screen p-8">
         <!-- Tabs -->
@@ -29,12 +44,7 @@
                         </svg>
                         Ajout Individuel
                     </button>
-                    <button id="tabBulk" class="tab-btn flex-1 px-6 py-4 text-sm font-medium transition flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                        Ajout en Masse
-                    </button>
+                   
                 </div>
             </div>
 
@@ -128,6 +138,30 @@
                         </div>
                     </div>
 
+                    <!-- Sélection de la date de début -->
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-4">
+                            Date de début de l'abonnement
+                        </label>
+                        <div class="relative max-w-xs">
+                            <!-- Icône calendrier -->
+                            <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V5m8 2V5m-9 4h10M5 9h14v10H5z"></path>
+                            </svg>
+
+                            <!-- Input date (affiche un calendrier natif) -->
+                            <input
+                                id="startDate"
+                                type="date"
+                                class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800 bg-white"
+                            >
+
+                          
+                        </div>
+                    </div>
+
+
                     <!-- Bouton d'action -->
                     <div class="flex justify-end">
                         <button id="addSubBtn" class="px-8 py-3 bg-gradient-to-r from-indigo-600 to-blue-500 text-white rounded-lg hover:from-indigo-700 hover:to-blue-600 transition font-medium shadow-md flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
@@ -137,6 +171,7 @@
                             Ajouter l'abonnement
                         </button>
                     </div>
+
                 </div>
             </div>
 
@@ -226,18 +261,7 @@
             </div>
         </div>
 
-        <!-- Notification -->
-        <div id="notification" class="hidden top-8 right-8 bg-white rounded-lg shadow-lg p-4 border-l-4 border-green-500 transform translate-x-full transition-transform duration-300 max-w-md">
-            <div class="flex items-center gap-3">
-                <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <div>
-                    <p class="font-medium text-gray-900">Abonnement ajouté</p>
-                    <p id="notificationText" class="text-sm text-gray-600"></p>
-                </div>
-            </div>
-        </div>
+        
 
         <script>
             // Données simulées
@@ -257,6 +281,17 @@
             let bulkFilter = 'all';
             let bulkDuration = null;
             let selectedStudents = new Set();
+
+            document.addEventListener('DOMContentLoaded', () => {
+            const startDateInput = document.getElementById('startDate');
+            if (startDateInput && !startDateInput.value) {
+                const today = new Date();
+                const yyyy = today.getFullYear();
+                const mm = String(today.getMonth() + 1).padStart(2, '0'); // mois 01-12
+                const dd = String(today.getDate()).padStart(2, '0');      // jour 01-31
+                startDateInput.value = `${yyyy}-${mm}-${dd}`;
+            }
+            });
 
             // Gestion des onglets
             document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -454,8 +489,12 @@
 
                 const token = document.querySelector('meta[name="csrf-token"]').content;
                 const email = document.getElementById('studentEmail').textContent;
+                const name = document.getElementById('studentName').textContent;
                 const id = document.getElementById('studentId').textContent;
+                const startDateInput = document.getElementById('startDate').value;
                 const duration = selectedDuration;
+
+             
                 
 
                 const response = await fetch('/admin_d_fiacre/suscriber/add', {
@@ -464,19 +503,19 @@
                                 "Content-Type": "application/json",
                                 "X-CSRF-TOKEN": token
                             },
-                            body: JSON.stringify({ email, id, duration })
+                            body: JSON.stringify({ email, id, duration, startDateInput })
                         });
                 
                         const json = await response.json();
                         const serverResponse = json?.response ?? null;
-                        alert(serverResponse);
+                        //alert(serverResponse);
 
                         showNotification(serverResponse);
                 
         
 
                 if (currentStudent && selectedDuration) {
-                    showNotification(`${selectedDuration} jours ajoutés à ${currentStudent.name}`);
+                    showNotification(`${selectedDuration} jours ajoutés à ${name}`);
                     
                     // Réinitialiser
                     document.getElementById('emailSearch').value = '';
@@ -493,8 +532,32 @@
             });
 
             // Notification
+
             function showNotification(text) {
                 const notif = document.getElementById('notification');
+                const textEl = document.getElementById('notificationText');
+
+                textEl.textContent = text;
+
+                // Reset état
+                notif.classList.remove('hidden', 'translate-x-full', 'opacity-0', 'scale-95');
+                notif.classList.add('translate-x-0', 'opacity-100', 'scale-100');
+
+                // Auto-hide avec animation
+                setTimeout(() => {
+                    notif.classList.remove('translate-x-0', 'opacity-100', 'scale-100');
+                    notif.classList.add('translate-x-full', 'opacity-0', 'scale-95');
+                }, 2800);
+
+                // Cacher complètement après l'anim
+                setTimeout(() => {
+                    notif.classList.add('hidden');
+                }, 3500);
+            }
+
+            function showNotifications(text) {
+                const notif = document.getElementById('notification');
+                notif.classList.remove('hidden');
                 document.getElementById('notificationText').textContent = text;
                 notif.classList.remove('translate-x-full');
                 setTimeout(() => {

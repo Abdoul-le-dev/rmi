@@ -28,6 +28,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
+
 class DashboardController extends Controller
 {
     use DashboardTrait;
@@ -685,25 +686,66 @@ public function indexs()
     $id_user  = $request->get('id');
     $email    = $request->get('email');
     $duration = $request->get('duration');
+    $startdays = $request->get('startDateInput');
 
     // utilisateur en cours
-    $who = auth()->user()->id;   // ou ->email si tu veux l'email
+    $who = auth()->user()->id;   
 
-    if ($id_user && $email && $duration)
+    if ($id_user && $email && $duration && $startdays)
     {   
-        return response()->json([
-            'response' => 'Nice'
-        ]);
 
-        /*SuscriberTeam::create([
-            'user_id'   => $id_user,
-            'email'     => $email,
-            'who'       => $who,
-            'nbr_jours' => $duration,
-            'valide'    => true,
-        ]);*/
+        $path = '../team/database.json';
 
+       try{
+
+         if (file_exists($path)) 
+            {
+                $json = file_get_contents($path);
+                $existingData = json_decode($json, true);
+            } else 
+            {
+                $existingData = [];
+            }
         
+
+        $newData = [
+            "id" =>$id_user,
+            "email" => $email,
+            "who" => $who,
+            "nbr_jours"  => $duration,
+            "start_days" => $startdays,
+            "date" => Carbon::now()->toDateTimestring()
+        ];
+
+        // 3. Chercher si l'utilisateur existe déjà
+        $found = false;
+
+        foreach ($existingData as $index => $user) {
+            if ((int)$user['id'] === (int)$id_user) {
+                //  Mise à jour si trouvé
+                $existingData[$index] = $newData;
+                $found = true;
+                break;
+            }
+        }
+
+        // 4. Si pas trouvé → on ajoute
+        if (!$found) {
+            $existingData[] = $newData;
+        }
+
+        file_put_contents(storage_path($path), json_encode($existingData, JSON_PRETTY_PRINT));
+
+        return response()->json([
+            'response' => 'Enregistré avec succès'
+        ]);
+        
+       }
+       catch(\Exception $e)
+       {
+        return  response()->json(['response' => $e->getMessage()]);
+        //yes
+       }
     }
 
     return response()->json([

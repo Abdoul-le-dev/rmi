@@ -27,5 +27,6 @@ terminat
 #git 
 
 /storage/*
+/team/*
 
 /yes
