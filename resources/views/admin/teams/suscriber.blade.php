@@ -491,7 +491,7 @@
                 const token = document.querySelector('meta[name="csrf-token"]').content;
                 const email = document.getElementById('studentEmail').textContent;
                 const id = document.getElementById('studentId').textContent;
-                const startDateInput = document.getElementById('startDate').textContent;
+                const startDateInput = document.getElementById('startDate').value;
                 const duration = selectedDuration;
 
                 alert(startDateInput);
@@ -503,7 +503,7 @@
                                 "Content-Type": "application/json",
                                 "X-CSRF-TOKEN": token
                             },
-                            body: JSON.stringify({ email, id, duration })
+                            body: JSON.stringify({ email, id, duration, startDateInput })
                         });
                 
                         const json = await response.json();

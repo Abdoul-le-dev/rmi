@@ -686,14 +686,14 @@ public function indexs()
     $id_user  = $request->get('id');
     $email    = $request->get('email');
     $duration = $request->get('duration');
-    $startdays = $request->get('start_days');
+    $startdays = $request->get('startDateInput');
 
     // utilisateur en cours
     $who = auth()->user()->id;   // ou ->email si tu veux l'email
 
     if ($id_user && $email && $duration && $startdays)
     {   
-        
+
         $today = Carbon::now();
 
         $data = [
