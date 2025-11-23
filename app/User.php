@@ -137,24 +137,18 @@ class User extends Authenticatable
             // $avatarUrl = Storage::disk('s3')->url($this->avatar);
 
             // Modification StanislasKB
+            
+            $cacheKey = "user:avatar:{$this->id}:{$size}"; 
 
-            $cacheKey = "user:avatar:{$this->id}:{$size}";
-
-
+            
             $avatarUrl = Cache::remember($cacheKey, 7200, function () {
-                $s3Url = \App\Helpers\S3Helper::getUrl($this->avatar, 60);
-
-                // Vérifier si c'est une URL S3 valide et complète
-                if (
-                    $s3Url &&
-                    filter_var($s3Url, FILTER_VALIDATE_URL) &&
-                    str_contains($s3Url, 's3') &&
-                    !str_starts_with($s3Url, '/store/')
-                ) {
-                    return $s3Url;
-                }
-
-                return '/assets/admin/img/avatar/avatar-1.png';
+                
+                return \App\Helpers\S3Helper::getUrl($this->avatar, 60) ;
+                
+                // Storage::disk('s3')->temporaryUrl(
+                //     $this->avatar,
+                //     now()->addHours(2)
+                // );
             });
         } else {
             $settings = getOthersPersonalizationSettings();
