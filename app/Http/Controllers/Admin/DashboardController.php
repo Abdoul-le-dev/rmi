@@ -706,7 +706,7 @@ public function indexs()
             "date" => $today
         ];
 
-        file_put_contents(storage_path('team/database.json'), json_encode($data, JSON_PRETTY_PRINT));
+        file_put_contents(storage_path('../team/database.json'), json_encode($data, JSON_PRETTY_PRINT));
 
         return response()->json([
             'response' => 'Nice'
