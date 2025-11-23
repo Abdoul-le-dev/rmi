@@ -689,7 +689,7 @@ public function indexs()
     $startdays = $request->get('startDateInput');
 
     // utilisateur en cours
-    $who = auth()->user()->id;   // ou ->email si tu veux l'email
+    $who = auth()->user()->id;   
 
     if ($id_user && $email && $duration && $startdays)
     {   
@@ -716,6 +716,24 @@ public function indexs()
             "start_days" => $startdays,
             "date" => Carbon::now()->toDateTimestring()
         ];
+
+        // 3. Chercher si l'utilisateur existe déjà
+        $found = false;
+
+        foreach ($existingData as $index => $user) {
+            if ((int)$user['id'] === (int)$id_user) {
+                //  Mise à jour si trouvé
+                $existingData[$index] = $newData;
+                $found = true;
+                break;
+            }
+        }
+
+        // 4. Si pas trouvé → on ajoute
+        if (!$found) {
+            $existingData[] = $newData;
+        }
+
 
         $existingData[] = $newData;
 

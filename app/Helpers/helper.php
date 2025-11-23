@@ -2724,6 +2724,9 @@ function suscriber_add_days($user_id)
             if ($today->lessThanOrEqualTo($end))
             {
                 return true;
+            }else
+            {
+                return false;
             }
 
             
