@@ -18,9 +18,11 @@
         </div>
 
         <!-- Notification -->
-        <div id="notification" class=" hidden top-8 right-8 bg-white rounded-lg shadow-lg p-4 border-l-4 border-green-500 transform translate-x-full transition-transform duration-300 max-w-md">
+        <div id="notification" 
+            class="hidden fixed top-8 right-8 bg-white rounded-lg shadow-2xl p-4 border-l-4 border-green-500 
+                    transform translate-x-full opacity-0 scale-95 transition-all duration-500 ease-out max-w-md z-50">
             <div class="flex items-center gap-3">
-                <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-6 h-6 text-green-500 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
                 <div>
@@ -29,6 +31,7 @@
                 </div>
             </div>
         </div>
+
 
         <div class="min-h-screen p-8">
         <!-- Tabs -->
@@ -529,6 +532,29 @@
             });
 
             // Notification
+
+            function showNotification(text) {
+                const notif = document.getElementById('notification');
+                const textEl = document.getElementById('notificationText');
+
+                textEl.textContent = text;
+
+                // Reset état
+                notif.classList.remove('hidden', 'translate-x-full', 'opacity-0', 'scale-95');
+                notif.classList.add('translate-x-0', 'opacity-100', 'scale-100');
+
+                // Auto-hide avec animation
+                setTimeout(() => {
+                    notif.classList.remove('translate-x-0', 'opacity-100', 'scale-100');
+                    notif.classList.add('translate-x-full', 'opacity-0', 'scale-95');
+                }, 2800);
+
+                // Cacher complètement après l'anim
+                setTimeout(() => {
+                    notif.classList.add('hidden');
+                }, 3500);
+            }
+
             function showNotification(text) {
                 const notif = document.getElementById('notification');
                 notif.classList.remove('hidden');
