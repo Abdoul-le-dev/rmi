@@ -150,6 +150,7 @@ class User extends Authenticatable
                 //     now()->addHours(2)
                 // );
             });
+            dd( $avatarUrl);
         } else {
             $settings = getOthersPersonalizationSettings();
 
