@@ -734,9 +734,6 @@ public function indexs()
             $existingData[] = $newData;
         }
 
-
-        $existingData[] = $newData;
-
         file_put_contents(storage_path($path), json_encode($existingData, JSON_PRETTY_PRINT));
 
         return response()->json([
