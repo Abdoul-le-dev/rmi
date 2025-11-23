@@ -140,12 +140,13 @@ class User extends Authenticatable
             
             $cacheKey = "user:avatar:{$this->id}:{$size}"; 
 
-            
+            // On met en cache pendant 2h (7200 secondes)
             $avatarUrl = Cache::remember($cacheKey, 7200, function () {
                 
-                return \App\Helpers\S3Helper::getUrl($this->avatar, 7200) ;
-                
-               
+                return Storage::disk('s3')->temporaryUrl(
+                    $this->avatar,
+                    now()->addHours(2)
+                );
             });
         } else {
             $settings = getOthersPersonalizationSettings();
