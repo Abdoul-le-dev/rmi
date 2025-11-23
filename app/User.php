@@ -143,12 +143,9 @@ class User extends Authenticatable
             
             $avatarUrl = Cache::remember($cacheKey, 7200, function () {
                 
-                return \App\Helpers\S3Helper::getUrl($this->avatar, 60) ;
+                return \App\Helpers\S3Helper::getUrl($this->avatar, 7200) ;
                 
-                // Storage::disk('s3')->temporaryUrl(
-                //     $this->avatar,
-                //     now()->addHours(2)
-                // );
+               
             });
         } else {
             $settings = getOthersPersonalizationSettings();
