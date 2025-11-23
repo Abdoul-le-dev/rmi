@@ -694,22 +694,35 @@ public function indexs()
     if ($id_user && $email && $duration && $startdays)
     {   
 
-       try{
-         $today = Carbon::now();
+        $path = '../team/database.json';
 
-        $data = [
+       try{
+
+         if (file_exists($path)) 
+            {
+                $json = file_get_contents($path);
+                $existingData = json_decode($json, true);
+            } else 
+            {
+                $existingData = [];
+            }
+        
+
+        $newData = [
             "id" =>$id_user,
             "email" => $email,
             "who" => $who,
             "nbr_jours"  => $duration,
             "start_days" => $startdays,
-            "date" => $today
+            "date" => Carbon::now()->toDateTimestring()
         ];
 
-        file_put_contents(storage_path('../team/database.json'), json_encode($data, JSON_PRETTY_PRINT));
+        $existingData[] = $newData;
+
+        file_put_contents(storage_path($path), json_encode($existingData, JSON_PRETTY_PRINT));
 
         return response()->json([
-            'response' => 'Nice'
+            'response' => 'Enregistré avec succès'
         ]);
         
        }
