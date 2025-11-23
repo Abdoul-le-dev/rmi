@@ -53,7 +53,7 @@ function dateTimeFormat($timestamp, $format = 'H:i', $useAdminSetting = true, $a
         $timezone = "UTC";
     }
 
-    $carbon = (new Carbon\Carbon())
+    $carbon = (new Carbon())
         ->setTimezone($timezone)
         ->setTimestamp($timestamp);
 
@@ -70,7 +70,7 @@ function dateTimeFormatForHumans($timestamp, $applyTimezone = true, $timezone = 
         $timezone = "UTC";
     }
 
-    $carbon = (new Carbon\Carbon())
+    $carbon = (new Carbon())
         ->setTimezone($timezone)
         ->setTimestamp($timestamp);
 
