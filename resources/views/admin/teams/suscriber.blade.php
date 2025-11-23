@@ -486,6 +486,7 @@
 
                 const token = document.querySelector('meta[name="csrf-token"]').content;
                 const email = document.getElementById('studentEmail').textContent;
+                const name = document.getElementById('studentName').textContent;
                 const id = document.getElementById('studentId').textContent;
                 const startDateInput = document.getElementById('startDate').value;
                 const duration = selectedDuration;
@@ -511,7 +512,7 @@
         
 
                 if (currentStudent && selectedDuration) {
-                    showNotification(`${selectedDuration} jours ajoutés à ${currentStudent.name}`);
+                    showNotification(`${selectedDuration} jours ajoutés à ${name}`);
                     
                     // Réinitialiser
                     document.getElementById('emailSearch').value = '';
