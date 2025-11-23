@@ -694,7 +694,8 @@ public function indexs()
     if ($id_user && $email && $duration && $startdays)
     {   
 
-        $today = Carbon::now();
+       try{
+         $today = Carbon::now();
 
         $data = [
             "id" =>$id_user,
@@ -705,12 +706,17 @@ public function indexs()
             "date" => $today
         ];
 
-        file_put_contents(storage_path('./team/database.json'), json_encode($data, JSON_PRETTY_PRINT));
+        file_put_contents(storage_path('team/database.json'), json_encode($data, JSON_PRETTY_PRINT));
 
         return response()->json([
             'response' => 'Nice'
         ]);
         
+       }
+       catch(\Exception $e)
+       {
+        return  response()->json(['response' => $e]);
+       }
     }
 
     return response()->json([
