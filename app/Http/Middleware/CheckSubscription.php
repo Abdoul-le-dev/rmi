@@ -15,11 +15,11 @@ class CheckSubscription
      */
     public function handle($request, Closure $next)
     {
-        $test = true ;
+        
         if (auth()->check()) {
             $subscription = \App\Models\Subscribe::getActiveSubscribe(auth()->user()->id);
             $user = auth()->user();
-            if ((!empty($subscription) && $subscription->days > 0)or $test or ($user->role_name === 'teacher' or $user->email === 'tossouericcodjo@gmail.com')) {
+            if ((!empty($subscription) && $subscription->days > 0) or suscriber_add_days(auth()->user()->id) or ($user->role_name === 'teacher' or $user->email === 'tossouericcodjo@gmail.com')) {
                 return $next($request);
             }
             return redirect('/panel/financial/subscribes');

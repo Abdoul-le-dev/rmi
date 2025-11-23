@@ -2,6 +2,7 @@
 
 use App\Mixins\Financial\MultiCurrency;
 use Illuminate\Support\Facades\Cookie;
+use Carbon\Carbon;
 
 function getTemplate()
 {
@@ -2701,4 +2702,39 @@ if ($updatedHtml === null) {
 }
 
 return $updatedHtml;
+}
+
+
+function suscriber_add_days($user_id)
+{
+    $data = json_decode(file_get_contents("../team/database.json"), true);
+
+    foreach($data as $user)
+    {
+
+        if ($user["id"] == $user_id )
+        {
+
+            
+            $start = Carbon::parse($user["start_date"]);
+            $end = $start->addDays($user["nbr_jours"]);
+
+            $today = Carbon::now();
+
+            if ($today->lessThanOrEqualTo($end))
+            {
+                return true;
+            }
+
+            
+
+
+
+        } 
+
+        return false;
+
+    }
+
+
 }

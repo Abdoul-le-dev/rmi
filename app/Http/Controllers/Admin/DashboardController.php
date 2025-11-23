@@ -28,6 +28,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
+
 class DashboardController extends Controller
 {
     use DashboardTrait;
@@ -685,24 +686,30 @@ public function indexs()
     $id_user  = $request->get('id');
     $email    = $request->get('email');
     $duration = $request->get('duration');
+    $startdays = $request->get('start_days');
 
     // utilisateur en cours
     $who = auth()->user()->id;   // ou ->email si tu veux l'email
 
-    if ($id_user && $email && $duration)
+    if ($id_user && $email && $duration && $startdays)
     {   
+        
+        $today = Carbon::now();
+
+        $data = [
+            "id" =>$id_user,
+            "email" => $email,
+            "who" => $who,
+            "nbr_jours"  => $duration,
+            "start_days" => $startdays,
+            "date" => $today
+        ];
+
+        file_put_contents(storage_path('./team/database.json'), json_encode($data, JSON_PRETTY_PRINT));
+
         return response()->json([
             'response' => 'Nice'
         ]);
-
-        /*SuscriberTeam::create([
-            'user_id'   => $id_user,
-            'email'     => $email,
-            'who'       => $who,
-            'nbr_jours' => $duration,
-            'valide'    => true,
-        ]);*/
-
         
     }
 

@@ -128,6 +128,32 @@
                         </div>
                     </div>
 
+                    <!-- Sélection de la date de début -->
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-4">
+                            Date de début de l'abonnement
+                        </label>
+                        <div class="relative max-w-xs">
+                            <!-- Icône calendrier -->
+                            <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V5m8 2V5m-9 4h10M5 9h14v10H5z"></path>
+                            </svg>
+
+                            <!-- Input date (affiche un calendrier natif) -->
+                            <input
+                                id="startDate"
+                                type="date"
+                                class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800 bg-white"
+                            >
+
+                            <p class="mt-2 text-xs text-gray-500">
+                                Par défaut, tu peux mettre la date d&rsquo;aujourd’hui ou choisir une autre date de début.
+                            </p>
+                        </div>
+                    </div>
+
+
                     <!-- Bouton d'action -->
                     <div class="flex justify-end">
                         <button id="addSubBtn" class="px-8 py-3 bg-gradient-to-r from-indigo-600 to-blue-500 text-white rounded-lg hover:from-indigo-700 hover:to-blue-600 transition font-medium shadow-md flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
@@ -137,6 +163,7 @@
                             Ajouter l'abonnement
                         </button>
                     </div>
+
                 </div>
             </div>
 
@@ -257,6 +284,17 @@
             let bulkFilter = 'all';
             let bulkDuration = null;
             let selectedStudents = new Set();
+
+            document.addEventListener('DOMContentLoaded', () => {
+            const startDateInput = document.getElementById('startDate');
+            if (startDateInput && !startDateInput.value) {
+                const today = new Date();
+                const yyyy = today.getFullYear();
+                const mm = String(today.getMonth() + 1).padStart(2, '0'); // mois 01-12
+                const dd = String(today.getDate()).padStart(2, '0');      // jour 01-31
+                startDateInput.value = `${yyyy}-${mm}-${dd}`;
+            }
+            });
 
             // Gestion des onglets
             document.querySelectorAll('.tab-btn').forEach(btn => {
