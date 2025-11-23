@@ -715,7 +715,7 @@ public function indexs()
        }
        catch(\Exception $e)
        {
-        return  response()->json(['response' => $e]);
+        return  response()->json(['response' => $e->getMessage()]);
        }
     }
 
