@@ -555,7 +555,7 @@
                 }, 3500);
             }
 
-            function showNotification(text) {
+            function showNotifications(text) {
                 const notif = document.getElementById('notification');
                 notif.classList.remove('hidden');
                 document.getElementById('notificationText').textContent = text;
