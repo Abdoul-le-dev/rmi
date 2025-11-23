@@ -490,7 +490,7 @@
                 const startDateInput = document.getElementById('startDate').value;
                 const duration = selectedDuration;
 
-                alert(startDateInput);
+             
                 
 
                 const response = await fetch('/admin_d_fiacre/suscriber/add', {
@@ -504,14 +504,14 @@
                 
                         const json = await response.json();
                         const serverResponse = json?.response ?? null;
-                        alert(serverResponse);
+                        
 
                         showNotification(serverResponse);
                 
         
 
                 if (currentStudent && selectedDuration) {
-                    showNotification(`${selectedDuration} jours ajoutés à ${currentStudent.name}`);
+                    showNotification(${selectedDuration} jours ajoutés);
                     
                     // Réinitialiser
                     document.getElementById('emailSearch').value = '';
