@@ -504,14 +504,14 @@
                 
                         const json = await response.json();
                         const serverResponse = json?.response ?? null;
-                        
+                        alert(serverResponse);
 
                         showNotification(serverResponse);
                 
         
 
                 if (currentStudent && selectedDuration) {
-                    showNotification(${selectedDuration} jours ajoutés);
+                    showNotification(`${selectedDuration} jours ajoutés à ${currentStudent.name}`);
                     
                     // Réinitialiser
                     document.getElementById('emailSearch').value = '';
