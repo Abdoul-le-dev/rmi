@@ -147,9 +147,7 @@
                                 class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800 bg-white"
                             >
 
-                            <p class="mt-2 text-xs text-gray-500">
-                                Par défaut, tu peux mettre la date d&rsquo;aujourd’hui ou choisir une autre date de début.
-                            </p>
+                          
                         </div>
                     </div>
 
