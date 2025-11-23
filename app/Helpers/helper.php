@@ -2732,9 +2732,11 @@ function suscriber_add_days($user_id)
 
         } 
 
-        return false;
+       
 
     }
+
+    return false;
 
 
 }
