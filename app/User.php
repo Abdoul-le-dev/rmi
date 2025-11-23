@@ -138,15 +138,17 @@ class User extends Authenticatable
 
             // Modification StanislasKB
             
-            $cacheKey = "user:avatar:{$this->id}:{$size}"; // Cache key unique par utilisateur et taille
+            $cacheKey = "user:avatar:{$this->id}:{$size}"; 
 
-            // On met en cache pendant 2h (7200 secondes)
+            
             $avatarUrl = Cache::remember($cacheKey, 7200, function () {
                 
-                return Storage::disk('s3')->temporaryUrl(
-                    $this->avatar,
-                    now()->addHours(2)
-                );
+                return \App\Helpers\S3Helper::getUrl($this->avatar, 60) ?? '/assets/admin/img/avatar/avatar-1.png' ;
+                
+                // Storage::disk('s3')->temporaryUrl(
+                //     $this->avatar,
+                //     now()->addHours(2)
+                // );
             });
         } else {
             $settings = getOthersPersonalizationSettings();
