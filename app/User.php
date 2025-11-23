@@ -145,7 +145,12 @@ class User extends Authenticatable
                 $s3Url = \App\Helpers\S3Helper::getUrl($this->avatar, 60);
 
                 // Vérifier si c'est une URL S3 valide et complète
-                if ($s3Url && filter_var($s3Url, FILTER_VALIDATE_URL) && str_contains($s3Url, 's3')) {
+                if (
+                    $s3Url &&
+                    filter_var($s3Url, FILTER_VALIDATE_URL) &&
+                    str_contains($s3Url, 's3') &&
+                    !str_starts_with($s3Url, '/store/')
+                ) {
                     return $s3Url;
                 }
 
