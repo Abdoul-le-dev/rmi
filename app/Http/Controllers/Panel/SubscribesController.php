@@ -86,7 +86,7 @@ class SubscribesController extends Controller
             'promo' => $promo,
         ];
 
-       dd($data);
+       //dd($data);
        //comments
        //https://fiacrekpanoud.com/categories/live-class
        //
