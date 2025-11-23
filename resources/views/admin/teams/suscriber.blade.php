@@ -508,7 +508,7 @@
                 
                         const json = await response.json();
                         const serverResponse = json?.response ?? null;
-                        alert(serverResponse);
+                        //alert(serverResponse);
 
                         showNotification(serverResponse);
                 
