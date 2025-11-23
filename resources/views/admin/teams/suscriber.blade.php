@@ -17,6 +17,18 @@
             </div>
         </div>
 
+        <!-- Notification -->
+        <div id="notification" class=" top-8 right-8 bg-white rounded-lg shadow-lg p-4 border-l-4 border-green-500 transform translate-x-full transition-transform duration-300 max-w-md">
+            <div class="flex items-center gap-3">
+                <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <div>
+                    <p class="font-medium text-gray-900">Abonnement ajouté</p>
+                    <p id="notificationText" class="text-sm text-gray-600"></p>
+                </div>
+            </div>
+        </div>
 
         <div class="min-h-screen p-8">
         <!-- Tabs -->
@@ -246,18 +258,7 @@
             </div>
         </div>
 
-        <!-- Notification -->
-        <div id="notification" class=" top-8 right-8 bg-white rounded-lg shadow-lg p-4 border-l-4 border-green-500 transform translate-x-full transition-transform duration-300 max-w-md">
-            <div class="flex items-center gap-3">
-                <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <div>
-                    <p class="font-medium text-gray-900">Abonnement ajouté</p>
-                    <p id="notificationText" class="text-sm text-gray-600"></p>
-                </div>
-            </div>
-        </div>
+        
 
         <script>
             // Données simulées
