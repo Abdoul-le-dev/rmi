@@ -2717,7 +2717,7 @@ function suscriber_add_days($user_id)
 
             
             $start = Carbon::parse($user["start_days"]);
-            $end = $start->addDays($user["nbr_jours"]);
+            $end = $start->copy()->addDays($user["nbr_jours"]);
 
             $today = Carbon::now();
 
