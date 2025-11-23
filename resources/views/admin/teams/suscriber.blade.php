@@ -491,7 +491,10 @@
                 const token = document.querySelector('meta[name="csrf-token"]').content;
                 const email = document.getElementById('studentEmail').textContent;
                 const id = document.getElementById('studentId').textContent;
+                const startDateInput = document.getElementById('startDate').textContent;
                 const duration = selectedDuration;
+
+                alert(startDateInput);
                 
 
                 const response = await fetch('/admin_d_fiacre/suscriber/add', {
