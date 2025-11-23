@@ -2721,7 +2721,7 @@ function suscriber_add_days($user_id)
 
             $today = Carbon::now();
 
-            if ($today->lessThanOrEqualTo($end))
+            if ( $today->greaterThanOrEqualTo($start) && $today->lessThanOrEqualTo($end))
             {
                 return true;
             }else
