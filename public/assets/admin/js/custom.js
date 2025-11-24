@@ -41,10 +41,11 @@
                     img_src =response.url;
                     console.log('dd', img_src)
                 }
-            });
-
+                
         $('#fileViewModal').find('img').attr('src', img_src);
         $('#fileViewModal').modal('show');
+            });
+
     });
 
 
