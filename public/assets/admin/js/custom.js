@@ -36,6 +36,12 @@
         var input = $(this).attr('data-input');
 
         var img_src = $('#' + input).val();
+        $.get("/media/temp-url/" + img_src, function (response) {
+                if (response.url) {
+                    img_src =response.url;
+                    
+                }
+            });
 
         $('#fileViewModal').find('img').attr('src', img_src);
         $('#fileViewModal').modal('show');
