@@ -39,7 +39,7 @@
         $.get("/media/temp-url/" + img_src, function (response) {
                 if (response.url) {
                     img_src =response.url;
-                    
+                    console.log('dd', img_src)
                 }
             });
 
