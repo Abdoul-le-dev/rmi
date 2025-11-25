@@ -164,7 +164,7 @@
                                                             <i class="fa fa-upload"></i>
                                                         </button>
                                                     </div>
-                                                    <input type="text" name="thumbnail" id="thumbnail" value="{{ !empty($webinar) ? $webinar->thumbnail : old('thumbnail') }}" class="form-control @error('thumbnail')  is-invalid @enderror"/>
+                                                    <input type="text" name="thumbnail" id="thumbnail" value="{{ !empty($webinar) ? $webinar->thumbnail  : old('thumbnail') }}" class="form-control @error('thumbnail')  is-invalid @enderror"/>
                                                     <div class="input-group-append">
                                                         <button type="button" class="input-group-text admin-file-view" data-input="thumbnail">
                                                             <i class="fa fa-eye"></i>

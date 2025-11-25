@@ -30,6 +30,7 @@ class S3Helper
 
         // Vérifier l'existence et générer l'URL temporaire
         try {
+            
             if (Storage::disk('s3')->exists($relativePath)) {
                 return Storage::disk('s3')->temporaryUrl(
                     $relativePath,

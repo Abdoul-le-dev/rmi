@@ -138,7 +138,7 @@ class User extends Authenticatable
 
             // Modification StanislasKB
             
-            $cacheKey = "user:avatar:{$this->id}:{$size}"; // Cache key unique par utilisateur et taille
+            $cacheKey = "user:avatar:{$this->id}:{$size}"; 
 
             // On met en cache pendant 2h (7200 secondes)
             $avatarUrl = Cache::remember($cacheKey, 7200, function () {
