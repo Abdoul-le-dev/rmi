@@ -481,8 +481,8 @@ class WebinarController extends Controller
                     $fileName = str_replace(' ', '-', $file->title);
                     $fileName = str_replace('.', '-', $fileName);
                     return \App\Helpers\S3Helper::downloadFile($attachment->path, $fileName);
-                    }
-                } else {
+                }
+                else {
                     $toastData = [
                         'title' => trans('public.not_access_toast_lang'),
                         'msg' => trans('public.not_access_toast_msg_lang'),
@@ -491,9 +491,11 @@ class WebinarController extends Controller
                     return back()->with(['toast' => $toastData]);
                 }
             }
-        }
+        
+          }
 
         return back();
+    
     }
 
     public function showHtmlFile($slug, $file_id)
