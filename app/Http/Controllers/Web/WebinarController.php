@@ -462,9 +462,9 @@ class WebinarController extends Controller
                     //     return redirect($file->file);
                     // }
 
-                    // if (in_array($file->storage, ['external_link'])) {
-                    //     return redirect($file->file);
-                    // }
+                    if (in_array($file->storage, ['external_link'])) {
+                        return redirect($file->file);
+                    }
                      dd('ici');
                     // $filePath = public_path($file->file);
 
@@ -482,7 +482,7 @@ class WebinarController extends Controller
                     //     return response()->download($filePath, $fileName, $headers);
                     $fileName = str_replace(' ', '-', $file->title);
                     $fileName = str_replace('.', '-', $fileName);
-                    return \App\Helpers\S3Helper::downloadFile($attachment->path, $fileName);
+                    return \App\Helpers\S3Helper::downloadFile($file->file, $fileName);
                 }
                 else {
                     $toastData = [
@@ -495,7 +495,9 @@ class WebinarController extends Controller
             }
         
           }
-
+          $fileName = str_replace(' ', '-', $file->title);
+                    $fileName = str_replace('.', '-', $fileName);
+                    return \App\Helpers\S3Helper::downloadFile($file->file, $fileName);
         return back();
     
     }
