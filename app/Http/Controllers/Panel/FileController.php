@@ -15,8 +15,188 @@ use Validator;
 
 class FileController extends Controller
 {
+    // public function store(Request $request)
+    // {
+    //     $user = auth()->user();
+
+    //     $s3FileInput = $request->file('s3_file');
+    //     $data = $request->get('ajax')['new'];
+    //     $data['s3_file'] = $s3FileInput;
+
+    //     if (empty($data['storage'])) {
+    //         $data['storage'] = 'upload';
+    //     }
+
+    //     if (!empty($data['file_path']) and is_array($data['file_path'])) {
+    //         $data['file_path'] = $data['file_path'][0];
+    //     }
+
+    //     $sourceRequiredFileType = ['external_link', 's3', 'google_drive', 'upload'];
+    //     $sourceRequiredFileVolume = ['external_link', 'google_drive'];
+    //     $sourceDefaultFileTypeAndVolume = ['youtube', 'vimeo', 'iframe', 'secure_host'];
+
+    //     if (in_array($data['storage'], $sourceDefaultFileTypeAndVolume)) {
+    //         $data['file_type'] = 'video';
+    //         $data['volume'] = !empty($data['volume']) ? $data['volume'] : 0;
+    //     }
+
+    //     $rules = [
+    //         'webinar_id' => 'required',
+    //         'chapter_id' => 'required',
+    //         'title' => 'required|max:255',
+    //         'accessibility' => 'required|' . Rule::in(File::$accessibility),
+    //         'file_path' => 'required',
+    //         'file_type' => Rule::requiredIf(in_array($data['storage'], $sourceRequiredFileType)),
+    //         'volume' => Rule::requiredIf(in_array($data['storage'], $sourceRequiredFileVolume)),
+    //         'description' => 'nullable',
+    //     ];
+
+    //     if ($data['storage'] == 'upload_archive') {
+    //         $rules['interactive_type'] = 'required';
+    //         $rules['interactive_file_name'] = Rule::requiredIf($data['interactive_type'] == 'custom');
+    //     }
+
+    //     if ($data['storage'] == 's3') {
+    //         $rules['file_path'] = 'nullable';
+    //         $rules['s3_file'] = 'required';
+    //     }
+
+    //     if ($data['storage'] == 'secure_host') {
+    //         $rules['file_path'] = 'nullable';
+    //         $rules['s3_file'] = 'required';
+
+    //         if ($data['secure_host_upload_type'] == "manual") {
+    //             $rules['s3_file'] = 'nullable';
+    //             $rules['secure_host_file_path'] = 'required';
+    //             $rules['volume'] = 'required';
+    //         }
+    //     }
+
+    //     $validator = Validator::make($data, $rules);
+
+    //     if ($validator->fails()) {
+    //         return response([
+    //             'code' => 422,
+    //             'errors' => $validator->errors(),
+    //         ], 422);
+    //     }
+
+    //     $data['downloadable'] = !empty($data['downloadable']);
+    //     if (in_array($data['storage'], ['youtube', 'vimeo', 'iframe', 'google_drive', 'upload_archive'])) {
+    //         $data['downloadable'] = false;
+    //     } elseif (in_array($data['storage'], ['external_link', 's3']) and $data['file_type'] != 'video') {
+    //         $data['downloadable'] = true;
+    //     }
+
+    //     if (!empty($data['sequence_content']) and $data['sequence_content'] == 'on') {
+    //         $data['check_previous_parts'] = (!empty($data['check_previous_parts']) and $data['check_previous_parts'] == 'on');
+    //         $data['access_after_day'] = !empty($data['access_after_day']) ? $data['access_after_day'] : null;
+    //     } else {
+    //         $data['check_previous_parts'] = false;
+    //         $data['access_after_day'] = null;
+    //     }
+
+    //     $webinar = Webinar::find($data['webinar_id']);
+
+    //     if (!empty($webinar) and $webinar->canAccess($user)) {
+    //         $volume = 0;
+    //         $fileInfos = null;
+
+    //         if ($data['storage'] == 'upload_archive') {
+    //             $fileInfos = $this->fileInfo($data['file_path']);
+
+    //             if (empty($fileInfos) or $fileInfos['extension'] != 'zip') {
+    //                 return response([
+    //                     'code' => 422,
+    //                     'errors' => [
+    //                         'file_path' => [trans('validation.mimes', ['attribute' => 'file', 'values' => 'zip'])]
+    //                     ],
+    //                 ], 422);
+    //             }
+
+    //             $volume = convertToMB($fileInfos['size'] ?? 0);
+    //             $fileInfos['extension'] = 'archive';
+    //             $data['interactive_file_path'] = $this->handleUnZipFile($data);
+
+    //         } elseif ($data['storage'] == 'upload') {
+    //             $uploadFile = $this->fileInfo($data['file_path']);
+    //             $volume = convertToMB($uploadFile['size'] ?? 0);
+    //         } elseif (in_array($data['storage'], ['s3', 'secure_host'])) {
+
+    //             if ($data['storage'] == 's3') {
+    //                 $data['volume'] = $request->file('s3_file')->getSize();
+    //                 $result = $this->uploadFileToS3($data['s3_file']);
+    //             } else {
+    //                 if ($data['secure_host_upload_type'] == "direct") {
+    //                     $data['volume'] = $request->file('s3_file')->getSize();
+    //                     $result = $this->uploadFileToBunny($webinar, $data['s3_file']);
+    //                 } else {
+    //                     $result['status'] = true;
+    //                     $result['path'] = $data['secure_host_file_path'];
+    //                 }
+    //             }
+
+    //             if (!$result['status']) {
+    //                 return $result['path'];
+    //             }
+
+    //             $data['file_path'] = $result['path'];
+    //             $fileInfos['extension'] = $data['file_type'];
+    //             $fileInfos['size'] = $data['volume'];
+
+    //             if ($data['storage'] == 'secure_host' and $data['secure_host_upload_type'] == "manual") {
+    //                 $volume = $data['volume'];
+    //             } else {
+    //                 $volume = convertToMB(($data['volume'] ?? 0));
+    //             }
+
+    //         } else {
+    //             $volume = !empty($data['volume']) ? $data['volume'] : 0; // input is MB
+    //         }
+
+    //         $file = File::create([
+    //             'creator_id' => $user->id,
+    //             'webinar_id' => $data['webinar_id'],
+    //             'chapter_id' => $data['chapter_id'],
+    //             'file' => $data['file_path'],
+    //             'volume' => $volume,
+    //             'file_type' => !empty($fileInfos) ? $fileInfos['extension'] : $data['file_type'],
+    //             'accessibility' => $data['accessibility'],
+    //             'storage' => $data['storage'],
+    //             'secure_host_upload_type' => $data['secure_host_upload_type'] ?? null,
+    //             'interactive_type' => $data['interactive_type'] ?? null,
+    //             'interactive_file_name' => $data['interactive_file_name'] ?? null,
+    //             'interactive_file_path' => $data['interactive_file_path'] ?? null,
+    //             'online_viewer' => (!empty($data['online_viewer']) and $data['online_viewer'] == 'on'),
+    //             'downloadable' => $data['downloadable'],
+    //             'check_previous_parts' => $data['check_previous_parts'],
+    //             'access_after_day' => $data['access_after_day'],
+    //             'status' => (!empty($data['status']) and $data['status'] == 'on') ? File::$Active : File::$Inactive,
+    //             'created_at' => time()
+    //         ]);
+
+    //         if (!empty($file)) {
+    //             FileTranslation::updateOrCreate([
+    //                 'file_id' => $file->id,
+    //                 'locale' => mb_strtolower($data['locale']),
+    //             ], [
+    //                 'title' => $data['title'],
+    //                 'description' => $data['description'],
+    //             ]);
+
+    //             WebinarChapterItem::makeItem($file->creator_id, $file->chapter_id, $file->id, WebinarChapterItem::$chapterFile);
+    //         }
+
+    //         return response()->json([
+    //             'code' => 200,
+    //         ], 200);
+    //     }
+
+    //     abort(403);
+    // }
     public function store(Request $request)
-    {
+{
+    try {
         $user = auth()->user();
 
         $s3FileInput = $request->file('s3_file');
@@ -75,8 +255,9 @@ class FileController extends Controller
         $validator = Validator::make($data, $rules);
 
         if ($validator->fails()) {
-            return response([
+            return response()->json([
                 'code' => 422,
+                'message' => 'Validation failed',
                 'errors' => $validator->errors(),
             ], 422);
         }
@@ -98,102 +279,150 @@ class FileController extends Controller
 
         $webinar = Webinar::find($data['webinar_id']);
 
-        if (!empty($webinar) and $webinar->canAccess($user)) {
-            $volume = 0;
-            $fileInfos = null;
-
-            if ($data['storage'] == 'upload_archive') {
-                $fileInfos = $this->fileInfo($data['file_path']);
-
-                if (empty($fileInfos) or $fileInfos['extension'] != 'zip') {
-                    return response([
-                        'code' => 422,
-                        'errors' => [
-                            'file_path' => [trans('validation.mimes', ['attribute' => 'file', 'values' => 'zip'])]
-                        ],
-                    ], 422);
-                }
-
-                $volume = convertToMB($fileInfos['size'] ?? 0);
-                $fileInfos['extension'] = 'archive';
-                $data['interactive_file_path'] = $this->handleUnZipFile($data);
-
-            } elseif ($data['storage'] == 'upload') {
-                $uploadFile = $this->fileInfo($data['file_path']);
-                $volume = convertToMB($uploadFile['size'] ?? 0);
-            } elseif (in_array($data['storage'], ['s3', 'secure_host'])) {
-
-                if ($data['storage'] == 's3') {
-                    $data['volume'] = $request->file('s3_file')->getSize();
-                    $result = $this->uploadFileToS3($data['s3_file']);
-                } else {
-                    if ($data['secure_host_upload_type'] == "direct") {
-                        $data['volume'] = $request->file('s3_file')->getSize();
-                        $result = $this->uploadFileToBunny($webinar, $data['s3_file']);
-                    } else {
-                        $result['status'] = true;
-                        $result['path'] = $data['secure_host_file_path'];
-                    }
-                }
-
-                if (!$result['status']) {
-                    return $result['path'];
-                }
-
-                $data['file_path'] = $result['path'];
-                $fileInfos['extension'] = $data['file_type'];
-                $fileInfos['size'] = $data['volume'];
-
-                if ($data['storage'] == 'secure_host' and $data['secure_host_upload_type'] == "manual") {
-                    $volume = $data['volume'];
-                } else {
-                    $volume = convertToMB(($data['volume'] ?? 0));
-                }
-
-            } else {
-                $volume = !empty($data['volume']) ? $data['volume'] : 0; // input is MB
-            }
-
-            $file = File::create([
-                'creator_id' => $user->id,
-                'webinar_id' => $data['webinar_id'],
-                'chapter_id' => $data['chapter_id'],
-                'file' => $data['file_path'],
-                'volume' => $volume,
-                'file_type' => !empty($fileInfos) ? $fileInfos['extension'] : $data['file_type'],
-                'accessibility' => $data['accessibility'],
-                'storage' => $data['storage'],
-                'secure_host_upload_type' => $data['secure_host_upload_type'] ?? null,
-                'interactive_type' => $data['interactive_type'] ?? null,
-                'interactive_file_name' => $data['interactive_file_name'] ?? null,
-                'interactive_file_path' => $data['interactive_file_path'] ?? null,
-                'online_viewer' => (!empty($data['online_viewer']) and $data['online_viewer'] == 'on'),
-                'downloadable' => $data['downloadable'],
-                'check_previous_parts' => $data['check_previous_parts'],
-                'access_after_day' => $data['access_after_day'],
-                'status' => (!empty($data['status']) and $data['status'] == 'on') ? File::$Active : File::$Inactive,
-                'created_at' => time()
-            ]);
-
-            if (!empty($file)) {
-                FileTranslation::updateOrCreate([
-                    'file_id' => $file->id,
-                    'locale' => mb_strtolower($data['locale']),
-                ], [
-                    'title' => $data['title'],
-                    'description' => $data['description'],
-                ]);
-
-                WebinarChapterItem::makeItem($file->creator_id, $file->chapter_id, $file->id, WebinarChapterItem::$chapterFile);
-            }
-
+        if (empty($webinar)) {
             return response()->json([
-                'code' => 200,
-            ], 200);
+                'code' => 404,
+                'message' => 'Webinar not found',
+            ], 404);
         }
 
-        abort(403);
+        if (!$webinar->canAccess($user)) {
+            return response()->json([
+                'code' => 403,
+                'message' => 'Access forbidden',
+            ], 403);
+        }
+
+        $volume = 0;
+        $fileInfos = null;
+
+        if ($data['storage'] == 'upload_archive') {
+            $fileInfos = $this->fileInfo($data['file_path']);
+
+            if (empty($fileInfos) or $fileInfos['extension'] != 'zip') {
+                return response()->json([
+                    'code' => 422,
+                    'message' => 'Invalid file format',
+                    'errors' => [
+                        'file_path' => [trans('validation.mimes', ['attribute' => 'file', 'values' => 'zip'])]
+                    ],
+                ], 422);
+            }
+
+            $volume = convertToMB($fileInfos['size'] ?? 0);
+            $fileInfos['extension'] = 'archive';
+            $data['interactive_file_path'] = $this->handleUnZipFile($data);
+
+        } elseif ($data['storage'] == 'upload') {
+            $uploadFile = $this->fileInfo($data['file_path']);
+            $volume = convertToMB($uploadFile['size'] ?? 0);
+            
+        } elseif (in_array($data['storage'], ['s3', 'secure_host'])) {
+
+            if ($data['storage'] == 's3') {
+                $data['volume'] = $request->file('s3_file')->getSize();
+                $result = $this->uploadFileToS3($data['s3_file']);
+            } else {
+                if ($data['secure_host_upload_type'] == "direct") {
+                    $data['volume'] = $request->file('s3_file')->getSize();
+                    $result = $this->uploadFileToBunny($webinar, $data['s3_file']);
+                } else {
+                    $result['status'] = true;
+                    $result['path'] = $data['secure_host_file_path'];
+                }
+            }
+
+            if (!$result['status']) {
+                return response()->json([
+                    'code' => 500,
+                    'message' => 'File upload failed',
+                    'error' => $result['path'] ?? 'Unknown upload error',
+                ], 500);
+            }
+
+            $data['file_path'] = $result['path'];
+            $fileInfos['extension'] = $data['file_type'];
+            $fileInfos['size'] = $data['volume'];
+
+            if ($data['storage'] == 'secure_host' and $data['secure_host_upload_type'] == "manual") {
+                $volume = $data['volume'];
+            } else {
+                $volume = convertToMB(($data['volume'] ?? 0));
+            }
+
+        } else {
+            $volume = !empty($data['volume']) ? $data['volume'] : 0;
+        }
+
+        $file = File::create([
+            'creator_id' => $user->id,
+            'webinar_id' => $data['webinar_id'],
+            'chapter_id' => $data['chapter_id'],
+            'file' => $data['file_path'],
+            'volume' => $volume,
+            'file_type' => !empty($fileInfos) ? $fileInfos['extension'] : $data['file_type'],
+            'accessibility' => $data['accessibility'],
+            'storage' => $data['storage'],
+            'secure_host_upload_type' => $data['secure_host_upload_type'] ?? null,
+            'interactive_type' => $data['interactive_type'] ?? null,
+            'interactive_file_name' => $data['interactive_file_name'] ?? null,
+            'interactive_file_path' => $data['interactive_file_path'] ?? null,
+            'online_viewer' => (!empty($data['online_viewer']) and $data['online_viewer'] == 'on'),
+            'downloadable' => $data['downloadable'],
+            'check_previous_parts' => $data['check_previous_parts'],
+            'access_after_day' => $data['access_after_day'],
+            'status' => (!empty($data['status']) and $data['status'] == 'on') ? File::$Active : File::$Inactive,
+            'created_at' => time()
+        ]);
+
+        if (!empty($file)) {
+            FileTranslation::updateOrCreate([
+                'file_id' => $file->id,
+                'locale' => mb_strtolower($data['locale']),
+            ], [
+                'title' => $data['title'],
+                'description' => $data['description'],
+            ]);
+
+            WebinarChapterItem::makeItem($file->creator_id, $file->chapter_id, $file->id, WebinarChapterItem::$chapterFile);
+        }
+
+        return response()->json([
+            'code' => 200,
+            'message' => 'File created successfully',
+            'data' => [
+                'file_id' => $file->id
+            ]
+        ], 200);
+
+    } catch (\Illuminate\Database\QueryException $e) {
+        \Log::error('Database error in file store: ' . $e->getMessage(), [
+            'exception' => $e,
+            'trace' => $e->getTraceAsString()
+        ]);
+        
+        return response()->json([
+            'code' => 500,
+            'message' => 'Database error occurred',
+            'error' => config('app.debug') ? $e->getMessage() : 'An error occurred while saving the file',
+        ], 500);
+
+    } catch (\Exception $e) {
+        \Log::error('Error in file store: ' . $e->getMessage(), [
+            'exception' => $e,
+            'trace' => $e->getTraceAsString(),
+            'request_data' => $request->all()
+        ]);
+        
+        return response()->json([
+            'code' => 500,
+            'message' => 'An unexpected error occurred',
+            'error' => config('app.debug') ? $e->getMessage() : 'Please try again later',
+            'file' => config('app.debug') ? $e->getFile() : null,
+            'line' => config('app.debug') ? $e->getLine() : null,
+        ], 500);
     }
+}
 
     private function handleUnZipFile($data)
     {
