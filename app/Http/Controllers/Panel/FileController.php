@@ -194,7 +194,240 @@ class FileController extends Controller
 
     //     abort(403);
     // }
-    public function store(Request $request)
+
+
+//     public function store(Request $request)
+// {
+//     try {
+//         $user = auth()->user();
+
+//         $s3FileInput = $request->file('s3_file');
+//         $data = $request->get('ajax')['new'];
+//         $data['s3_file'] = $s3FileInput;
+
+//         if (empty($data['storage'])) {
+//             $data['storage'] = 'upload';
+//         }
+
+//         if (!empty($data['file_path']) and is_array($data['file_path'])) {
+//             $data['file_path'] = $data['file_path'][0];
+//         }
+
+//         $sourceRequiredFileType = ['external_link', 's3', 'google_drive', 'upload'];
+//         $sourceRequiredFileVolume = ['external_link', 'google_drive'];
+//         $sourceDefaultFileTypeAndVolume = ['youtube', 'vimeo', 'iframe', 'secure_host'];
+
+//         if (in_array($data['storage'], $sourceDefaultFileTypeAndVolume)) {
+//             $data['file_type'] = 'video';
+//             $data['volume'] = !empty($data['volume']) ? $data['volume'] : 0;
+//         }
+
+//         $rules = [
+//             'webinar_id' => 'required',
+//             'chapter_id' => 'required',
+//             'title' => 'required|max:255',
+//             'accessibility' => 'required|' . Rule::in(File::$accessibility),
+//             'file_path' => 'required',
+//             'file_type' => Rule::requiredIf(in_array($data['storage'], $sourceRequiredFileType)),
+//             'volume' => Rule::requiredIf(in_array($data['storage'], $sourceRequiredFileVolume)),
+//             'description' => 'nullable',
+//         ];
+
+//         if ($data['storage'] == 'upload_archive') {
+//             $rules['interactive_type'] = 'required';
+//             $rules['interactive_file_name'] = Rule::requiredIf($data['interactive_type'] == 'custom');
+//         }
+
+//         if ($data['storage'] == 's3') {
+//             $rules['file_path'] = 'nullable';
+//             $rules['s3_file'] = 'required';
+//         }
+
+//         if ($data['storage'] == 'secure_host') {
+//             $rules['file_path'] = 'nullable';
+//             $rules['s3_file'] = 'required';
+
+//             if ($data['secure_host_upload_type'] == "manual") {
+//                 $rules['s3_file'] = 'nullable';
+//                 $rules['secure_host_file_path'] = 'required';
+//                 $rules['volume'] = 'required';
+//             }
+//         }
+
+//         $validator = Validator::make($data, $rules);
+
+//         if ($validator->fails()) {
+//             return response()->json([
+//                 'code' => 422,
+//                 'message' => 'Validation failed',
+//                 'errors' => $validator->errors(),
+//             ], 422);
+//         }
+
+//         $data['downloadable'] = !empty($data['downloadable']);
+//         if (in_array($data['storage'], ['youtube', 'vimeo', 'iframe', 'google_drive', 'upload_archive'])) {
+//             $data['downloadable'] = false;
+//         } elseif (in_array($data['storage'], ['external_link', 's3']) and $data['file_type'] != 'video') {
+//             $data['downloadable'] = true;
+//         }
+
+//         if (!empty($data['sequence_content']) and $data['sequence_content'] == 'on') {
+//             $data['check_previous_parts'] = (!empty($data['check_previous_parts']) and $data['check_previous_parts'] == 'on');
+//             $data['access_after_day'] = !empty($data['access_after_day']) ? $data['access_after_day'] : null;
+//         } else {
+//             $data['check_previous_parts'] = false;
+//             $data['access_after_day'] = null;
+//         }
+
+//         $webinar = Webinar::find($data['webinar_id']);
+
+//         if (empty($webinar)) {
+//             return response()->json([
+//                 'code' => 404,
+//                 'message' => 'Webinar not found',
+//             ], 404);
+//         }
+
+//         if (!$webinar->canAccess($user)) {
+//             return response()->json([
+//                 'code' => 403,
+//                 'message' => 'Access forbidden',
+//             ], 403);
+//         }
+
+//         $volume = 0;
+//         $fileInfos = null;
+
+//         if ($data['storage'] == 'upload_archive') {
+//             $fileInfos = $this->fileInfo($data['file_path']);
+
+//             if (empty($fileInfos) or $fileInfos['extension'] != 'zip') {
+//                 return response()->json([
+//                     'code' => 422,
+//                     'message' => 'Invalid file format',
+//                     'errors' => [
+//                         'file_path' => [trans('validation.mimes', ['attribute' => 'file', 'values' => 'zip'])]
+//                     ],
+//                 ], 422);
+//             }
+
+//             $volume = convertToMB($fileInfos['size'] ?? 0);
+//             $fileInfos['extension'] = 'archive';
+//             $data['interactive_file_path'] = $this->handleUnZipFile($data);
+
+//         } elseif ($data['storage'] == 'upload') {
+//             $uploadFile = $this->fileInfo($data['file_path']);
+//             $volume = convertToMB($uploadFile['size'] ?? 0);
+            
+//         } elseif (in_array($data['storage'], ['s3', 'secure_host'])) {
+
+//             if ($data['storage'] == 's3') {
+//                 $data['volume'] = $request->file('s3_file')->getSize();
+//                 $result = $this->uploadFileToS3($data['s3_file']);
+//             } else {
+//                 if ($data['secure_host_upload_type'] == "direct") {
+//                     $data['volume'] = $request->file('s3_file')->getSize();
+//                     $result = $this->uploadFileToBunny($webinar, $data['s3_file']);
+//                 } else {
+//                     $result['status'] = true;
+//                     $result['path'] = $data['secure_host_file_path'];
+//                 }
+//             }
+
+//             if (!$result['status']) {
+//                 return response()->json([
+//                     'code' => 500,
+//                     'message' => 'File upload failed',
+//                     'error' => $result['path'] ?? 'Unknown upload error',
+//                 ], 500);
+//             }
+
+//             $data['file_path'] = $result['path'];
+//             $fileInfos['extension'] = $data['file_type'];
+//             $fileInfos['size'] = $data['volume'];
+
+//             if ($data['storage'] == 'secure_host' and $data['secure_host_upload_type'] == "manual") {
+//                 $volume = $data['volume'];
+//             } else {
+//                 $volume = convertToMB(($data['volume'] ?? 0));
+//             }
+
+//         } else {
+//             $volume = !empty($data['volume']) ? $data['volume'] : 0;
+//         }
+
+//         $file = File::create([
+//             'creator_id' => $user->id,
+//             'webinar_id' => $data['webinar_id'],
+//             'chapter_id' => $data['chapter_id'],
+//             'file' => $data['file_path'],
+//             'volume' => $volume,
+//             'file_type' => !empty($fileInfos) ? $fileInfos['extension'] : $data['file_type'],
+//             'accessibility' => $data['accessibility'],
+//             'storage' => $data['storage'],
+//             'secure_host_upload_type' => $data['secure_host_upload_type'] ?? null,
+//             'interactive_type' => $data['interactive_type'] ?? null,
+//             'interactive_file_name' => $data['interactive_file_name'] ?? null,
+//             'interactive_file_path' => $data['interactive_file_path'] ?? null,
+//             'online_viewer' => (!empty($data['online_viewer']) and $data['online_viewer'] == 'on'),
+//             'downloadable' => $data['downloadable'],
+//             'check_previous_parts' => $data['check_previous_parts'],
+//             'access_after_day' => $data['access_after_day'],
+//             'status' => (!empty($data['status']) and $data['status'] == 'on') ? File::$Active : File::$Inactive,
+//             'created_at' => time()
+//         ]);
+
+//         if (!empty($file)) {
+//             FileTranslation::updateOrCreate([
+//                 'file_id' => $file->id,
+//                 'locale' => mb_strtolower($data['locale']),
+//             ], [
+//                 'title' => $data['title'],
+//                 'description' => $data['description'],
+//             ]);
+
+//             WebinarChapterItem::makeItem($file->creator_id, $file->chapter_id, $file->id, WebinarChapterItem::$chapterFile);
+//         }
+
+//         return response()->json([
+//             'code' => 200,
+//             'message' => 'File created successfully',
+//             'data' => [
+//                 'file_id' => $file->id
+//             ]
+//         ], 200);
+
+//     } catch (\Illuminate\Database\QueryException $e) {
+//         \Log::error('Database error in file store: ' . $e->getMessage(), [
+//             'exception' => $e,
+//             'trace' => $e->getTraceAsString()
+//         ]);
+        
+//         return response()->json([
+//             'code' => 500,
+//             'message' => 'Database error occurred',
+//             'error' => config('app.debug') ? $e->getMessage() : 'An error occurred while saving the file',
+//         ], 500);
+
+//     } catch (\Exception $e) {
+//         \Log::error('Error in file store: ' . $e->getMessage(), [
+//             'exception' => $e,
+//             'trace' => $e->getTraceAsString(),
+//             'request_data' => $request->all()
+//         ]);
+        
+//         return response()->json([
+//             'code' => 500,
+//             'message' => 'An unexpected error occurred',
+//             'error' => config('app.debug') ? $e->getMessage() : 'Please try again later',
+//             'file' => config('app.debug') ? $e->getFile() : null,
+//             'line' => config('app.debug') ? $e->getLine() : null,
+//         ], 500);
+//     }
+// }
+
+
+public function store(Request $request)
 {
     try {
         $user = auth()->user();
@@ -314,33 +547,103 @@ class FileController extends Controller
             $data['interactive_file_path'] = $this->handleUnZipFile($data);
 
         } elseif ($data['storage'] == 'upload') {
-            $uploadFile = $this->fileInfo($data['file_path']);
-            $volume = convertToMB($uploadFile['size'] ?? 0);
+            // Fichier uploadé via LFM - le chemin est relatif
+            try {
+                $uploadFile = $this->fileInfo($data['file_path']);
+                if ($uploadFile) {
+                    $volume = convertToMB($uploadFile['size'] ?? 0);
+                    $fileInfos = $uploadFile;
+                } else {
+                    \Log::warning('Could not get file info for upload', [
+                        'file_path' => $data['file_path']
+                    ]);
+                    // Si on ne peut pas obtenir les infos, on continue quand même
+                    $volume = 0;
+                }
+            } catch (\Exception $e) {
+                \Log::error('Error getting file info for upload: ' . $e->getMessage(), [
+                    'file_path' => $data['file_path']
+                ]);
+                // On continue même en cas d'erreur
+                $volume = 0;
+            }
             
         } elseif (in_array($data['storage'], ['s3', 'secure_host'])) {
 
             if ($data['storage'] == 's3') {
-                $data['volume'] = $request->file('s3_file')->getSize();
-                $result = $this->uploadFileToS3($data['s3_file']);
-            } else {
-                if ($data['secure_host_upload_type'] == "direct") {
-                    $data['volume'] = $request->file('s3_file')->getSize();
-                    $result = $this->uploadFileToBunny($webinar, $data['s3_file']);
+                // Upload direct vers S3 avec un nouveau fichier
+                if ($request->hasFile('s3_file')) {
+                    $uploadedFile = $request->file('s3_file');
+                    $data['volume'] = $uploadedFile->getSize();
+                    \Log::info('S3 Upload - File size before upload: ' . $data['volume']);
+                    
+                    $result = $this->uploadFileToS3($uploadedFile);
+                    
+                    if (!$result['status']) {
+                        return response()->json([
+                            'code' => 500,
+                            'message' => 'S3 upload failed',
+                            'error' => $result['path'] ?? 'Unknown upload error',
+                        ], 500);
+                    }
+                    
+                    $data['file_path'] = $result['path'];
+                    
                 } else {
+                    // Fichier déjà uploadé via LFM vers S3
+                    \Log::info('S3 - File already uploaded via LFM', [
+                        'file_path' => $data['file_path']
+                    ]);
+                    
+                    // Essayer de récupérer la taille depuis S3
+                    try {
+                        $s3 = \Storage::disk('s3');
+                        if ($s3->exists($data['file_path'])) {
+                            $data['volume'] = $s3->size($data['file_path']);
+                            \Log::info('S3 - Got file size from S3: ' . $data['volume']);
+                        } else {
+                            \Log::warning('S3 - File not found on S3: ' . $data['file_path']);
+                            $data['volume'] = 0;
+                        }
+                    } catch (\Exception $e) {
+                        \Log::error('S3 - Error getting file size: ' . $e->getMessage());
+                        $data['volume'] = 0;
+                    }
+                }
+                
+            } else {
+                // secure_host
+                if ($data['secure_host_upload_type'] == "direct") {
+                    if ($request->hasFile('s3_file')) {
+                        $uploadedFile = $request->file('s3_file');
+                        $data['volume'] = $uploadedFile->getSize();
+                        \Log::info('Bunny Upload - File size before upload: ' . $data['volume']);
+                        
+                        $result = $this->uploadFileToBunny($webinar, $uploadedFile);
+                    } else {
+                        return response()->json([
+                            'code' => 422,
+                            'message' => 'No file uploaded',
+                            'errors' => ['s3_file' => ['File is required for direct upload']]
+                        ], 422);
+                    }
+                } else {
+                    // Manual upload
                     $result['status'] = true;
                     $result['path'] = $data['secure_host_file_path'];
                 }
+                
+                if (!$result['status']) {
+                    return response()->json([
+                        'code' => 500,
+                        'message' => 'Bunny upload failed',
+                        'error' => $result['path'] ?? 'Unknown upload error',
+                    ], 500);
+                }
+                
+                $data['file_path'] = $result['path'];
             }
 
-            if (!$result['status']) {
-                return response()->json([
-                    'code' => 500,
-                    'message' => 'File upload failed',
-                    'error' => $result['path'] ?? 'Unknown upload error',
-                ], 500);
-            }
-
-            $data['file_path'] = $result['path'];
             $fileInfos['extension'] = $data['file_type'];
             $fileInfos['size'] = $data['volume'];
 
@@ -349,8 +652,11 @@ class FileController extends Controller
             } else {
                 $volume = convertToMB(($data['volume'] ?? 0));
             }
+            
+            \Log::info('Final volume for S3/Bunny: ' . $volume . ' MB');
 
         } else {
+            // Pour les sources externes (youtube, vimeo, etc.)
             $volume = !empty($data['volume']) ? $data['volume'] : 0;
         }
 
@@ -411,7 +717,12 @@ class FileController extends Controller
         \Log::error('Error in file store: ' . $e->getMessage(), [
             'exception' => $e,
             'trace' => $e->getTraceAsString(),
-            'request_data' => $request->all()
+            'request_data' => $request->except(['s3_file']),
+            'file_info' => $request->hasFile('s3_file') ? [
+                'name' => $request->file('s3_file')->getClientOriginalName(),
+                'size' => $request->file('s3_file')->getSize(),
+                'mime' => $request->file('s3_file')->getMimeType()
+            ] : null
         ]);
         
         return response()->json([
@@ -421,6 +732,166 @@ class FileController extends Controller
             'file' => config('app.debug') ? $e->getFile() : null,
             'line' => config('app.debug') ? $e->getLine() : null,
         ], 500);
+    }
+}
+/**
+ * Récupère les informations d'un fichier local
+ * Gère les chemins relatifs retournés par LFM
+ * 
+ * @param string $filePath Chemin relatif du fichier (ex: /1059/uploads/file.pdf)
+ * @return array|null
+ */
+private function fileInfo($filePath)
+{
+    try {
+        // Nettoyer le chemin (enlever les slashes au début si présent)
+        $cleanPath = ltrim($filePath, '/');
+        
+        // Construire le chemin complet
+        $fullPath = public_path($cleanPath);
+        
+        \Log::info('FileInfo - Checking file', [
+            'relative_path' => $filePath,
+            'clean_path' => $cleanPath,
+            'full_path' => $fullPath
+        ]);
+        
+        // Vérifier si le fichier existe
+        if (!file_exists($fullPath)) {
+            \Log::warning('FileInfo - File not found', [
+                'full_path' => $fullPath,
+                'file_exists' => false
+            ]);
+            
+            // Essayer avec le chemin original sans modification
+            $fullPath = public_path($filePath);
+            if (!file_exists($fullPath)) {
+                \Log::error('FileInfo - File not found after retry', [
+                    'original_path' => $filePath,
+                    'tried_paths' => [
+                        public_path($cleanPath),
+                        public_path($filePath)
+                    ]
+                ]);
+                return null;
+            }
+        }
+        
+        // Vérifier si c'est un fichier (pas un dossier)
+        if (!is_file($fullPath)) {
+            \Log::error('FileInfo - Path is not a file', [
+                'full_path' => $fullPath,
+                'is_dir' => is_dir($fullPath)
+            ]);
+            return null;
+        }
+        
+        // Récupérer les informations du fichier
+        $pathInfo = pathinfo($fullPath);
+        $fileSize = filesize($fullPath);
+        $mimeType = mime_content_type($fullPath);
+        
+        $info = [
+            'name' => $pathInfo['basename'] ?? '',
+            'extension' => strtolower($pathInfo['extension'] ?? ''),
+            'size' => $fileSize,
+            'path' => $filePath,
+            'full_path' => $fullPath,
+            'mime_type' => $mimeType
+        ];
+        
+        \Log::info('FileInfo - Success', $info);
+        
+        return $info;
+        
+    } catch (\Exception $e) {
+        \Log::error('FileInfo - Exception occurred', [
+            'message' => $e->getMessage(),
+            'file_path' => $filePath,
+            'trace' => $e->getTraceAsString()
+        ]);
+        return null;
+    }
+}
+
+/**
+ * Récupère la taille d'un fichier S3
+ * 
+ * @param string $s3Path Chemin du fichier sur S3
+ * @return int Size in bytes
+ */
+private function getS3FileSize($s3Path)
+{
+    try {
+        $s3 = \Storage::disk('s3');
+        
+        \Log::info('Getting S3 file size', ['path' => $s3Path]);
+        
+        if ($s3->exists($s3Path)) {
+            $size = $s3->size($s3Path);
+            \Log::info('S3 file size retrieved', [
+                'path' => $s3Path,
+                'size' => $size
+            ]);
+            return $size;
+        }
+        
+        \Log::warning('S3 file not found', ['path' => $s3Path]);
+        return 0;
+        
+    } catch (\Exception $e) {
+        \Log::error('Error getting S3 file size', [
+            'message' => $e->getMessage(),
+            's3_path' => $s3Path,
+            'trace' => $e->getTraceAsString()
+        ]);
+        return 0;
+    }
+}
+
+/**
+ * Récupère les informations d'un fichier uploadé (UploadedFile)
+ * 
+ * @param \Illuminate\Http\UploadedFile $file
+ * @return array
+ */
+private function getUploadedFileInfo($file)
+{
+    try {
+        if (!$file || !$file->isValid()) {
+            \Log::warning('Invalid uploaded file');
+            return [
+                'name' => '',
+                'extension' => '',
+                'size' => 0,
+                'mime_type' => ''
+            ];
+        }
+        
+        $extension = strtolower($file->getClientOriginalExtension());
+        
+        $info = [
+            'name' => $file->getClientOriginalName(),
+            'extension' => $extension,
+            'size' => $file->getSize(),
+            'mime_type' => $file->getMimeType(),
+            'original_name' => $file->getClientOriginalName()
+        ];
+        
+        \Log::info('Uploaded file info', $info);
+        
+        return $info;
+        
+    } catch (\Exception $e) {
+        \Log::error('Error getting uploaded file info', [
+            'message' => $e->getMessage()
+        ]);
+        return [
+            'name' => '',
+            'extension' => '',
+            'size' => 0,
+            'mime_type' => ''
+        ];
     }
 }
 
@@ -662,20 +1133,20 @@ class FileController extends Controller
         abort(403);
     }
 
-    public function fileInfo($path)
-    {
-        $file = array();
+    // public function fileInfo($path)
+    // {
+    //     $file = array();
 
-        $file_path = public_path($path);
+    //     $file_path = public_path($path);
 
-        $filePath = pathinfo($file_path);
+    //     $filePath = pathinfo($file_path);
 
-        $file['name'] = $filePath['filename'];
-        $file['extension'] = $filePath['extension'];
-        $file['size'] = filesize($file_path);
+    //     $file['name'] = $filePath['filename'];
+    //     $file['extension'] = $filePath['extension'];
+    //     $file['size'] = filesize($file_path);
 
-        return $file;
-    }
+    //     return $file;
+    // }
 
     private function uploadFileToS3($file)
     {
