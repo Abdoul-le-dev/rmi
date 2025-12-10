@@ -457,24 +457,30 @@ class WebinarController extends Controller
                 }
 
                 if ($canAccess) {
-                    if (in_array($file->storage, ['s3', 'external_link'])) {
+                    // if (in_array($file->storage, ['s3', 'external_link'])) {
+                    //     return redirect($file->file);
+                    // }
+
+                    if (in_array($file->storage, ['external_link'])) {
                         return redirect($file->file);
                     }
+                    // $filePath = public_path($file->file);
 
-                    $filePath = public_path($file->file);
+                    // if (file_exists($filePath)) {
+                    //     $extension = \Illuminate\Support\Facades\File::extension($filePath);
 
-                    if (file_exists($filePath)) {
-                        $extension = \Illuminate\Support\Facades\File::extension($filePath);
+                    //     $fileName = str_replace(' ', '-', $file->title);
+                    //     $fileName = str_replace('.', '-', $fileName);
+                    //     $fileName .= '.' . $extension;
 
-                        $fileName = str_replace(' ', '-', $file->title);
-                        $fileName = str_replace('.', '-', $fileName);
-                        $fileName .= '.' . $extension;
+                    //     $headers = array(
+                    //         'Content-Type: application/' . $file->file_type,
+                    //     );
 
-                        $headers = array(
-                            'Content-Type: application/' . $file->file_type,
-                        );
-
-                        return response()->download($filePath, $fileName, $headers);
+                    //     return response()->download($filePath, $fileName, $headers);
+                    $fileName = str_replace(' ', '-', $file->title);
+                    $fileName = str_replace('.', '-', $fileName);
+                    return \App\Helpers\S3Helper::downloadFile($attachment->path, $fileName);
                     }
                 } else {
                     $toastData = [
