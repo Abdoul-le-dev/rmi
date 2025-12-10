@@ -493,11 +493,12 @@ class WebinarController extends Controller
                     return back()->with(['toast' => $toastData]);
                 }
             }
-        
-          }
-          $fileName = str_replace(' ', '-', $file->title);
+            $fileName = str_replace(' ', '-', $file->title);
                     $fileName = str_replace('.', '-', $fileName);
                     return \App\Helpers\S3Helper::downloadFile($file->file, $fileName);
+        
+          }
+          
         return back();
     
     }
