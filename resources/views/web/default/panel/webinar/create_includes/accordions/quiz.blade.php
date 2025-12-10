@@ -1,6 +1,17 @@
+@php
+    $quizId = !empty($quizInfo) ? $quizInfo->id : 'record';
+    $collapseId = 'collapseQuiz' . $quizId;
+    $headingId = 'quiz_' . $quizId;
+@endphp
+
 <li data-id="{{ !empty($chapterItem) ? $chapterItem->id :'' }}" class="accordion-row bg-white rounded-sm border border-gray300 mt-20 py-15 py-lg-30 px-10 px-lg-20">
-    <div class="d-flex align-items-center justify-content-between " role="tab" id="quiz_{{ !empty($quizInfo) ? $quizInfo->id :'record' }}">
-        <div class="d-flex align-items-center" href="#collapseQuiz{{ !empty($quizInfo) ? $quizInfo->id :'record' }}" aria-controls="collapseQuiz{{ !empty($quizInfo) ? $quizInfo->id :'record' }}" data-parent="#{{ !empty($chapter) ? 'chapterContentAccordion'.$chapter->id : 'quizzesAccordion' }}" role="button" data-toggle="collapse" aria-expanded="true">
+    <div class="d-flex align-items-center justify-content-between " role="tab" id="{{ $headingId }}">
+        <div class="d-flex align-items-center cursor-pointer" 
+             role="button" 
+             data-toggle="collapse" 
+             data-target="#{{ $collapseId }}" 
+             aria-controls="{{ $collapseId }}" 
+             aria-expanded="true">
             <span class="chapter-icon chapter-content-icon mr-10">
                 <i data-feather="award" class=""></i>
             </span>
@@ -15,7 +26,11 @@
             @endif
 
             @if(!empty($quizInfo) and !empty($chapterItem))
-                <button type="button" data-item-id="{{ $quizInfo->id }}" data-item-type="{{ \App\Models\WebinarChapterItem::$chapterQuiz }}" data-chapter-id="{{ !empty($chapter) ? $chapter->id : '' }}" class="js-change-content-chapter btn btn-sm btn-transparent text-gray mr-10">
+                <button type="button" 
+                        data-item-id="{{ $quizInfo->id }}" 
+                        data-item-type="{{ \App\Models\WebinarChapterItem::$chapterQuiz }}" 
+                        data-chapter-id="{{ !empty($chapter) ? $chapter->id : '' }}" 
+                        class="js-change-content-chapter btn btn-sm btn-transparent text-gray mr-10">
                     <i data-feather="grid" class="" height="20"></i>
                 </button>
             @endif
@@ -30,11 +45,22 @@
                 </a>
             @endif
 
-            <i class="collapse-chevron-icon" data-feather="chevron-down" height="20" href="#collapseQuiz{{ !empty($quizInfo) ? $quizInfo->id :'record' }}" aria-controls="collapseQuiz{{ !empty($quizInfo) ? $quizInfo->id :'record' }}" data-parent="#quizzesAccordion" role="button" data-toggle="collapse" aria-expanded="true"></i>
+            <i class="collapse-chevron-icon cursor-pointer" 
+               data-feather="chevron-down" 
+               height="20" 
+               role="button" 
+               data-toggle="collapse" 
+               data-target="#{{ $collapseId }}" 
+               aria-controls="{{ $collapseId }}" 
+               aria-expanded="true"></i>
         </div>
     </div>
 
-    <div id="collapseQuiz{{ !empty($quizInfo) ? $quizInfo->id :'record' }}" aria-labelledby="quiz_{{ !empty($quizInfo) ? $quizInfo->id :'record' }}" class=" collapse @if(empty($quizInfo)) show @endif" role="tabpanel">
+    <div id="{{ $collapseId }}" 
+         aria-labelledby="{{ $headingId }}" 
+         class="collapse @if(empty($quizInfo)) show @endif" 
+         data-parent="#chapterContentAccordion{{ !empty($chapter) ? $chapter->id : '' }}"
+         role="tabpanel">
         <div class="panel-collapse text-gray">
             @include('web.default.panel.quizzes.create_quiz_form',
                     [
