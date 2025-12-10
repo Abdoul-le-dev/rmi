@@ -462,9 +462,9 @@ class WebinarController extends Controller
                     //     return redirect($file->file);
                     // }
 
-                    if (in_array($file->storage, ['external_link'])) {
-                        return redirect($file->file);
-                    }
+                    // if (in_array($file->storage, ['external_link'])) {
+                    //     return redirect($file->file);
+                    // }
                      dd('ici');
                     // $filePath = public_path($file->file);
 
