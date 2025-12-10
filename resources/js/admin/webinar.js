@@ -809,6 +809,8 @@
 
     $('body').on('click', '.js-save-file', function (e) {
         e.preventDefault();
+        console.log('on est dedans Hi');
+        
         const $this = $(this);
         let form = $this.closest('.file-form');
 
