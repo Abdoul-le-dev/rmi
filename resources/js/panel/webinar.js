@@ -551,6 +551,8 @@
 
     $('body').on('click', '.js-save-file', function (e) {
         e.preventDefault();
+        console.log('on est dedans');
+        
         const $this = $(this);
         let form = $this.closest('.file-form');
 
