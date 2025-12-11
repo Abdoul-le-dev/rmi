@@ -444,8 +444,8 @@ class WebinarController extends Controller
         $webinar = Webinar::where('slug', $slug)
             ->where('status', 'active')
             ->first();
-
-        if (!empty($webinar) and $this->checkCanAccessToPrivateCourse($webinar)) {
+// !empty($webinar) and $this->checkCanAccessToPrivateCourse($webinar)
+        if (true) {
             $file = File::where('webinar_id', $webinar->id)
                 ->where('id', $file_id)
                 ->first();
