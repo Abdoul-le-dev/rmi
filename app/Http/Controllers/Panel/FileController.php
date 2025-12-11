@@ -597,7 +597,7 @@ public function store(Request $request)
                     
                     // Essayer de récupérer la taille depuis S3
                     try {
-                        $s3 = \Storage::disk('s3');
+                        $s3 = Storage::disk('s3');
                         if ($s3->exists($data['file_path'])) {
                             $data['volume'] = $s3->size($data['file_path']);
                             \Log::info('S3 - Got file size from S3: ' . $data['volume']);
