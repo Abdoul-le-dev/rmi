@@ -440,7 +440,7 @@ class WebinarController extends Controller
 
     public function downloadFile($slug, $file_id)
     {
-       
+        dd('ici');
         $webinar = Webinar::where('slug', $slug)
             ->where('status', 'active')
             ->first();
@@ -465,7 +465,7 @@ class WebinarController extends Controller
                     if (in_array($file->storage, ['external_link'])) {
                         return redirect($file->file);
                     }
-                     dd('ici');
+                    
                     // $filePath = public_path($file->file);
 
                     // if (file_exists($filePath)) {
