@@ -440,7 +440,7 @@ class WebinarController extends Controller
 
     public function downloadFile($slug, $file_id)
     {
-       dd('ici');
+       
         $webinar = Webinar::where('slug', $slug)
             ->where('status', 'active')
             ->first();
@@ -449,9 +449,7 @@ class WebinarController extends Controller
             $file = File::where('webinar_id', $webinar->id)
                 ->where('id', $file_id)
                 ->first();
-             $fileName = str_replace(' ', '-', $file->title);
-                    $fileName = str_replace('.', '-', $fileName);
-                    return \App\Helpers\S3Helper::downloadFile($file->file, $fileName);
+             
             if (!empty($file) and $file->downloadable) {
                 $canAccess = true;
 
