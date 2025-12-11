@@ -318,7 +318,7 @@ class WebinarController extends Controller
         }
 
         $purchaseModels = PurchaseModule::where('status', 'active')->with('subscription')->get();
-        Log::info('purchaseList', ['data'=>$purchaseModels]);
+        Log::info('purchaseList', ['data' => $purchaseModels]);
 
         $promo = Promo::where('status', 'active')
             ->where('start_date', '<=', now()) // Compare full timestamp
@@ -440,7 +440,7 @@ class WebinarController extends Controller
 
     public function downloadFile($slug, $file_id)
     {
-       
+
         $webinar = Webinar::where('slug', $slug)
             ->where('status', 'active')
             ->first();
@@ -449,7 +449,7 @@ class WebinarController extends Controller
             $file = File::where('webinar_id', $webinar->id)
                 ->where('id', $file_id)
                 ->first();
-             
+
             if (!empty($file) and $file->downloadable) {
                 $canAccess = true;
 
@@ -461,11 +461,17 @@ class WebinarController extends Controller
                     // if (in_array($file->storage, ['s3', 'external_link'])) {
                     //     return redirect($file->file);
                     // }
-                    dd($file);
+                    if (preg_match('#^\d+/uploads/.+$#', $file->file)) {
+                        $fileName = str_replace(' ', '-', $file->title);
+                        $fileName = str_replace('.', '-', $fileName);
+                        return \App\Helpers\S3Helper::downloadFile($file->file, $fileName);
+                    }
 
                     if (in_array($file->storage, ['external_link'])) {
                         return redirect($file->file);
                     }
+
+
                     dd('ici');
                     // $filePath = public_path($file->file);
 
@@ -481,11 +487,8 @@ class WebinarController extends Controller
                     //     );
 
                     //     return response()->download($filePath, $fileName, $headers);
-                    $fileName = str_replace(' ', '-', $file->title);
-                    $fileName = str_replace('.', '-', $fileName);
-                    return \App\Helpers\S3Helper::downloadFile($file->file, $fileName);
-                }
-                else {
+
+                } else {
                     $toastData = [
                         'title' => trans('public.not_access_toast_lang'),
                         'msg' => trans('public.not_access_toast_msg_lang'),
@@ -494,12 +497,9 @@ class WebinarController extends Controller
                     return back()->with(['toast' => $toastData]);
                 }
             }
-         
-        
-          }
-          
+        }
+
         return back();
-    
     }
 
     public function showHtmlFile($slug, $file_id)
@@ -979,7 +979,7 @@ class WebinarController extends Controller
 
     public function purchaseModelPay(Request $request)
     {
-        try{
+        try {
             $paymentChannels = PaymentChannel::where('status', 'active')->get();
 
             $subscribe = Subscribe::where('id', $request->input('subscription_id'))->first();
@@ -1031,14 +1031,14 @@ class WebinarController extends Controller
             //     }
             // }
 
-            try{
+            try {
                 $purchasemodelsale = new PurchaseModelSale;
                 $purchasemodelsale->buyer_id = $user->id;
                 $purchasemodelsale->purchase_model_id = $purchase_id;
                 $purchasemodelsale->created_at = time();
                 $purchasemodelsale->save();
-            }catch(\Exception $e){
-                Log::info('error while inserting purchasemodelsale', ['data'=>$e->getMessage()]);
+            } catch (\Exception $e) {
+                Log::info('error while inserting purchasemodelsale', ['data' => $e->getMessage()]);
             }
 
             $order = Order::create([
@@ -1129,11 +1129,10 @@ class WebinarController extends Controller
                 'status' => 'success'
             ];
             return back()->with(['toast' => $toastData]);
-        }catch(\Exception $e){
-            Log::info('error', ['data'=>$e->getMessage()]);
+        } catch (\Exception $e) {
+            Log::info('error', ['data' => $e->getMessage()]);
             abort(500);
         }
-
     }
 
     // public function purchaseModelPay(Request $request)
