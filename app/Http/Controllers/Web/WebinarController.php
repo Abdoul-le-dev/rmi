@@ -444,8 +444,8 @@ class WebinarController extends Controller
         $webinar = Webinar::where('slug', $slug)
             ->where('status', 'active')
             ->first();
-// !empty($webinar) and $this->checkCanAccessToPrivateCourse($webinar)
-        if (true) {
+
+        if (!empty($webinar) and $this->checkCanAccessToPrivateCourse($webinar)) {
             $file = File::where('webinar_id', $webinar->id)
                 ->where('id', $file_id)
                 ->first();
@@ -495,13 +495,10 @@ class WebinarController extends Controller
                     return back()->with(['toast' => $toastData]);
                 }
             }
-            $fileName = str_replace(' ', '-', $file->title);
-                    $fileName = str_replace('.', '-', $fileName);
-                    return \App\Helpers\S3Helper::downloadFile($file->file, $fileName);
+         
         
           }
           
-          dd('ici');
         return back();
     
     }
