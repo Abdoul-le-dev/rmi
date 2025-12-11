@@ -461,6 +461,7 @@ class WebinarController extends Controller
                     // if (in_array($file->storage, ['s3', 'external_link'])) {
                     //     return redirect($file->file);
                     // }
+                    dd($file);
 
                     if (in_array($file->storage, ['external_link'])) {
                         return redirect($file->file);
