@@ -211,9 +211,9 @@ class QuizController extends Controller
         }
 
         // Send Notification To All Students
-        if (!empty($webinar)) {
-            $webinar->sendNotificationToAllStudentsForNewQuizPublished($quiz);
-        }
+        // if (!empty($webinar)) {
+        //     $webinar->sendNotificationToAllStudentsForNewQuizPublished($quiz);
+        // }
 
         if ($request->ajax()) {
 
