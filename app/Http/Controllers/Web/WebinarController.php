@@ -501,6 +501,7 @@ class WebinarController extends Controller
         
           }
           
+          dd('ici');
         return back();
     
     }
