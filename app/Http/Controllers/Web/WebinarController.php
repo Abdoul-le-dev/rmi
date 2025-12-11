@@ -440,7 +440,7 @@ class WebinarController extends Controller
 
     public function downloadFile($slug, $file_id)
     {
-        dd('ici');
+       
         $webinar = Webinar::where('slug', $slug)
             ->where('status', 'active')
             ->first();
