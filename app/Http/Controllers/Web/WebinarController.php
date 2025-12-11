@@ -458,9 +458,7 @@ class WebinarController extends Controller
                 }
 
                 if ($canAccess) {
-                    // if (in_array($file->storage, ['s3', 'external_link'])) {
-                    //     return redirect($file->file);
-                    // }
+                    
                     if (preg_match('#^\d+/uploads/.+$#', $file->file)) {
                         $fileName = str_replace(' ', '-', $file->title);
                         $fileName = str_replace('.', '-', $fileName);
