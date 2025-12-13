@@ -182,7 +182,7 @@
                         @enderror
 
                         <div class="custom-control custom-checkbox mt-3">
-                            <input type="checkbox" name="news" value="1" {{ (!empty(old('news')) and old('news') == '1') ? 'checked' : '' }} class="custom-control-input @error('term') is-invalid @enderror" id="news">
+                            <input type="checkbox" name="news" value="1" {{ (!empty(old('news')) and old('news') == '1') ? 'checked' : '' }} class="custom-control-input @error('news') is-invalid @enderror" id="news">
                             <label class="custom-control-label font-14" for="news">{{ trans('auth.i_agree_with_newsletter') }}
                                 <span class="text-secondary font-weight-bold font-14">{{ trans('auth.newsletter') }}</span> {{ trans('auth.rmi_newsletter') }}  <span class="text-secondary font-weight-bold font-14">{{ trans('auth.newsletter_email') }}</span>
                                 {{-- <a href="#" target="_blank" class="text-secondary font-weight-bold font-14">{{ trans('auth.terms_and_rules') }}</a> --}}
