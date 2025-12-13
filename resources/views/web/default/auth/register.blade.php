@@ -181,6 +181,24 @@
                         </div>
                         @enderror
 
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" name="news" value="1" {{ (!empty(old('news')) and old('news') == '1') ? 'checked' : '' }} class="custom-control-input @error('term') is-invalid @enderror" id="news">
+                            <label class="custom-control-label font-14" for="news">{{ trans('auth.newsletter') }}
+                                {{-- <a href="#" target="_blank" class="text-secondary font-weight-bold font-14">{{ trans('auth.terms_and_rules') }}</a> --}}
+                            </label>
+
+                            @error('news')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
+                        @error('news')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+
                         <button type="submit" class="btn btn-primary btn-block mt-20">{{ trans('auth.signup') }}</button>
                     </form>
 

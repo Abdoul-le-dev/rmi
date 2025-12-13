@@ -42,9 +42,10 @@ return [
     'facebook_login' => 'Connectez-vous avec un compte Facebook',
 
 
-    'i_agree_with' => 'je suis d\'accord avec',
-    'terms_and_rules' => 'termes et règles',
+    'i_agree_with' => 'J\'ai lu et j\'accepte les',
+    'terms_and_rules' => 'Conditions Générales d\'Utilisation et la Politique de Confidentialité',
     'already_have_an_account' => 'Vous avez déjà un compte?',
+    'newsletter' => 'J\'accepte recevoir la newsletter hebdomadaire de la RMI Class ainsi que les emails promotionnelles occasionnels.',
 
     'reset_password' => 'réinitialiser le mot de passe',
     'send_email_for_reset_password' => 'Lien de récupération de mot de passe envoyé à votre adresse e-mail. Merci de consulter vos emails.',
