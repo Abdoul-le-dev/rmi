@@ -431,3 +431,7 @@ Route::get('/media/temp-url/{path}', [MediaController::class, 'preview'])
     
 //     return response()->json(['url' => $temporaryUrl]);
 // })->where('path', '.*')->name('media.temp-url');
+
+    Route::get('vip', function(){
+        return view('vip.app');
+    });
