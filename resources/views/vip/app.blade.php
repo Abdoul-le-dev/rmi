@@ -26,7 +26,7 @@
                 <div class="flex items-center space-x-3">
                     <!-- Bouton menu mobile -->
                     <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                        <i class="fas fa-bars text-gray-600 text-xl"></i>
+                        <i class="fas fa-bars text-gray-600 text-lg"></i>
                     </button>
                     
                     <!-- Logo -->
@@ -34,7 +34,7 @@
                         <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
                             <i class="fas fa-play text-white text-sm"></i>
                         </div>
-                        <span class="text-xl font-bold">
+                        <span class="text-lg font-bold">
                             Trade <span class="text-indigo-600">Hub</span>
                         </span>
                     </div>
@@ -61,13 +61,13 @@
 
                     <!-- Notifications -->
                     <button class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                        <i class="fas fa-bell text-gray-600 text-xl"></i>
+                        <i class="fas fa-bell text-gray-600 text-lg"></i>
                         <span class="notification-badge pulse-dot">3</span>
                     </button>
 
                     <!-- Messages -->
                     <button class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                        <i class="fas fa-comment-dots text-gray-600 text-xl"></i>
+                        <i class="fas fa-comment-dots text-gray-600 text-lg"></i>
                         <span class="notification-badge pulse-dot">2</span>
                     </button>
 
@@ -181,7 +181,7 @@
                 
                 <!-- Message de bienvenue -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 fade-in">
-                    <h2 class="text-xl font-bold text-gray-900 mb-2">
+                    <h2 class="text-lg font-bold text-gray-900 mb-2">
                         Bienvenue Abdoulaye 👋 ? Que pensez-vous aujourd'hui ?
                     </h2>
                     <p class="text-sm text-gray-500 mb-4">
@@ -200,19 +200,19 @@
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-4">
                                 <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Emoji">
-                                    <i class="far fa-smile text-gray-600 text-xl"></i>
+                                    <i class="far fa-smile text-gray-600 text-lg"></i>
                                 </button>
                                 <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Image">
-                                    <i class="far fa-image text-gray-600 text-xl"></i>
+                                    <i class="far fa-image text-gray-600 text-lg"></i>
                                 </button>
                                 <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Vidéo">
-                                    <i class="fas fa-video text-gray-600 text-xl"></i>
+                                    <i class="fas fa-video text-gray-600 text-lg"></i>
                                 </button>
                                 <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Pièce jointe">
-                                    <i class="fas fa-paperclip text-gray-600 text-xl"></i>
+                                    <i class="fas fa-paperclip text-gray-600 text-lg"></i>
                                 </button>
                                 <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Localisation">
-                                    <i class="fas fa-map-marker-alt text-gray-600 text-xl"></i>
+                                    <i class="fas fa-map-marker-alt text-gray-600 text-lg"></i>
                                 </button>
                             </div>
                             <div class="flex items-center space-x-2">
@@ -613,9 +613,9 @@
             <!-- Header -->
             <div class="gradient-bg p-6 text-white">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-xl font-bold">Menu</h3>
+                    <h3 class="text-lg font-bold">Menu</h3>
                     <button id="close-mobile-menu" class="p-2 hover:bg-white/20 rounded-lg transition-colors">
-                        <i class="fas fa-times text-xl"></i>
+                        <i class="fas fa-times text-lg"></i>
                     </button>
                 </div>
                 <div class="flex items-center space-x-3">
