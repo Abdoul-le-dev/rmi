@@ -77,7 +77,7 @@
                             <img 
                                 src="https://i.pravatar.cc/150?img=12" 
                                 alt="Avatar" 
-                                class="w-9 h-9 rounded-full object-cover ring-2 ring-indigo-500"
+                                class="w-6 h-6 rounded-full object-cover ring-2 ring-indigo-500"
                             >
                         </button>
                         
