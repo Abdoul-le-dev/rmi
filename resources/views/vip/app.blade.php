@@ -114,7 +114,7 @@
                                 alt="Profil" 
                                 class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg mx-auto"
                             >
-                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-3 border-white rounded-full"></div>
+                            <div class="absolute bottom-2 right-0 w-3 h-3 bg-green-500 border-3 border-white rounded-full"></div>
                         </div>
                         <h3 class="font-bold text-white text-base">CHOUTI Abdoulaye</h3>
                         <p class="text-indigo-100 text-xs">Modérateur</p>
@@ -185,7 +185,7 @@
                         Bienvenue Abdoulaye 👋 ? Que pensez-vous aujourd'hui ?
                     </h2>
                     <p class="text-xs text-gray-500 mb-4">
-                        Standard glass, 3.8GHz 8-core 10th-generation Intel Core i7 processor, Turbo Boost up to 5.0GHz, 16GB 2666MHz DDR4 memory...
+                        Advertising ...
                     </p>
                     
                     <!-- Zone de création de post -->
@@ -213,7 +213,7 @@
                                 </button>
                                
                             </div>
-                            <div class="flex items-center space-x-2">
+                            <div class="flex justify-between space-x-2">
 
                                 <button class="px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-all btn-ripple">
                                     <i class="fas fa-paper-plane mr-2 hidden lg:block"></i>
