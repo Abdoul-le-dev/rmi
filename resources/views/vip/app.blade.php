@@ -216,10 +216,8 @@
                                 </button>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <button class="px-5 py-2 border border-gray-300 rounded-lg font-normal text-gray-700 hover:bg-gray-50 transition-all">
-                                    Brouillon
-                                </button>
-                                <button class="px-6 py-2 bg-indigo-600 text-white rounded-lg font-normal hover:bg-indigo-700 transition-all btn-ripple">
+
+                                <button class="px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-all btn-ripple">
                                     <i class="fas fa-paper-plane mr-2"></i>
                                     Envoyer
                                 </button>
