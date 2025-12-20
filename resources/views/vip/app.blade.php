@@ -211,9 +211,7 @@
                                 <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Pièce jointe">
                                     <i class="fas fa-paperclip text-gray-600 text-lg"></i>
                                 </button>
-                                <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Localisation">
-                                    <i class="fas fa-map-marker-alt text-gray-600 text-lg"></i>
-                                </button>
+                               
                             </div>
                             <div class="flex items-center space-x-2">
 
