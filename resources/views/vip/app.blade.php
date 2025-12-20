@@ -116,7 +116,7 @@
                             >
                             <div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 border-3 border-white rounded-full"></div>
                         </div>
-                        <h3 class="font-bold text-white text-lg">CHOUTI Abdoulaye</h3>
+                        <h3 class="font-bold text-white text-base">CHOUTI Abdoulaye</h3>
                         <p class="text-indigo-100 text-sm">Modérateur</p>
                         <div class="flex items-center justify-center space-x-1 mt-1">
                             <i class="fas fa-check-circle text-white text-xs"></i>
@@ -127,15 +127,15 @@
                     <!-- Statistiques -->
                     <div class="grid grid-cols-3 gap-4 p-4 bg-gray-50">
                         <div class="text-center">
-                            <p class="font-bold text-gray-900 text-lg">500k</p>
+                            <p class="font-bold text-gray-900 text-base">500k</p>
                             <p class="text-xs text-gray-500">Post</p>
                         </div>
                         <div class="text-center border-x border-gray-200">
-                            <p class="font-bold text-gray-900 text-lg">23.5M</p>
+                            <p class="font-bold text-gray-900 text-base">23.5M</p>
                             <p class="text-xs text-gray-500">Followers</p>
                         </div>
                         <div class="text-center">
-                            <p class="font-bold text-gray-900 text-lg">50</p>
+                            <p class="font-bold text-gray-900 text-base">50</p>
                             <p class="text-xs text-gray-500">Following</p>
                         </div>
                     </div>
@@ -143,31 +143,31 @@
                     <!-- Navigation -->
                     <nav class="p-3">
                         <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-indigo-50 text-indigo-600 mb-2 transition-all hover:bg-indigo-100">
-                            <i class="fas fa-home text-lg"></i>
+                            <i class="fas fa-home text-base"></i>
                             <span class="font-medium">Communautés</span>
                         </a>
                         <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2 transition-all">
-                            <i class="fas fa-book text-lg"></i>
+                            <i class="fas fa-book text-base"></i>
                             <span class="font-medium">Classrooms</span>
                         </a>
                         <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2 transition-all">
-                            <i class="fas fa-calendar-alt text-lg"></i>
+                            <i class="fas fa-calendar-alt text-base"></i>
                             <span class="font-medium">Événements</span>
                         </a>
                         <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2 transition-all">
-                            <i class="fas fa-map-marker-alt text-lg"></i>
+                            <i class="fas fa-map-marker-alt text-base"></i>
                             <span class="font-medium">Localisations</span>
                         </a>
                         <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2 transition-all">
-                            <i class="fas fa-users text-lg"></i>
+                            <i class="fas fa-users text-base"></i>
                             <span class="font-medium">Vos Sessions</span>
                         </a>
                         <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2 transition-all">
-                            <i class="fas fa-cog text-lg"></i>
+                            <i class="fas fa-cog text-base"></i>
                             <span class="font-medium">Paramètres</span>
                         </a>
                         <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 transition-all">
-                            <i class="fas fa-question-circle text-lg"></i>
+                            <i class="fas fa-question-circle text-base"></i>
                             <span class="font-medium">Centre d'aide</span>
                         </a>
                     </nav>
@@ -634,31 +634,31 @@
             <!-- Navigation -->
             <nav class="p-4">
                 <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-indigo-50 text-indigo-600 mb-2">
-                    <i class="fas fa-home text-lg w-6"></i>
+                    <i class="fas fa-home text-base w-6"></i>
                     <span class="font-medium">Communautés</span>
                 </a>
                 <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2">
-                    <i class="fas fa-book text-lg w-6"></i>
+                    <i class="fas fa-book text-base w-6"></i>
                     <span class="font-medium">Classrooms</span>
                 </a>
                 <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2">
-                    <i class="fas fa-calendar-alt text-lg w-6"></i>
+                    <i class="fas fa-calendar-alt text-base w-6"></i>
                     <span class="font-medium">Événements</span>
                 </a>
                 <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2">
-                    <i class="fas fa-map-marker-alt text-lg w-6"></i>
+                    <i class="fas fa-map-marker-alt text-base w-6"></i>
                     <span class="font-medium">Localisations des Membres</span>
                 </a>
                 <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2">
-                    <i class="fas fa-users text-lg w-6"></i>
+                    <i class="fas fa-users text-base w-6"></i>
                     <span class="font-medium">Vos Sessions</span>
                 </a>
                 <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2">
-                    <i class="fas fa-cog text-lg w-6"></i>
+                    <i class="fas fa-cog text-base w-6"></i>
                     <span class="font-medium">Paramètres</span>
                 </a>
                 <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50">
-                    <i class="fas fa-question-circle text-lg w-6"></i>
+                    <i class="fas fa-question-circle text-base w-6"></i>
                     <span class="font-medium">Centre d'aide</span>
                 </a>
             </nav>
@@ -667,15 +667,15 @@
             <div class="mx-4 my-6 p-4 bg-gray-50 rounded-lg">
                 <div class="grid grid-cols-3 gap-4 text-center">
                     <div>
-                        <p class="font-bold text-lg">500k</p>
+                        <p class="font-bold text-base">500k</p>
                         <p class="text-xs text-gray-500">Posts</p>
                     </div>
                     <div class="border-x border-gray-300">
-                        <p class="font-bold text-lg">23.5M</p>
+                        <p class="font-bold text-base">23.5M</p>
                         <p class="text-xs text-gray-500">Followers</p>
                     </div>
                     <div>
-                        <p class="font-bold text-lg">50</p>
+                        <p class="font-bold text-base">50</p>
                         <p class="text-xs text-gray-500">Following</p>
                     </div>
                 </div>
