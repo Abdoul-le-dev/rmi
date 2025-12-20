@@ -77,7 +77,7 @@
                             <img 
                                 src="https://i.pravatar.cc/150?img=12" 
                                 alt="Avatar" 
-                                class="w-8 h-8 rounded-full object-cover ring-2 ring-indigo-500"
+                                class="w-7 h-7 rounded-full object-cover ring-2 ring-indigo-500"
                             >
                         </button>
                         
@@ -116,11 +116,11 @@
                             >
                             <div class="absolute bottom-2 right-2 w-3 h-3 bg-green-500 border-3 border-white rounded-full"></div>
                         </div>
-                        <h3 class="font-bold text-white text-base">CHOUTI Abdoulaye</h3>
-                        <p class="text-indigo-100 text-xs">Modérateur</p>
+                        <h3 class="font-bold text-white text-base change">CHOUTI Abdoulaye</h3>
+                        <p class="text-indigo-100 text-xs change">Modérateur</p>
                         <div class="flex items-center justify-center space-x-1 mt-1">
                             <i class="fas fa-check-circle text-white text-xs"></i>
-                            <span class="text-white text-xs">Vérifié</span>
+                            <span class="text-white text-xs change">Vérifié</span>
                         </div>
                     </div>
 
