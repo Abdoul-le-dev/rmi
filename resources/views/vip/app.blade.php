@@ -215,8 +215,8 @@
                             </div>
                             <div class="flex justify-between space-x-2">
 
-                                <button class="px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-all btn-ripple w-20">
-                                    <i class="fas fa-paper-plane mr-2 hidden lg:block"></i>
+                                <button class="px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-all btn-ripple ">
+                                    <i class="fas fa-paper-plane mr-2 hidden "></i>
                                     Envoyer
                                 </button>
                             </div>
