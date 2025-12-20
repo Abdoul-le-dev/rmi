@@ -114,7 +114,7 @@
                                 alt="Profil" 
                                 class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg mx-auto"
                             >
-                            <div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 border-3 border-white rounded-full"></div>
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-3 border-white rounded-full"></div>
                         </div>
                         <h3 class="font-bold text-white text-base">CHOUTI Abdoulaye</h3>
                         <p class="text-indigo-100 text-xs">Modérateur</p>
@@ -216,7 +216,7 @@
                             <div class="flex items-center space-x-2">
 
                                 <button class="px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-all btn-ripple">
-                                    <i class="fas fa-paper-plane mr-2"></i>
+                                    <i class="fas fa-paper-plane mr-2 hidden lg:block"></i>
                                     Envoyer
                                 </button>
                             </div>
