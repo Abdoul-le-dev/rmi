@@ -116,7 +116,7 @@
                             >
                             <div class="absolute bottom-2 right-2 w-3 h-3 bg-green-500 border-3 border-white rounded-full"></div>
                         </div>
-                        <h3 class="font-bold text-white text-base change">CHOUTI Abdoulaye</h3>
+                        <h3 class="font-bold text-white text-base ">CHOUTI Abdoulaye</h3>
                         <p class="text-indigo-100 text-xs change">Modérateur</p>
                         <div class="flex items-center justify-center space-x-1 mt-1">
                             <i class="fas fa-check-circle text-white text-xs"></i>
@@ -181,7 +181,7 @@
                 
                 <!-- Message de bienvenue -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 fade-in">
-                    <h2 class="text-lg font-bold text-gray-900 mb-2">
+                    <h2 class="text-lg font-bold text-gray-900 mb-2 change">
                         Bienvenue Abdoulaye 👋 ? Que pensez-vous aujourd'hui ?
                     </h2>
                     <p class="text-xs text-gray-500 mb-4">
@@ -192,7 +192,7 @@
                     <div class="space-y-4">
                         <textarea 
                             placeholder="Partagez vos idées, stratégies de trading..." 
-                            class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                            class="w-full change p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
                             rows="3"
                         ></textarea>
                         
