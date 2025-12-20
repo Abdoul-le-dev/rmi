@@ -32,7 +32,7 @@
                     <!-- Logo -->
                     <div class="flex items-center space-x-2 cursor-pointer">
                         <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
-                            <i class="fas fa-play text-white text-sm"></i>
+                            <i class="fas fa-play text-white text-xs"></i>
                         </div>
                         <span class="text-lg font-bold">
                             Trade <span class="text-indigo-600">Hub</span>
@@ -83,10 +83,10 @@
                         
                         <!-- Dropdown menu (caché par défaut) -->
                         <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mon Profil</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Paramètres</a>
+                            <a href="#" class="block px-4 py-2 text-xs text-gray-700 hover:bg-gray-100">Mon Profil</a>
+                            <a href="#" class="block px-4 py-2 text-xs text-gray-700 hover:bg-gray-100">Paramètres</a>
                             <hr class="my-2">
-                            <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Déconnexion</a>
+                            <a href="#" class="block px-4 py-2 text-xs text-red-600 hover:bg-gray-100">Déconnexion</a>
                         </div>
                     </div>
                 </div>
@@ -117,7 +117,7 @@
                             <div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 border-3 border-white rounded-full"></div>
                         </div>
                         <h3 class="font-bold text-white text-base">CHOUTI Abdoulaye</h3>
-                        <p class="text-indigo-100 text-sm">Modérateur</p>
+                        <p class="text-indigo-100 text-xs">Modérateur</p>
                         <div class="flex items-center justify-center space-x-1 mt-1">
                             <i class="fas fa-check-circle text-white text-xs"></i>
                             <span class="text-white text-xs">Vérifié</span>
@@ -184,7 +184,7 @@
                     <h2 class="text-lg font-bold text-gray-900 mb-2">
                         Bienvenue Abdoulaye 👋 ? Que pensez-vous aujourd'hui ?
                     </h2>
-                    <p class="text-sm text-gray-500 mb-4">
+                    <p class="text-xs text-gray-500 mb-4">
                         Standard glass, 3.8GHz 8-core 10th-generation Intel Core i7 processor, Turbo Boost up to 5.0GHz, 16GB 2666MHz DDR4 memory...
                     </p>
                     
@@ -243,7 +243,7 @@
                                 >
                                 <div>
                                     <h4 class="font-semibold text-gray-900">Junior TOSSA</h4>
-                                    <p class="text-sm text-gray-500">Modérateur</p>
+                                    <p class="text-xs text-gray-500">Modérateur</p>
                                 </div>
                             </div>
                             <div class="flex items-center space-x-3">
@@ -270,11 +270,11 @@
                             <div class="flex items-center space-x-6">
                                 <button class="flex items-center space-x-2 text-gray-500 hover:text-indigo-600 transition-colors">
                                     <i class="far fa-comment"></i>
-                                    <span class="text-sm font-medium">47.5k</span>
+                                    <span class="text-xs font-medium">47.5k</span>
                                 </button>
                                 <button class="flex items-center space-x-2 text-gray-500 hover:text-red-500 transition-colors">
                                     <i class="far fa-heart"></i>
-                                    <span class="text-sm font-medium">650.3k</span>
+                                    <span class="text-xs font-medium">650.3k</span>
                                 </button>
                             </div>
                             <div class="flex -space-x-2">
@@ -298,7 +298,7 @@
                                 >
                                 <div>
                                     <h4 class="font-semibold text-gray-900">Zeynab HOUNGBE</h4>
-                                    <p class="text-sm text-gray-500">Coach</p>
+                                    <p class="text-xs text-gray-500">Coach</p>
                                 </div>
                             </div>
                             <div class="flex items-center space-x-3">
@@ -332,11 +332,11 @@
                             <div class="flex items-center space-x-6">
                                 <button class="flex items-center space-x-2 text-gray-500 hover:text-indigo-600 transition-colors">
                                     <i class="far fa-comment"></i>
-                                    <span class="text-sm font-medium">234</span>
+                                    <span class="text-xs font-medium">234</span>
                                 </button>
                                 <button class="flex items-center space-x-2 text-gray-500 hover:text-red-500 transition-colors">
                                     <i class="far fa-heart"></i>
-                                    <span class="text-sm font-medium">5.2k</span>
+                                    <span class="text-xs font-medium">5.2k</span>
                                 </button>
                             </div>
                             <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
@@ -356,7 +356,7 @@
                                 >
                                 <div>
                                     <h4 class="font-semibold text-gray-900">Sarah MARTIN</h4>
-                                    <p class="text-sm text-gray-500">Trader Pro</p>
+                                    <p class="text-xs text-gray-500">Trader Pro</p>
                                 </div>
                             </div>
                             <div class="flex items-center space-x-3">
@@ -379,11 +379,11 @@
                             <div class="flex items-center space-x-6">
                                 <button class="flex items-center space-x-2 text-gray-500 hover:text-indigo-600 transition-colors">
                                     <i class="far fa-comment"></i>
-                                    <span class="text-sm font-medium">89</span>
+                                    <span class="text-xs font-medium">89</span>
                                 </button>
                                 <button class="flex items-center space-x-2 text-gray-500 hover:text-red-500 transition-colors">
                                     <i class="far fa-heart"></i>
-                                    <span class="text-sm font-medium">1.8k</span>
+                                    <span class="text-xs font-medium">1.8k</span>
                                 </button>
                             </div>
                             <div class="flex -space-x-2">
@@ -424,11 +424,11 @@
                                         class="w-10 h-10 rounded-full object-cover"
                                     >
                                     <div>
-                                        <p class="font-medium text-gray-900 text-sm">Charbel MEHINTO</p>
+                                        <p class="font-medium text-gray-900 text-xs">Charbel MEHINTO</p>
                                         <p class="text-xs text-gray-500">Trader</p>
                                     </div>
                                 </div>
-                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
+                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-xs rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
                                     Suivre
                                 </button>
                             </div>
@@ -442,11 +442,11 @@
                                         class="w-10 h-10 rounded-full object-cover"
                                     >
                                     <div>
-                                        <p class="font-medium text-gray-900 text-sm">Junias SIHOU</p>
+                                        <p class="font-medium text-gray-900 text-xs">Junias SIHOU</p>
                                         <p class="text-xs text-gray-500">Analyste</p>
                                     </div>
                                 </div>
-                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
+                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-xs rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
                                     Suivre
                                 </button>
                             </div>
@@ -460,11 +460,11 @@
                                         class="w-10 h-10 rounded-full object-cover"
                                     >
                                     <div>
-                                        <p class="font-medium text-gray-900 text-sm">Pierre SOUROU</p>
+                                        <p class="font-medium text-gray-900 text-xs">Pierre SOUROU</p>
                                         <p class="text-xs text-gray-500">Coach</p>
                                     </div>
                                 </div>
-                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
+                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-xs rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
                                     Suivre
                                 </button>
                             </div>
@@ -478,11 +478,11 @@
                                         class="w-10 h-10 rounded-full object-cover"
                                     >
                                     <div>
-                                        <p class="font-medium text-gray-900 text-sm">Samson R. VOOBE</p>
+                                        <p class="font-medium text-gray-900 text-xs">Samson R. VOOBE</p>
                                         <p class="text-xs text-gray-500">Expert</p>
                                     </div>
                                 </div>
-                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
+                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-xs rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
                                     Suivre
                                 </button>
                             </div>
@@ -496,11 +496,11 @@
                                         class="w-10 h-10 rounded-full object-cover"
                                     >
                                     <div>
-                                        <p class="font-medium text-gray-900 text-sm">Julien HOUNGBO</p>
+                                        <p class="font-medium text-gray-900 text-xs">Julien HOUNGBO</p>
                                         <p class="text-xs text-gray-500">Mentor</p>
                                     </div>
                                 </div>
-                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
+                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-xs rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
                                     Suivre
                                 </button>
                             </div>
@@ -514,11 +514,11 @@
                                         class="w-10 h-10 rounded-full object-cover"
                                     >
                                     <div>
-                                        <p class="font-medium text-gray-900 text-sm">Fabrice SOSSA</p>
+                                        <p class="font-medium text-gray-900 text-xs">Fabrice SOSSA</p>
                                         <p class="text-xs text-gray-500">Formateur</p>
                                     </div>
                                 </div>
-                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
+                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-xs rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
                                     Suivre
                                 </button>
                             </div>
@@ -538,7 +538,7 @@
                                         <i class="fas fa-check text-green-600"></i>
                                     </div>
                                     <div>
-                                        <p class="font-medium text-gray-900 text-sm">Traders Profession</p>
+                                        <p class="font-medium text-gray-900 text-xs">Traders Profession</p>
                                         <p class="text-xs text-gray-500">12.5k membres</p>
                                     </div>
                                 </div>
@@ -554,7 +554,7 @@
                                         <i class="fas fa-chart-line text-blue-600"></i>
                                     </div>
                                     <div>
-                                        <p class="font-medium text-gray-900 text-sm">Crypto Currency</p>
+                                        <p class="font-medium text-gray-900 text-xs">Crypto Currency</p>
                                         <p class="text-xs text-gray-500">8.2k membres</p>
                                     </div>
                                 </div>
@@ -570,7 +570,7 @@
                                         <i class="fas fa-users text-purple-600"></i>
                                     </div>
                                     <div>
-                                        <p class="font-medium text-gray-900 text-sm">Global Trade Union</p>
+                                        <p class="font-medium text-gray-900 text-xs">Global Trade Union</p>
                                         <p class="text-xs text-gray-500">15.8k membres</p>
                                     </div>
                                 </div>
@@ -586,7 +586,7 @@
                                         <i class="fas fa-star text-yellow-600"></i>
                                     </div>
                                     <div>
-                                        <p class="font-medium text-gray-900 text-sm">Solaris Traders</p>
+                                        <p class="font-medium text-gray-900 text-xs">Solaris Traders</p>
                                         <p class="text-xs text-gray-500">6.4k membres</p>
                                     </div>
                                 </div>
@@ -626,7 +626,7 @@
                     >
                     <div>
                         <p class="font-bold">CHOUTI Abdoulaye</p>
-                        <p class="text-sm text-indigo-100">Modérateur</p>
+                        <p class="text-xs text-indigo-100">Modérateur</p>
                     </div>
                 </div>
             </div>
