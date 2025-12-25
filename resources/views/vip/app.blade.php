@@ -1,26 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Trade Hub - Plateforme de formation en trading">
-    <meta name="author" content="Trade Hub">
-    <title>Trade Hub - Plateforme de Formation Trading</title>
-    
-    <!-- Tailwind CSS CDN -->
+    <title>VIP RMI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- CSS Personnalisé -->
-    <link rel="stylesheet" href="styles.css">
     {{-- CSS global --}}
     <link rel="stylesheet" href="{{ asset('assets/vip/vip.css') }}">
 
@@ -33,23 +18,23 @@
     <!-- ========================================
          HEADER PRINCIPAL
     ======================================== -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 
                 <!-- Logo et titre -->
                 <div class="flex items-center space-x-3">
                     <!-- Bouton menu mobile -->
-                    <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Menu mobile">
-                        <i class="fas fa-bars text-gray-600 text-xl"></i>
+                    <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                        <i class="fas fa-bars text-gray-600 text-lg"></i>
                     </button>
                     
                     <!-- Logo -->
                     <div class="flex items-center space-x-2 cursor-pointer">
                         <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
-                            <i class="fas fa-play text-white text-sm"></i>
+                            <i class="fas fa-play text-white text-xs"></i>
                         </div>
-                        <span class="text-xl font-bold">
+                        <span class="text-lg font-bold">
                             Trade <span class="text-indigo-600">Hub</span>
                         </span>
                     </div>
@@ -62,7 +47,6 @@
                             type="text" 
                             placeholder="Rechercher..." 
                             class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                            aria-label="Rechercher"
                         >
                         <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                     </div>
@@ -71,59 +55,38 @@
                 <!-- Actions utilisateur -->
                 <div class="flex items-center space-x-4">
                     <!-- Icône recherche mobile -->
-                    <button class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Rechercher">
+                    <button class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
                         <i class="fas fa-search text-gray-600"></i>
                     </button>
 
                     <!-- Notifications -->
-                    <button id="notifications-btn" class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Notifications">
-                        <i class="fas fa-bell text-gray-600 text-xl"></i>
-                        <span class="notification-badge pulse-dot">5</span>
+                    <button class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors" id ="notification" >
+                        <i class="fas fa-bell text-gray-600 text-lg"></i>
+                        <span class="notification-badge pulse-dot">3</span>
                     </button>
 
                     <!-- Messages -->
-                    <button id="messages-btn" class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Messages">
-                        <i class="fas fa-comment-dots text-gray-600 text-xl"></i>
-                        <span class="notification-badge pulse-dot">3</span>
+                    <button class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                        <i class="fas fa-comment-dots text-gray-600 text-lg"></i>
+                        <span class="notification-badge pulse-dot">2</span>
                     </button>
 
                     <!-- Avatar utilisateur -->
                     <div class="relative">
-                        <button id="user-menu-btn" class="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Menu utilisateur">
+                        <button id="user-menu-btn" class="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-100 transition-colors">
                             <img 
                                 src="https://i.pravatar.cc/150?img=12" 
-                                alt="Avatar utilisateur" 
-                                class="w-9 h-9 rounded-full object-cover ring-2 ring-indigo-500"
+                                alt="Avatar" 
+                                class="w-7 h-7 rounded-full object-cover ring-2 ring-indigo-500"
                             >
                         </button>
                         
-                        <!-- Dropdown menu utilisateur -->
-                        <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 py-2 scale-in">
-                            <div class="px-4 py-3 border-b border-gray-100">
-                                <p class="text-sm font-semibold text-gray-900">CHOUTI Abdoulaye</p>
-                                <p class="text-xs text-gray-500">abdoulaye@tradehub.com</p>
-                            </div>
-                            <a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-user w-5 text-gray-400"></i>
-                                <span class="ml-3">Votre compte</span>
-                            </a>
-                            <a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-envelope w-5 text-gray-400"></i>
-                                <span class="ml-3">Vos messages</span>
-                            </a>
-                            <a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-bell w-5 text-gray-400"></i>
-                                <span class="ml-3">Notifications</span>
-                            </a>
-                            <a href="#" class="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-question-circle w-5 text-gray-400"></i>
-                                <span class="ml-3">Centre d'aide</span>
-                            </a>
+                        <!-- Dropdown menu (caché par défaut) -->
+                        <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
+                            <a href="#" class="block px-4 py-2 text-xs text-gray-700 hover:bg-gray-100">Mon Profil</a>
+                            <a href="#" class="block px-4 py-2 text-xs text-gray-700 hover:bg-gray-100">Paramètres</a>
                             <hr class="my-2">
-                            <a href="#" class="flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                                <i class="fas fa-sign-out-alt w-5"></i>
-                                <span class="ml-3">Déconnexion</span>
-                            </a>
+                            <a href="#" class="block px-4 py-2 text-xs text-red-600 hover:bg-gray-100">Déconnexion</a>
                         </div>
                     </div>
                 </div>
@@ -132,491 +95,14 @@
     </header>
 
     <!-- ========================================
-         PANEL NOTIFICATIONS (Coulissant)
-    ======================================== -->
-    <div id="notifications-panel" class="slide-panel">
-        <div class="h-full flex flex-col">
-            <!-- Header du panel -->
-            <div class="p-4 border-b border-gray-200 flex items-center justify-between bg-white">
-                <h2 class="text-lg font-bold text-gray-900">Notifications</h2>
-                <button id="close-notifications" class="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Fermer notifications">
-                    <i class="fas fa-times text-gray-600"></i>
-                </button>
-            </div>
-
-            <!-- Notification mise en avant -->
-            <div class="p-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
-                <div class="flex items-start space-x-3">
-                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-rocket text-white"></i>
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-semibold text-sm mb-1">Cher utilisateur, Nous avons mis en place de nouvelles fonctionnalités</p>
-                        <p class="text-xs text-indigo-100">Allez les consulter !</p>
-                    </div>
-                    <i class="fas fa-chevron-right text-white/70"></i>
-                </div>
-            </div>
-
-            <!-- Liste des notifications -->
-            <div class="flex-1 overflow-y-auto custom-scrollbar bg-gray-50">
-                <div class="p-4 space-y-3">
-                    
-                    <!-- Notification 1 -->
-                    <div class="bg-white rounded-lg p-3 card-hover cursor-pointer border border-gray-100">
-                        <div class="flex items-start space-x-3">
-                            <img src="https://i.pravatar.cc/150?img=20" alt="Jardis AMÉGAN" class="w-10 h-10 rounded-full flex-shrink-0">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm text-gray-900">
-                                    <span class="font-semibold">Jardis AMÉGAN</span> souhaite collaborer avec vous
-                                </p>
-                                <p class="text-xs text-gray-500 mt-1">il y a 5 jours</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Notification 2 -->
-                    <div class="bg-white rounded-lg p-3 card-hover cursor-pointer border border-gray-100">
-                        <div class="flex items-start space-x-3">
-                            <img src="https://i.pravatar.cc/150?img=25" alt="Judith KOSSOU" class="w-10 h-10 rounded-full flex-shrink-0">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm text-gray-900">
-                                    <span class="font-semibold">Judith KOSSOU</span> vous invite à rejoindre une session
-                                </p>
-                                <p class="text-xs text-gray-500 mt-1">il y a 5 jours</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Notification 3 -->
-                    <div class="bg-white rounded-lg p-3 card-hover cursor-pointer border border-gray-100">
-                        <div class="flex items-start space-x-3">
-                            <img src="https://i.pravatar.cc/150?img=30" alt="Patrick HOUNGUE" class="w-10 h-10 rounded-full flex-shrink-0">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm text-gray-900">
-                                    <span class="font-semibold">Patrick HOUNGUE</span> vous invite à rejoindre une session
-                                </p>
-                                <p class="text-xs text-gray-500 mt-1">il y a 5 jours</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Notification 4 -->
-                    <div class="bg-white rounded-lg p-3 card-hover cursor-pointer border border-gray-100">
-                        <div class="flex items-start space-x-3">
-                            <img src="https://i.pravatar.cc/150?img=35" alt="Josué ZINSALO" class="w-10 h-10 rounded-full flex-shrink-0">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm text-gray-900">
-                                    <span class="font-semibold">Josué ZINSALO</span> vous souhaite la bienvenue
-                                </p>
-                                <p class="text-xs text-gray-500 mt-1">il y a 5 jours</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Notification 5 -->
-                    <div class="bg-white rounded-lg p-3 card-hover cursor-pointer border border-gray-100">
-                        <div class="flex items-start space-x-3">
-                            <img src="https://i.pravatar.cc/150?img=40" alt="Jack TITOUAN" class="w-10 h-10 rounded-full flex-shrink-0">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm text-gray-900">
-                                    <span class="font-semibold">Jack TITOUAN</span> vous invite à rejoindre une session
-                                </p>
-                                <p class="text-xs text-gray-500 mt-1">il y a 5 jours</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Notification 6 -->
-                    <div class="bg-white rounded-lg p-3 card-hover cursor-pointer border border-gray-100">
-                        <div class="flex items-start space-x-3">
-                            <img src="https://i.pravatar.cc/150?img=45" alt="Edite ANASSOU" class="w-10 h-10 rounded-full flex-shrink-0">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm text-gray-900">
-                                    <span class="font-semibold">Edite ANASSOU</span> vous invite à rejoindre une session
-                                </p>
-                                <p class="text-xs text-gray-500 mt-1">il y a 5 jours</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Notification 7 -->
-                    <div class="bg-white rounded-lg p-3 card-hover cursor-pointer border border-gray-100">
-                        <div class="flex items-start space-x-3">
-                            <img src="https://i.pravatar.cc/150?img=50" alt="Peter" class="w-10 h-10 rounded-full flex-shrink-0">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm text-gray-900">
-                                    Hey Peter, we've got an even Ipsum is simply dummy text of the printing and typesetting industry.
-                                </p>
-                                <p class="text-xs text-gray-500 mt-1">il y a 1 mois</p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========================================
-         PANEL MESSAGES (Coulissant)
-    ======================================== -->
-    <div id="messages-panel" class="slide-panel">
-        <div class="h-full flex">
-            
-            <!-- Liste des conversations (Sidebar) -->
-            <div id="conversations-list" class="w-full lg:w-80 bg-white border-r border-gray-200 flex flex-col transition-all">
-                <!-- Header -->
-                <div class="p-4 border-b border-gray-200 flex items-center justify-between">
-                    <h2 class="text-lg font-bold text-gray-900">Messages</h2>
-                    <div class="flex items-center space-x-2">
-                        <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Nouveau message">
-                            <i class="fas fa-edit text-gray-600"></i>
-                        </button>
-                        <button id="close-messages" class="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Fermer messages">
-                            <i class="fas fa-times text-gray-600"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Recherche dans les conversations -->
-                <div class="p-3 border-b border-gray-200">
-                    <div class="relative">
-                        <input 
-                            type="text" 
-                            placeholder="Rechercher une conversation..." 
-                            class="w-full pl-10 pr-4 py-2 bg-gray-100 border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
-                            aria-label="Rechercher conversation"
-                        >
-                        <i class="fas fa-search absolute left-3 top-2.5 text-gray-400 text-sm"></i>
-                    </div>
-                </div>
-
-                <!-- Liste des conversations -->
-                <div class="flex-1 overflow-y-auto custom-scrollbar">
-                    
-                    <!-- Conversation 1 (Active) -->
-                    <div class="conversation-item active cursor-pointer p-4 border-b border-gray-100" data-conversation="1">
-                        <div class="flex items-center space-x-3">
-                            <div class="relative flex-shrink-0">
-                                <img src="https://i.pravatar.cc/150?img=15" alt="HOUESSOU Amour" class="w-12 h-12 rounded-full">
-                                <div class="status-online"></div>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="font-semibold text-sm text-gray-900 truncate">HOUESSOU Amour</p>
-                                    <span class="text-xs text-gray-500">4:30 PM</span>
-                                </div>
-                                <p class="text-xs text-gray-500 truncate">Neque porro quisquam est qui dolorem ipsu...</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Conversation 2 -->
-                    <div class="conversation-item cursor-pointer p-4 border-b border-gray-100" data-conversation="2">
-                        <div class="flex items-center space-x-3">
-                            <div class="relative flex-shrink-0">
-                                <img src="https://i.pravatar.cc/150?img=22" alt="AGLA Marinette" class="w-12 h-12 rounded-full">
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="font-semibold text-sm text-gray-900 truncate">AGLA Marinette</p>
-                                    <span class="text-xs text-gray-500">4:30 PM</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-video text-indigo-600 text-xs"></i>
-                                    <p class="text-xs text-gray-500 truncate">Vidéo</p>
-                                    <div class="unread-indicator ml-auto"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Conversation 3 -->
-                    <div class="conversation-item cursor-pointer p-4 border-b border-gray-100" data-conversation="3">
-                        <div class="flex items-center space-x-3">
-                            <div class="relative flex-shrink-0">
-                                <img src="https://i.pravatar.cc/150?img=28" alt="ZOSSOU Lionnel" class="w-12 h-12 rounded-full">
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="font-semibold text-sm text-gray-900 truncate">ZOSSOU Lionnel</p>
-                                    <span class="text-xs text-gray-500">4:30 PM</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-file text-gray-400 text-xs"></i>
-                                    <p class="text-xs text-gray-500 truncate">Neque porro quisquam est qui dolorem ipsu...</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Conversation 4 -->
-                    <div class="conversation-item cursor-pointer p-4 border-b border-gray-100" data-conversation="4">
-                        <div class="flex items-center space-x-3">
-                            <div class="relative flex-shrink-0">
-                                <img src="https://i.pravatar.cc/150?img=33" alt="Tranquillin AKOTEGNON" class="w-12 h-12 rounded-full">
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="font-semibold text-sm text-gray-900 truncate">Tranquillin AKOTEGNON</p>
-                                    <span class="text-xs text-gray-500">4:30 PM</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-volume-up text-indigo-600 text-xs"></i>
-                                    <p class="text-xs text-gray-500 truncate">Audio</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Conversation 5 -->
-                    <div class="conversation-item cursor-pointer p-4 border-b border-gray-100" data-conversation="5">
-                        <div class="flex items-center space-x-3">
-                            <div class="relative flex-shrink-0">
-                                <img src="https://i.pravatar.cc/150?img=38" alt="Fadel ABOUDOU" class="w-12 h-12 rounded-full">
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="font-semibold text-sm text-gray-900 truncate">Fadel ABOUDOU</p>
-                                    <span class="text-xs text-gray-500">4:30 PM</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-handshake text-yellow-500 text-xs"></i>
-                                    <p class="text-xs text-gray-500 truncate">Félicitations pour la conclusion</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Conversation 6 -->
-                    <div class="conversation-item cursor-pointer p-4 border-b border-gray-100" data-conversation="6">
-                        <div class="flex items-center space-x-3">
-                            <div class="relative flex-shrink-0">
-                                <img src="https://i.pravatar.cc/150?img=42" alt="Micheal Scott" class="w-12 h-12 rounded-full">
-                                <div class="status-online"></div>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="font-semibold text-sm text-gray-900 truncate">Micheal Scott</p>
-                                    <span class="text-xs text-gray-500">4:30 PM</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-phone text-green-500 text-xs"></i>
-                                    <p class="text-xs text-gray-500 truncate">Voice call</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Conversation 7 -->
-                    <div class="conversation-item cursor-pointer p-4 border-b border-gray-100" data-conversation="7">
-                        <div class="flex items-center space-x-3">
-                            <div class="relative flex-shrink-0">
-                                <img src="https://i.pravatar.cc/150?img=47" alt="Geoffroy AHIDOMONHAN" class="w-12 h-12 rounded-full">
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="font-semibold text-sm text-gray-900 truncate">Geoffroy AHIDOMONHAN</p>
-                                    <span class="text-xs text-gray-500">4:30 PM</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-smile text-gray-400 text-xs"></i>
-                                    <p class="text-xs text-gray-500 truncate">Sticker</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Conversation 8 -->
-                    <div class="conversation-item cursor-pointer p-4 border-b border-gray-100" data-conversation="8">
-                        <div class="flex items-center space-x-3">
-                            <div class="relative flex-shrink-0">
-                                <img src="https://i.pravatar.cc/150?img=52" alt="SOSSA Gustave" class="w-12 h-12 rounded-full">
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="font-semibold text-sm text-gray-900 truncate">SOSSA Gustave</p>
-                                    <span class="text-xs text-gray-500">4:30 PM</span>
-                                </div>
-                                <p class="text-xs text-gray-500 truncate">Ce message a été supprimé</p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Zone de conversation (Desktop uniquement) -->
-            <div id="conversation-detail" class="hidden lg:flex flex-1 flex-col bg-gray-50">
-                <!-- Header de la conversation -->
-                <div class="bg-white p-4 border-b border-gray-200 flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <img src="https://i.pravatar.cc/150?img=15" alt="HOUESSOU Amour" class="w-10 h-10 rounded-full">
-                        <div>
-                            <p class="font-semibold text-sm text-gray-900">HOUESSOU Amour</p>
-                            <p class="text-xs text-green-600">En ligne</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Appel vidéo">
-                            <i class="fas fa-video text-gray-600"></i>
-                        </button>
-                        <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Appel audio">
-                            <i class="fas fa-phone text-gray-600"></i>
-                        </button>
-                        <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Plus d'options">
-                            <i class="fas fa-ellipsis-v text-gray-600"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Messages -->
-                <div class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
-                    
-                    <!-- Message reçu -->
-                    <div class="flex items-start space-x-2">
-                        <img src="https://i.pravatar.cc/150?img=15" alt="HOUESSOU Amour" class="w-8 h-8 rounded-full flex-shrink-0">
-                        <div class="flex flex-col">
-                            <div class="message-bubble received px-4 py-2">
-                                <p class="text-sm">Oui c'est disponible</p>
-                            </div>
-                            <span class="text-xs text-gray-400 mt-1 ml-2">4:52 pm</span>
-                        </div>
-                    </div>
-
-                    <!-- Message envoyé -->
-                    <div class="flex items-end justify-end space-x-2">
-                        <div class="flex flex-col items-end">
-                            <div class="message-bubble sent px-4 py-2">
-                                <p class="text-sm">Bien sûr ! Je t'envoie quelques images !</p>
-                            </div>
-                            <span class="text-xs text-gray-400 mt-1 mr-2">4:52 pm</span>
-                        </div>
-                    </div>
-
-                    <!-- Message avec image -->
-                    <div class="flex items-end justify-end space-x-2">
-                        <div class="flex flex-col items-end max-w-xs">
-                            <div class="rounded-2xl overflow-hidden shadow-lg">
-                                <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400" alt="Image partagée" class="w-full h-48 object-cover">
-                            </div>
-                            <div class="mt-2 bg-gray-100 rounded-lg px-3 py-1 flex items-center space-x-2">
-                                <i class="fas fa-images text-indigo-600 text-xs"></i>
-                                <span class="text-xs text-gray-600">Sticker Pack Name</span>
-                            </div>
-                            <span class="text-xs text-gray-400 mt-1 mr-2">4:52 pm</span>
-                        </div>
-                    </div>
-
-                    <!-- Stickers -->
-                    <div class="flex items-end justify-end">
-                        <div class="flex flex-col items-end">
-                            <div class="flex items-center space-x-2">
-                                <div class="text-5xl">🦁</div>
-                                <div class="text-5xl">🤡</div>
-                                <div class="text-5xl">🤖</div>
-                            </div>
-                            <div class="flex items-center space-x-2 mt-2">
-                                <div class="text-5xl">🐯</div>
-                                <div class="text-5xl">🎪</div>
-                                <div class="text-5xl">🤡</div>
-                            </div>
-                            <div class="mt-2 bg-gray-100 rounded-lg px-3 py-1 flex items-center space-x-1">
-                                <i class="fas fa-reply text-gray-500 text-xs"></i>
-                                <span class="text-xs text-gray-600">4 Replies</span>
-                            </div>
-                            <span class="text-xs text-gray-400 mt-1 mr-2">4:52 pm</span>
-                        </div>
-                    </div>
-
-                    <!-- Message reçu -->
-                    <div class="flex items-start space-x-2">
-                        <img src="https://i.pravatar.cc/150?img=15" alt="HOUESSOU Amour" class="w-8 h-8 rounded-full flex-shrink-0">
-                        <div class="flex flex-col">
-                            <div class="message-bubble received px-4 py-2">
-                                <p class="text-sm">Merci ! Cela me semble correct.</p>
-                            </div>
-                            <span class="text-xs text-gray-400 mt-1 ml-2">4:52 pm</span>
-                        </div>
-                    </div>
-
-                    <!-- Messages envoyés multiples -->
-                    <div class="flex flex-col items-end space-y-2">
-                        <div class="message-bubble sent px-4 py-2">
-                            <p class="text-sm">Salut, les parts dont tu m'avais parlé, sont dispo?</p>
-                        </div>
-                        <div class="message-bubble sent px-4 py-2">
-                            <p class="text-sm">Super, puis-je avoir un aperçu</p>
-                        </div>
-                        <div class="message-bubble sent px-4 py-2">
-                            <p class="text-sm">Je les prends !</p>
-                        </div>
-                        <span class="text-xs text-gray-400 mr-2">4:55 pm</span>
-                    </div>
-
-                    <!-- Indicateur Today -->
-                    <div class="flex items-center justify-center my-4">
-                        <div class="bg-gray-200 rounded-full px-3 py-1">
-                            <span class="text-xs text-gray-600">Today</span>
-                        </div>
-                    </div>
-
-                    <!-- Dernier message -->
-                    <div class="flex items-end justify-end space-x-2">
-                        <div class="flex flex-col items-end">
-                            <div class="message-bubble sent px-4 py-2">
-                                <p class="text-sm">Je les prends !</p>
-                            </div>
-                            <span class="text-xs text-gray-400 mt-1 mr-2">4:55 pm</span>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Zone de saisie -->
-                <div class="bg-white border-t border-gray-200 p-4">
-                    <div class="flex items-center space-x-2 mb-3">
-                        <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Ajouter fichier">
-                            <i class="fas fa-plus-circle text-gray-400"></i>
-                        </button>
-                        <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Message vocal">
-                            <i class="fas fa-microphone text-gray-400"></i>
-                        </button>
-                        <button id="emoji-btn" class="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Emoji">
-                            <i class="far fa-smile text-gray-400"></i>
-                        </button>
-                        <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Ajouter image">
-                            <i class="far fa-image text-gray-400"></i>
-                        </button>
-                    </div>
-                    <div class="flex items-end space-x-2">
-                        <textarea 
-                            placeholder="Type your message..." 
-                            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
-                            rows="2"
-                            aria-label="Message"
-                        ></textarea>
-                        <button class="p-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors btn-ripple" aria-label="Envoyer message">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- Overlay pour les panels -->
-    <div id="panel-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-30 modal-overlay"></div>
-
-    <!-- ========================================
-         LAYOUT PRINCIPAL
+         LAYOUT PRINCIPAL (3 COLONNES)
     ======================================== -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- SIDEBAR GAUCHE -->
+            <!-- ========================================
+                 SIDEBAR GAUCHE - NAVIGATION
+            ======================================== -->
             <aside class="hidden lg:block lg:col-span-3">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden sticky top-24">
                     
@@ -625,31 +111,31 @@
                         <div class="relative inline-block mb-3">
                             <img 
                                 src="https://i.pravatar.cc/150?img=12" 
-                                alt="Profil CHOUTI Abdoulaye" 
+                                alt="Profil" 
                                 class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg mx-auto"
                             >
-                            <div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 border-3 border-white rounded-full"></div>
+                            <div class="absolute bottom-2 right-2 w-3 h-3 bg-green-500 border-3 border-white rounded-full"></div>
                         </div>
-                        <h3 class="font-bold text-white text-lg">CHOUTI Abdoulaye</h3>
-                        <p class="text-indigo-100 text-sm">Modérateur</p>
+                        <h3 class="font-bold text-white text-base ">CHOUTI Abdoulaye</h3>
+                        <p class="text-indigo-100 text-xs change">Modérateur</p>
                         <div class="flex items-center justify-center space-x-1 mt-1">
                             <i class="fas fa-check-circle text-white text-xs"></i>
-                            <span class="text-white text-xs">Vérifié</span>
+                            <span class="text-white text-xs change">Vérifié</span>
                         </div>
                     </div>
 
                     <!-- Statistiques -->
                     <div class="grid grid-cols-3 gap-4 p-4 bg-gray-50">
                         <div class="text-center">
-                            <p class="font-bold text-gray-900 text-lg">500k</p>
+                            <p class="font-bold text-gray-900 text-base">500k</p>
                             <p class="text-xs text-gray-500">Post</p>
                         </div>
                         <div class="text-center border-x border-gray-200">
-                            <p class="font-bold text-gray-900 text-lg">23.5M</p>
+                            <p class="font-bold text-gray-900 text-base">23.5M</p>
                             <p class="text-xs text-gray-500">Followers</p>
                         </div>
                         <div class="text-center">
-                            <p class="font-bold text-gray-900 text-lg">50</p>
+                            <p class="font-bold text-gray-900 text-base">50</p>
                             <p class="text-xs text-gray-500">Following</p>
                         </div>
                     </div>
@@ -657,103 +143,503 @@
                     <!-- Navigation -->
                     <nav class="p-3">
                         <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-indigo-50 text-indigo-600 mb-2 transition-all hover:bg-indigo-100">
-                            <i class="fas fa-home text-lg"></i>
+                            <i class="fas fa-home text-base"></i>
                             <span class="font-medium">Communautés</span>
                         </a>
                         <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2 transition-all">
-                            <i class="fas fa-book text-lg"></i>
+                            <i class="fas fa-book text-base"></i>
                             <span class="font-medium">Classrooms</span>
                         </a>
                         <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2 transition-all">
-                            <i class="fas fa-calendar-alt text-lg"></i>
+                            <i class="fas fa-calendar-alt text-base"></i>
                             <span class="font-medium">Événements</span>
                         </a>
                         <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2 transition-all">
-                            <i class="fas fa-map-marker-alt text-lg"></i>
+                            <i class="fas fa-map-marker-alt text-base"></i>
                             <span class="font-medium">Localisations</span>
                         </a>
                         <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2 transition-all">
-                            <i class="fas fa-users text-lg"></i>
+                            <i class="fas fa-users text-base"></i>
                             <span class="font-medium">Vos Sessions</span>
                         </a>
                         <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2 transition-all">
-                            <i class="fas fa-cog text-lg"></i>
+                            <i class="fas fa-cog text-base"></i>
                             <span class="font-medium">Paramètres</span>
                         </a>
                         <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 transition-all">
-                            <i class="fas fa-question-circle text-lg"></i>
+                            <i class="fas fa-question-circle text-base"></i>
                             <span class="font-medium">Centre d'aide</span>
                         </a>
                     </nav>
                 </div>
             </aside>
 
-            <!-- COLONNE CENTRALE - FEED -->
-            <main class="lg:col-span-6">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h2 class="text-xl font-bold text-gray-900 mb-4">
-                        Bienvenue sur Trade Hub ! 🚀
-                    </h2>
-                    <p class="text-gray-600 mb-4">
-                        Votre plateforme de formation en trading. Cliquez sur les icônes en haut à droite pour accéder aux notifications et messages.
-                    </p>
-                    <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
-                        <h3 class="font-semibold text-indigo-900 mb-2">Fonctionnalités disponibles :</h3>
-                        <ul class="space-y-1 text-sm text-indigo-700">
-                            <li>🔔 Panel de notifications avec liste complète</li>
-                            <li>💬 Panel de messages avec conversations</li>
-                            <li>👤 Menu utilisateur avec options</li>
-                            <li>📱 Interface responsive (mobile & desktop)</li>
-                        </ul>
+            <!-- ========================================
+                 COLONNE CENTRALE - FEED
+            ======================================== -->
+            
+
+            <div id="notification" class="lg:col-span-6 main notifications-container max-w-xl mx-auto bg-white rounded-xl shadow-lg p-6 w-full">
+
+                <h1 class="text-2xl font-semibold text-gray-900 mb-5">Notifications</h1>
+                
+                <!-- Notification mise en avant -->
+                <div class="notification-item flex items-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg p-4 mb-4 cursor-pointer hover:from-indigo-600 hover:to-purple-700 transition-all relative group">
+                    <div class="w-10 h-10 rounded-full bg-white bg-opacity-30 flex items-center justify-center text-2xl mr-3 flex-shrink-0">
+                        🎉
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm leading-relaxed">
+                            <span class="font-semibold">Cher utilisateur,</span> 
+                            <span>Nous avons mis en place de nouvelles fonctionnalités</span>
+                        </p>
+                        <p class="text-xs text-white text-opacity-80 mt-1">Allez les consulter !</p>
+                    </div>
+                    <span class="absolute right-4 text-2xl font-light opacity-70 group-hover:opacity-100 transition-opacity">›</span>
+                </div>
+
+                <!-- Notification standard -->
+                <div class="notification-item flex items-center rounded-lg p-3 mb-2 cursor-pointer hover:bg-gray-50 transition-colors" style="animation-delay: 0.05s;">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-semibold text-base mr-3 flex-shrink-0">
+                        JA
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm">
+                            <span class="font-semibold text-gray-900">Jordis AMEGAN</span> 
+                            <span class="text-gray-600">Souhaite collaborer avec vous</span>
+                        </p>
+                        <p class="text-xs text-gray-400 mt-1">Il y a 5 jours</p>
                     </div>
                 </div>
-            </main>
 
-            <!-- SIDEBAR DROITE - SUGGESTIONS -->
-            <aside class="hidden lg:block lg:col-span-3">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sticky top-24">
-                    <h3 class="font-bold text-gray-900 mb-4">Personnes que vous pourriez connaître</h3>
+            
+
+                <div class="notification-item flex items-center rounded-lg p-3 mb-2 cursor-pointer hover:bg-gray-50 transition-colors" style="animation-delay: 0.4s;">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-2xl mr-3 flex-shrink-0">
+                        📝
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Hey Peter, we've got a c.unt team is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500's...
+                        </p>
+                        <p class="text-xs text-gray-400 mt-1">Il y a 1 mois</p>
+                    </div>
+                </div>
+            </div>
+
+            <main class="lg:col-span-6 main " id="menu_menu">
+                
+                <!-- Message de bienvenue -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 fade-in">
+                    <h2 class="text-lg font-bold text-gray-900 mb-2 change">
+                        Bienvenue Abdoulaye 👋 ? Que pensez-vous aujourd'hui ?
+                    </h2>
+                    <p class="text-xs text-gray-500 mb-4">
+                        Advertising ...
+                    </p>
+                    
+                    <!-- Zone de création de post -->
                     <div class="space-y-4">
-                        <!-- Suggestion 1 -->
+                        <textarea 
+                            placeholder="Partagez vos idées, stratégies de trading..." 
+                            class="w-full change p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                            rows="3"
+                        ></textarea>
+                        
+                        <!-- Actions de post -->
                         <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Emoji">
+                                    <i class="far fa-smile text-gray-600 text-lg"></i>
+                                </button>
+                                <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Image">
+                                    <i class="far fa-image text-gray-600 text-lg"></i>
+                                </button>
+                                <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Vidéo">
+                                    <i class="fas fa-video text-gray-600 text-lg"></i>
+                                </button>
+                                <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Pièce jointe">
+                                    <i class="fas fa-paperclip text-gray-600 text-lg"></i>
+                                </button>
+                               
+                            </div>
+                            <div class="flex justify-between space-x-2">
+
+                                <button class="px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-all btn-ripple ">
+                                    <i class="fas fa-paper-plane mr-2 hidden "></i>
+                                    Envoyer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Posts Feed -->
+                <div class="space-y-4">
+                    
+                    <!-- Post 1 -->
+                    <article class="bg-white rounded-xl shadow-sm post-card p-6 fade-in">
+                        <!-- Header du post -->
+                        <div class="flex items-start justify-between mb-4">
                             <div class="flex items-center space-x-3">
-                                <img src="https://i.pravatar.cc/150?img=11" alt="Charbel MEHINTO" class="w-10 h-10 rounded-full">
+                                <img 
+                                    src="https://i.pravatar.cc/150?img=33" 
+                                    alt="Junior TOSSA" 
+                                    class="w-12 h-12 rounded-full object-cover"
+                                >
                                 <div>
-                                    <p class="font-medium text-sm">Charbel MEHINTO</p>
-                                    <p class="text-xs text-gray-500">Trader</p>
+                                    <h4 class="font-semibold text-gray-900">Junior TOSSA</h4>
+                                    <p class="text-xs text-gray-500">Modérateur</p>
                                 </div>
                             </div>
-                            <button class="px-4 py-1.5 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
-                                Suivre
-                            </button>
-                        </div>
-                        
-                        <!-- Suggestion 2 -->
-                        <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
-                                <img src="https://i.pravatar.cc/150?img=22" alt="Junias SIHOU" class="w-10 h-10 rounded-full">
-                                <div>
-                                    <p class="font-medium text-sm">Junias SIHOU</p>
-                                    <p class="text-xs text-gray-500">Analyste</p>
-                                </div>
+                                <span class="text-xs text-gray-400">il y a 1 min</span>
+                                <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                                    <i class="fas fa-ellipsis-h text-gray-400"></i>
+                                </button>
                             </div>
-                            <button class="px-4 py-1.5 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
-                                Suivre
-                            </button>
                         </div>
-                        
-                        <!-- Suggestion 3 -->
-                        <div class="flex items-center justify-between">
+
+                        <!-- Contenu du post -->
+                        <div class="mb-4">
+                            <p class="text-gray-700 leading-relaxed mb-2">
+                                🚀👍<br>
+                                Le marché ne dort jamais... mais ton plan de trading, oui : il doit être clair et discipliné.
+                            </p>
+                            <p class="text-indigo-600 font-semibold">
+                                Trade avec la tête, pas avec le stress !
+                            </p>
+                        </div>
+
+                        <!-- Interactions -->
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <div class="flex items-center space-x-6">
+                                <button class="flex items-center space-x-2 text-gray-500 hover:text-indigo-600 transition-colors">
+                                    <i class="far fa-comment"></i>
+                                    <span class="text-xs font-medium">47.5k</span>
+                                </button>
+                                <button class="flex items-center space-x-2 text-gray-500 hover:text-red-500 transition-colors">
+                                    <i class="far fa-heart"></i>
+                                    <span class="text-xs font-medium">650.3k</span>
+                                </button>
+                            </div>
+                            <div class="flex -space-x-2">
+                                <img src="https://i.pravatar.cc/150?img=1" class="w-8 h-8 rounded-full border-2 border-white" alt="">
+                                <img src="https://i.pravatar.cc/150?img=2" class="w-8 h-8 rounded-full border-2 border-white" alt="">
+                                <img src="https://i.pravatar.cc/150?img=3" class="w-8 h-8 rounded-full border-2 border-white" alt="">
+                                <img src="https://i.pravatar.cc/150?img=4" class="w-8 h-8 rounded-full border-2 border-white" alt="">
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Post 2 avec image -->
+                    <article class="bg-white rounded-xl shadow-sm post-card p-6 fade-in">
+                        <!-- Header du post -->
+                        <div class="flex items-start justify-between mb-4">
                             <div class="flex items-center space-x-3">
-                                <img src="https://i.pravatar.cc/150?img=35" alt="Pierre SOUROU" class="w-10 h-10 rounded-full">
+                                <img 
+                                    src="https://i.pravatar.cc/150?img=45" 
+                                    alt="Zeynab HOUNGBE" 
+                                    class="w-12 h-12 rounded-full object-cover"
+                                >
                                 <div>
-                                    <p class="font-medium text-sm">Pierre SOUROU</p>
+                                    <h4 class="font-semibold text-gray-900">Zeynab HOUNGBE</h4>
                                     <p class="text-xs text-gray-500">Coach</p>
                                 </div>
                             </div>
-                            <button class="px-4 py-1.5 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
-                                Suivre
+                            <div class="flex items-center space-x-3">
+                                <span class="text-xs text-gray-400">il y a 2 heures</span>
+                                <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                                    <i class="fas fa-ellipsis-h text-gray-400"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Contenu du post -->
+                        <div class="mb-4">
+                            <p class="text-gray-700 leading-relaxed mb-4">
+                                🚀🔥<br>
+                                Un bon trade, c'est 80% de patience et 20% d'action.<br>
+                                Attends le bon signal, pas le frisson.
+                            </p>
+                            
+                            <!-- Image du post -->
+                            <div class="rounded-lg overflow-hidden">
+                                <img 
+                                    src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800" 
+                                    alt="Bitcoin" 
+                                    class="w-full h-64 object-cover hover:scale-105 transition-transform duration-300"
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Interactions -->
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <div class="flex items-center space-x-6">
+                                <button class="flex items-center space-x-2 text-gray-500 hover:text-indigo-600 transition-colors">
+                                    <i class="far fa-comment"></i>
+                                    <span class="text-xs font-medium">234</span>
+                                </button>
+                                <button class="flex items-center space-x-2 text-gray-500 hover:text-red-500 transition-colors">
+                                    <i class="far fa-heart"></i>
+                                    <span class="text-xs font-medium">5.2k</span>
+                                </button>
+                            </div>
+                            <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                                <i class="fas fa-share text-gray-500"></i>
                             </button>
+                        </div>
+                    </article>
+
+                    <!-- Post 3 -->
+                    <article class="bg-white rounded-xl shadow-sm post-card p-6 fade-in">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <img 
+                                    src="https://i.pravatar.cc/150?img=68" 
+                                    alt="Sarah MARTIN" 
+                                    class="w-12 h-12 rounded-full object-cover"
+                                >
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Sarah MARTIN</h4>
+                                    <p class="text-xs text-gray-500">Trader Pro</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="text-xs text-gray-400">il y a 5 heures</span>
+                                <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                                    <i class="fas fa-ellipsis-h text-gray-400"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="text-gray-700 leading-relaxed">
+                                📊 Analyse du jour : Le marché montre des signes de consolidation. 
+                                C'est le moment parfait pour affiner votre stratégie et attendre les bonnes opportunités. 
+                                <span class="text-indigo-600 font-semibold">#Trading #Strategy #Patience</span>
+                            </p>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <div class="flex items-center space-x-6">
+                                <button class="flex items-center space-x-2 text-gray-500 hover:text-indigo-600 transition-colors">
+                                    <i class="far fa-comment"></i>
+                                    <span class="text-xs font-medium">89</span>
+                                </button>
+                                <button class="flex items-center space-x-2 text-gray-500 hover:text-red-500 transition-colors">
+                                    <i class="far fa-heart"></i>
+                                    <span class="text-xs font-medium">1.8k</span>
+                                </button>
+                            </div>
+                            <div class="flex -space-x-2">
+                                <img src="https://i.pravatar.cc/150?img=5" class="w-8 h-8 rounded-full border-2 border-white" alt="">
+                                <img src="https://i.pravatar.cc/150?img=6" class="w-8 h-8 rounded-full border-2 border-white" alt="">
+                                <img src="https://i.pravatar.cc/150?img=7" class="w-8 h-8 rounded-full border-2 border-white" alt="">
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Bouton charger plus -->
+                <div class="mt-6 text-center">
+                    <button class="px-6 py-3 bg-white border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-all">
+                        Charger plus de posts
+                    </button>
+                </div>
+            </main>
+
+            <!-- ========================================
+                 SIDEBAR DROITE - SUGGESTIONS
+            ======================================== -->
+            <aside class="hidden lg:block lg:col-span-3">
+                <div class="sticky top-24 space-y-6">
+                    
+                    <!-- Personnes à suivre -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="p-4 border-b border-gray-200">
+                            <h3 class="font-bold text-gray-900">Personnes que vous pourriez connaître</h3>
+                        </div>
+                        <div class="p-4 space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
+                            <!-- Personne 1 -->
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <img 
+                                        src="https://i.pravatar.cc/150?img=11" 
+                                        alt="Charbel MEHINTO" 
+                                        class="w-10 h-10 rounded-full object-cover"
+                                    >
+                                    <div>
+                                        <p class="font-medium text-gray-900 text-xs">Charbel MEHINTO</p>
+                                        <p class="text-xs text-gray-500">Trader</p>
+                                    </div>
+                                </div>
+                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-xs rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
+                                    Suivre
+                                </button>
+                            </div>
+
+                            <!-- Personne 2 -->
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <img 
+                                        src="https://i.pravatar.cc/150?img=22" 
+                                        alt="Junias SIHOU" 
+                                        class="w-10 h-10 rounded-full object-cover"
+                                    >
+                                    <div>
+                                        <p class="font-medium text-gray-900 text-xs">Junias SIHOU</p>
+                                        <p class="text-xs text-gray-500">Analyste</p>
+                                    </div>
+                                </div>
+                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-xs rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
+                                    Suivre
+                                </button>
+                            </div>
+
+                            <!-- Personne 3 -->
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <img 
+                                        src="https://i.pravatar.cc/150?img=35" 
+                                        alt="Pierre SOUROU" 
+                                        class="w-10 h-10 rounded-full object-cover"
+                                    >
+                                    <div>
+                                        <p class="font-medium text-gray-900 text-xs">Pierre SOUROU</p>
+                                        <p class="text-xs text-gray-500">Coach</p>
+                                    </div>
+                                </div>
+                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-xs rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
+                                    Suivre
+                                </button>
+                            </div>
+
+                            <!-- Personne 4 -->
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <img 
+                                        src="https://i.pravatar.cc/150?img=47" 
+                                        alt="Samson R. VOOBE" 
+                                        class="w-10 h-10 rounded-full object-cover"
+                                    >
+                                    <div>
+                                        <p class="font-medium text-gray-900 text-xs">Samson R. VOOBE</p>
+                                        <p class="text-xs text-gray-500">Expert</p>
+                                    </div>
+                                </div>
+                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-xs rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
+                                    Suivre
+                                </button>
+                            </div>
+
+                            <!-- Personne 5 -->
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <img 
+                                        src="https://i.pravatar.cc/150?img=58" 
+                                        alt="Julien HOUNGBO" 
+                                        class="w-10 h-10 rounded-full object-cover"
+                                    >
+                                    <div>
+                                        <p class="font-medium text-gray-900 text-xs">Julien HOUNGBO</p>
+                                        <p class="text-xs text-gray-500">Mentor</p>
+                                    </div>
+                                </div>
+                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-xs rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
+                                    Suivre
+                                </button>
+                            </div>
+
+                            <!-- Personne 6 -->
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <img 
+                                        src="https://i.pravatar.cc/150?img=64" 
+                                        alt="Fabrice SOSSA" 
+                                        class="w-10 h-10 rounded-full object-cover"
+                                    >
+                                    <div>
+                                        <p class="font-medium text-gray-900 text-xs">Fabrice SOSSA</p>
+                                        <p class="text-xs text-gray-500">Formateur</p>
+                                    </div>
+                                </div>
+                                <button class="px-4 py-1.5 bg-indigo-600 text-white text-xs rounded-lg hover:bg-indigo-700 transition-all btn-ripple">
+                                    Suivre
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sessions recommandées -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="p-4 border-b border-gray-200">
+                            <h3 class="font-bold text-gray-900">Sessions Recommandées pour vous</h3>
+                        </div>
+                        <div class="p-4 space-y-3">
+                            <!-- Session 1 -->
+                            <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-check text-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900 text-xs">Traders Profession</p>
+                                        <p class="text-xs text-gray-500">12.5k membres</p>
+                                    </div>
+                                </div>
+                                <button class="px-3 py-1.5 border border-indigo-600 text-indigo-600 text-xs rounded-lg hover:bg-indigo-50 transition-all">
+                                    Rejoindre
+                                </button>
+                            </div>
+
+                            <!-- Session 2 -->
+                            <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-chart-line text-blue-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900 text-xs">Crypto Currency</p>
+                                        <p class="text-xs text-gray-500">8.2k membres</p>
+                                    </div>
+                                </div>
+                                <button class="px-3 py-1.5 border border-indigo-600 text-indigo-600 text-xs rounded-lg hover:bg-indigo-50 transition-all">
+                                    Rejoindre
+                                </button>
+                            </div>
+
+                            <!-- Session 3 -->
+                            <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-users text-purple-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900 text-xs">Global Trade Union</p>
+                                        <p class="text-xs text-gray-500">15.8k membres</p>
+                                    </div>
+                                </div>
+                                <button class="px-3 py-1.5 border border-indigo-600 text-indigo-600 text-xs rounded-lg hover:bg-indigo-50 transition-all">
+                                    Rejoindre
+                                </button>
+                            </div>
+
+                            <!-- Session 4 -->
+                            <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-star text-yellow-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900 text-xs">Solaris Traders</p>
+                                        <p class="text-xs text-gray-500">6.4k membres</p>
+                                    </div>
+                                </div>
+                                <button class="px-3 py-1.5 border border-indigo-600 text-indigo-600 text-xs rounded-lg hover:bg-indigo-50 transition-all">
+                                    Rejoindre
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -762,70 +648,80 @@
     </div>
 
     <!-- ========================================
-         MENU MOBILE
+         MENU MOBILE (Overlay)
     ======================================== -->
     <div id="mobile-menu" class="fixed inset-0 z-50 hidden">
-        <div class="modal-overlay absolute inset-0" id="mobile-menu-overlay"></div>
-        <div class="slide-in-left absolute left-0 top-0 bottom-0 w-80 bg-white shadow-2xl overflow-y-auto">
+        <!-- Overlay -->
+        <div class="mobile-menu-overlay absolute inset-0" id="mobile-menu-overlay"></div>
+        
+        <!-- Menu sidebar -->
+        <div class="slide-in absolute left-0 top-0 bottom-0 w-80 bg-white shadow-2xl overflow-y-auto">
+            <!-- Header -->
             <div class="gradient-bg p-6 text-white">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-xl font-bold">Menu</h3>
-                    <button id="close-mobile-menu" class="p-2 hover:bg-white/20 rounded-lg transition-colors" aria-label="Fermer menu">
-                        <i class="fas fa-times text-xl"></i>
+                    <h3 class="text-lg font-bold">Menu</h3>
+                    <button id="close-mobile-menu" class="p-2 hover:bg-white/20 rounded-lg transition-colors">
+                        <i class="fas fa-times text-lg"></i>
                     </button>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <img src="https://i.pravatar.cc/150?img=12" alt="CHOUTI Abdoulaye" class="w-16 h-16 rounded-full border-3 border-white">
+                    <img 
+                        src="https://i.pravatar.cc/150?img=12" 
+                        alt="Profil" 
+                        class="w-16 h-16 rounded-full border-3 border-white"
+                    >
                     <div>
                         <p class="font-bold">CHOUTI Abdoulaye</p>
-                        <p class="text-sm text-indigo-100">Modérateur</p>
+                        <p class="text-xs text-indigo-100">Modérateur</p>
                     </div>
                 </div>
             </div>
-            
+
+            <!-- Navigation -->
             <nav class="p-4">
                 <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-indigo-50 text-indigo-600 mb-2">
-                    <i class="fas fa-home text-lg w-6"></i>
+                    <i class="fas fa-home text-base w-6"></i>
                     <span class="font-medium">Communautés</span>
                 </a>
                 <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2">
-                    <i class="fas fa-book text-lg w-6"></i>
+                    <i class="fas fa-book text-base w-6"></i>
                     <span class="font-medium">Classrooms</span>
                 </a>
                 <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2">
-                    <i class="fas fa-calendar-alt text-lg w-6"></i>
+                    <i class="fas fa-calendar-alt text-base w-6"></i>
                     <span class="font-medium">Événements</span>
                 </a>
                 <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2">
-                    <i class="fas fa-map-marker-alt text-lg w-6"></i>
-                    <span class="font-medium">Localisations</span>
+                    <i class="fas fa-map-marker-alt text-base w-6"></i>
+                    <span class="font-medium">Localisations des Membres</span>
                 </a>
                 <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2">
-                    <i class="fas fa-users text-lg w-6"></i>
+                    <i class="fas fa-users text-base w-6"></i>
                     <span class="font-medium">Vos Sessions</span>
                 </a>
                 <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2">
-                    <i class="fas fa-cog text-lg w-6"></i>
+                    <i class="fas fa-cog text-base w-6"></i>
                     <span class="font-medium">Paramètres</span>
                 </a>
                 <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50">
-                    <i class="fas fa-question-circle text-lg w-6"></i>
+                    <i class="fas fa-question-circle text-base w-6"></i>
                     <span class="font-medium">Centre d'aide</span>
                 </a>
             </nav>
-            
+
+            <!-- Stats -->
             <div class="mx-4 my-6 p-4 bg-gray-50 rounded-lg">
                 <div class="grid grid-cols-3 gap-4 text-center">
                     <div>
-                        <p class="font-bold text-lg">500k</p>
+                        <p class="font-bold text-base">500k</p>
                         <p class="text-xs text-gray-500">Posts</p>
                     </div>
                     <div class="border-x border-gray-300">
-                        <p class="font-bold text-lg">23.5M</p>
+                        <p class="font-bold text-base">23.5M</p>
                         <p class="text-xs text-gray-500">Followers</p>
                     </div>
                     <div>
-                        <p class="font-bold text-lg">50</p>
+                        <p class="font-bold text-base">50</p>
                         <p class="text-xs text-gray-500">Following</p>
                     </div>
                 </div>
@@ -833,7 +729,7 @@
         </div>
     </div>
 
-    <!-- JavaScript -->
-    <script src="script.js"></script>
+    
+   
 </body>
 </html>
