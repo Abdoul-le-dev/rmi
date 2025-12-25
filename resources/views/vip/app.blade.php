@@ -179,7 +179,7 @@
             ======================================== -->
             
 
-            <div id="notification" class="notifications-container max-w-xl mx-auto bg-white rounded-xl shadow-lg p-6 w-96">
+            <div id="notification" class="lg:col-span-6 main notifications-container max-w-xl mx-auto bg-white rounded-xl shadow-lg p-6 w-96">
 
                 <h1 class="text-2xl font-semibold text-gray-900 mb-5">Notifications</h1>
                 
