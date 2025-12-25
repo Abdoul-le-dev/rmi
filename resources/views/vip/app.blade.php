@@ -177,7 +177,7 @@
             <!-- ========================================
                  COLONNE CENTRALE - FEED
             ======================================== -->
-            <div class="notifications-container hidden" id="notification">
+            <div class="notifications-container " id="notification">
                 <h1>Notifications</h1>
                 
                 <div class="notification featured">
@@ -271,7 +271,7 @@
                 </div>
             </div>
 
-            <main class="lg:col-span-6 main" id="menu_menu">
+            <main class="lg:col-span-6 main hidden" id="menu_menu">
                 
                 <!-- Message de bienvenue -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 fade-in">
