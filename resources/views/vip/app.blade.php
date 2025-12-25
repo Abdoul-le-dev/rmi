@@ -179,7 +179,7 @@
             ======================================== -->
             
 
-            <div id="notification" class="lg:col-span-6 hidden main notifications-container max-w-xl mx-auto bg-white rounded-xl shadow-lg p-6 w-full">
+            <div id="notification" class="lg:col-span-6 main notifications-container max-w-xl mx-auto bg-white rounded-xl shadow-lg p-6 w-full">
 
                 <h1 class="text-2xl font-semibold text-gray-900 mb-5">Notifications</h1>
                 
@@ -227,7 +227,7 @@
                 </div>
             </div>
 
-            <main class="lg:col-span-6 main hidden" id="menu_menu">
+            <main class="lg:col-span-6 main " id="menu_menu">
                 
                 <!-- Message de bienvenue -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 fade-in">
