@@ -177,96 +177,52 @@
             <!-- ========================================
                  COLONNE CENTRALE - FEED
             ======================================== -->
-            <div class="notifications-container " id="notification">
-                <h1>Notifications</h1>
+            
+
+            <div id="notification" class="notifications-container max-w-xl mx-auto bg-white rounded-xl shadow-lg p-6">
+
+                <h1 class="text-2xl font-semibold text-gray-900 mb-5">Notifications</h1>
                 
-                <div class="notification featured">
-                    <div class="notification-icon">🎉</div>
-                    <div class="notification-content">
-                        <div class="notification-text">
-                            <span class="name">Cher utilisateur,</span> <span class="action">Nous avons mis en place de nouvelles fonctionnalités</span>
-                        </div>
-                        <div class="notification-time">Allez les consulter !</div>
+                <!-- Notification mise en avant -->
+                <div class="notification-item flex items-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg p-4 mb-4 cursor-pointer hover:from-indigo-600 hover:to-purple-700 transition-all relative group">
+                    <div class="w-10 h-10 rounded-full bg-white bg-opacity-30 flex items-center justify-center text-2xl mr-3 flex-shrink-0">
+                        🎉
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm leading-relaxed">
+                            <span class="font-semibold">Cher utilisateur,</span> 
+                            <span>Nous avons mis en place de nouvelles fonctionnalités</span>
+                        </p>
+                        <p class="text-xs text-white text-opacity-80 mt-1">Allez les consulter !</p>
+                    </div>
+                    <span class="absolute right-4 text-2xl font-light opacity-70 group-hover:opacity-100 transition-opacity">›</span>
+                </div>
+
+                <!-- Notification standard -->
+                <div class="notification-item flex items-center rounded-lg p-3 mb-2 cursor-pointer hover:bg-gray-50 transition-colors" style="animation-delay: 0.05s;">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-semibold text-base mr-3 flex-shrink-0">
+                        JA
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm">
+                            <span class="font-semibold text-gray-900">Jordis AMEGAN</span> 
+                            <span class="text-gray-600">Souhaite collaborer avec vous</span>
+                        </p>
+                        <p class="text-xs text-gray-400 mt-1">Il y a 5 jours</p>
                     </div>
                 </div>
 
-                <div class="notification">
-                    <div class="avatar">JA</div>
-                    <div class="notification-content">
-                        <div class="notification-text">
-                            <span class="name">Jordis AMEGAN</span> <span class="action">Souhaite collaborer avec vous</span>
-                        </div>
-                        <div class="notification-time">Il y a 5 jours</div>
-                    </div>
-                </div>
+            
 
-                <div class="notification">
-                    <div class="avatar">JK</div>
-                    <div class="notification-content">
-                        <div class="notification-text">
-                            <span class="name">Judith KOSSOU</span> <span class="action">vous invite à rejoindre une session</span>
-                        </div>
-                        <div class="notification-time">Il y a 5 jours</div>
+                <div class="notification-item flex items-center rounded-lg p-3 mb-2 cursor-pointer hover:bg-gray-50 transition-colors" style="animation-delay: 0.4s;">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-2xl mr-3 flex-shrink-0">
+                        📝
                     </div>
-                </div>
-
-                <div class="notification">
-                    <div class="avatar">PH</div>
-                    <div class="notification-content">
-                        <div class="notification-text">
-                            <span class="name">Patrice HOUNGUE</span> <span class="action">vous invite à rejoindre une session</span>
-                        </div>
-                        <div class="notification-time">Il y a 5 jours</div>
-                    </div>
-                </div>
-
-                <div class="notification">
-                    <div class="avatar">JZ</div>
-                    <div class="notification-content">
-                        <div class="notification-text">
-                            <span class="name">Josué ZINSALO</span> <span class="action">vous souhaite la bienvenue</span>
-                        </div>
-                        <div class="notification-time">Il y a 5 jours</div>
-                    </div>
-                </div>
-
-                <div class="notification">
-                    <div class="avatar">JT</div>
-                    <div class="notification-content">
-                        <div class="notification-text">
-                            <span class="name">Jack TITOUAN</span> <span class="action">vous invite à rejoindre une session</span>
-                        </div>
-                        <div class="notification-time">Il y a 5 jours</div>
-                    </div>
-                </div>
-
-                <div class="notification">
-                    <div class="avatar">JK</div>
-                    <div class="notification-content">
-                        <div class="notification-text">
-                            <span class="name">Judith KOSSOU</span> <span class="action">vous invite à rejoindre une session</span>
-                        </div>
-                        <div class="notification-time">Il y a 5 jours</div>
-                    </div>
-                </div>
-
-                <div class="notification">
-                    <div class="avatar">EA</div>
-                    <div class="notification-content">
-                        <div class="notification-text">
-                            <span class="name">Edies ANASSOU</span> <span class="action">vous invite à rejoindre une session</span>
-                        </div>
-                        <div class="notification-time">Il y a 5 jours</div>
-                    </div>
-                </div>
-
-                <div class="notification">
-                    <div class="avatar">📝</div>
-                    <div class="notification-content">
-                        <div class="notification-text long-text">
+                    <div class="flex-1">
+                        <p class="text-sm text-gray-600 leading-relaxed">
                             Hey Peter, we've got a c.unt team is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500's...
-                        </div>
-                        <div class="notification-time">Il y a 1 mois</div>
+                        </p>
+                        <p class="text-xs text-gray-400 mt-1">Il y a 1 mois</p>
                     </div>
                 </div>
             </div>
