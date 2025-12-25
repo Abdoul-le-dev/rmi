@@ -31,8 +31,9 @@ const notification_button = document.getElementById('notification');
 const menu_menu = document.getElementById('menu_menu');
 
 //Notification
-notification_button.addEventiListener('click', (e) =>
+notification_button?.addEventiListener('click', (e) =>
     {
+        e.stopPropagation();
         notification_button.classList.remove('hidden');
         menu_menu.classList.add('hidden')
 
