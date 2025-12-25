@@ -1,179 +1,481 @@
-/* ========================================
-           CONFIGURATION TAILWIND PERSONNALISÉE
-        ======================================== 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Space-Grotesk:wght@300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');*/
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+/**
+ * ============================================================================
+ * TRADE HUB - FEUILLE DE STYLES PRINCIPALE
+ * ============================================================================
+ * 
+ * Description: Styles personnalisés pour l'interface Trade Hub
+ * Version: 1.0.0
+ * Auteur: Trade Hub Team
+ * 
+ * Structure du fichier:
+ * 1. Variables CSS et Configuration
+ * 2. Reset et Base
+ * 3. Typographie
+ * 4. Animations
+ * 5. Composants
+ * 6. Layouts
+ * 7. Responsive
+ * 8. Utilitaires
+ * 
+ * ============================================================================
+ */
 
+/* ============================================================================
+   1. VARIABLES CSS ET CONFIGURATION
+   ============================================================================ */
 
-.nono {
-    font-family: 'Inter', sans-serif;
-}
-
-
-/*
-.change
-{
-    font-family: 'Space-Grotesk', sans-serif;
-}
-
- Variables CSS personnalisées */
 :root {
+    /* Palette de couleurs primaires */
+    --primary-50: #EEF2FF;
+    --primary-100: #E0E7FF;
+    --primary-200: #C7D2FE;
+    --primary-300: #A5B4FC;
+    --primary-400: #818CF8;
+    --primary-500: #6366F1;
+    --primary-600: #4F46E5;
+    --primary-700: #4338CA;
+    --primary-800: #3730A3;
+    --primary-900: #312E81;
     
-    --font-ui: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --font-title: 'Space Grotesk', 'Inter', sans-serif;
-    --primary-color: #6366F1;
-    --primary-hover: #4F46E5;
-    --secondary-color: #F3F4F6;
-    --text-primary: #111827;
-    --text-secondary: #6B7280;
-    --border-color: #E5E7EB;
-    --success-color: #10B981;
-    --text-main: #1f2937;
-    --text-muted: #6b7280;
-    --primary: #5b5cf6; 
+    /* Couleurs grises */
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-300: #D1D5DB;
+    --gray-400: #9CA3AF;
+    --gray-500: #6B7280;
+    --gray-600: #4B5563;
+    --gray-700: #374151;
+    --gray-800: #1F2937;
+    --gray-900: #111827;
+    
+    /* Couleurs de statut */
+    --success: #10B981;
+    --warning: #F59E0B;
+    --error: #EF4444;
+    --info: #3B82F6;
+    
+    /* Couleurs fonctionnelles */
+    --primary-color: var(--primary-500);
+    --primary-hover: var(--primary-600);
+    --secondary-color: var(--gray-100);
+    --text-primary: var(--gray-900);
+    --text-secondary: var(--gray-500);
+    --border-color: var(--gray-200);
+    --background: #FFFFFF;
+    --background-secondary: var(--gray-50);
+    
+    /* Espacements */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    
+    /* Border radius */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --radius-2xl: 1.5rem;
+    --radius-full: 9999px;
+    
+    /* Ombres */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Z-index */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
 }
 
+/* ============================================================================
+   2. RESET ET BASE
+   ============================================================================ */
+
+/**
+ * Reset basique pour normaliser les styles
+ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/**
+ * Configuration de base du HTML
+ */
 html {
-  font-size: 16px;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
 }
 
+/**
+ * Configuration du body
+ */
 body {
-  font-family: var(--font-ui);
-  font-weight: 400;
-  line-height: 1.55;
-  color: var(--text-main);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
- 
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.5;
+    color: var(--text-primary);
+    background-color: var(--background-secondary);
 }
 
-.nav,
-.sidebar,
-.menu-item,
-.label {
-  font-family: var(--font-ui);
-  font-weight: 500;
-  font-size: 0.95rem;
-  
-}
-button,
-.btn {
-  font-family: var(--font-ui);
-  font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: 0.01em;
+/**
+ * Reset des listes
+ */
+ul, ol {
+    list-style: none;
 }
 
-.btn-primary {
-  background: var(--primary);
-  color: #fff;
+/**
+ * Reset des liens
+ */
+a {
+    text-decoration: none;
+    color: inherit;
 }
 
-.text-muted,
-.meta {
-  font-size: 0.85rem;
-  color: var(--text-muted);
+/**
+ * Reset des boutons
+ */
+button {
+    font-family: inherit;
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none;
 }
 
-
-h1, h2, h3, .title {
-  font-family: var(--font-title);
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  color: var(--text-main);
+/**
+ * Reset des inputs
+ */
+input, textarea {
+    font-family: inherit;
+    outline: none;
 }
 
-h1 { font-size: 1.6rem; }
-h2 { font-size: 1.35rem; }
-h3 { font-size: 1.15rem; }
+/**
+ * Images responsives par défaut
+ */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
 
-/* ========================================
-           ANIMATIONS PERSONNALISÉES
-        ======================================== */
+/* ============================================================================
+   3. TYPOGRAPHIE
+   ============================================================================ */
 
-/* Animation de fade-in pour les éléments */
+/**
+ * Titres
+ */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-primary);
+}
+
+h1 { font-size: 2.25rem; }
+h2 { font-size: 1.875rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.125rem; }
+h6 { font-size: 1rem; }
+
+/**
+ * Paragraphes
+ */
+p {
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+}
+
+/**
+ * Texte en gras
+ */
+strong, b {
+    font-weight: 600;
+}
+
+/**
+ * Texte en italique
+ */
+em, i {
+    font-style: italic;
+}
+
+/* ============================================================================
+   4. ANIMATIONS
+   ============================================================================ */
+
+/**
+ * Animation de fade in
+ * Utilisée pour l'apparition progressive des éléments
+ */
 @keyframes fadeIn {
     from {
         opacity: 0;
         transform: translateY(10px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-/* Animation de pulse pour les notifications */
-@keyframes pulse-notification {
+/**
+ * Animation de slide depuis la droite
+ * Utilisée pour les panels coulissants
+ */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
 
-    0%,
-    100% {
+/**
+ * Animation de slide depuis la gauche
+ * Utilisée pour le menu mobile
+ */
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+/**
+ * Animation de pulsation pour les notifications
+ * Utilisée pour attirer l'attention sur les badges
+ */
+@keyframes pulse-notification {
+    0%, 100% {
         transform: scale(1);
         opacity: 1;
     }
-
     50% {
         transform: scale(1.1);
         opacity: 0.8;
     }
 }
 
-/* Animation de slide pour le menu mobile */
-@keyframes slideInLeft {
+/**
+ * Animation de scale in
+ * Utilisée pour les dropdowns et modales
+ */
+@keyframes scaleIn {
     from {
-        transform: translateX(-100%);
+        opacity: 0;
+        transform: scale(0.95);
     }
-
     to {
-        transform: translateX(0);
+        opacity: 1;
+        transform: scale(1);
     }
 }
 
-/* Animation de hover pour les boutons */
-@keyframes buttonHover {
+/**
+ * Animation de rotation
+ * Utilisée pour les loaders et avatars animés
+ */
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/**
+ * Animation de typing indicator
+ * Utilisée pour l'indicateur de saisie dans les messages
+ */
+@keyframes typing {
+    0%, 60%, 100% {
+        transform: translateY(0);
+    }
+    30% {
+        transform: translateY(-10px);
+    }
+}
+
+/**
+ * Animation de shimmer (loading skeleton)
+ * Utilisée pour les placeholders de chargement
+ */
+@keyframes shimmer {
     0% {
-        transform: scale(1);
+        background-position: -1000px 0;
     }
-
-    50% {
-        transform: scale(1.05);
-    }
-
     100% {
-        transform: scale(1);
+        background-position: 1000px 0;
     }
 }
 
-/* ========================================
-           CLASSES UTILITAIRES
-        ======================================== */
-
-.fade-in {
-    animation: fadeIn 0.5s ease-out;
+/**
+ * Animation de bounce
+ * Utilisée pour les effets d'attention
+ */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
+/**
+ * Animation de spin pour les loaders
+ */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================================================
+   5. CLASSES D'ANIMATION
+   ============================================================================ */
+
+/**
+ * Classe pour appliquer l'animation fade in
+ */
+.fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/**
+ * Classe pour appliquer l'animation slide depuis la droite
+ */
+.slide-in-right {
+    animation: slideInRight 0.3s ease-out forwards;
+}
+
+/**
+ * Classe pour appliquer l'animation slide depuis la gauche
+ */
+.slide-in-left {
+    animation: slideInLeft 0.3s ease-out forwards;
+}
+
+/**
+ * Classe pour appliquer l'animation scale in
+ */
+.scale-in {
+    animation: scaleIn 0.2s ease-out forwards;
+}
+
+/**
+ * Classe pour appliquer l'animation de pulsation
+ */
 .pulse-dot {
     animation: pulse-notification 2s infinite;
 }
 
-.slide-in {
-    animation: slideInLeft 0.3s ease-out;
+/* ============================================================================
+   6. COMPOSANTS
+   ============================================================================ */
+
+/**
+ * Badge de notification
+ * Petit indicateur circulaire pour les compteurs
+ */
+.notification-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 18px;
+    height: 18px;
+    background-color: var(--error);
+    color: white;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    border: 2px solid white;
+    z-index: 10;
 }
 
-/* Effet de hover sur les cartes */
+/**
+ * Scrollbar personnalisée
+ * Style moderne pour les barres de défilement
+ */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--gray-100);
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--gray-300);
+    border-radius: 10px;
+    transition: background var(--transition-fast);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-400);
+}
+
+/**
+ * Overlay pour les modales
+ * Fond semi-transparent avec effet de flou
+ */
+.modal-overlay {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: opacity var(--transition-base);
+}
+
+/**
+ * Effet de hover sur les cartes
+ * Animation au survol pour les éléments cliquables
+ */
 .card-hover {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all var(--transition-base);
 }
 
 .card-hover:hover {
     transform: translateY(-4px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    box-shadow: var(--shadow-lg);
 }
 
-/* Effet de ripple sur les boutons */
+/**
+ * Bouton avec effet ripple
+ * Effet d'onde au clic
+ */
 .btn-ripple {
     position: relative;
     overflow: hidden;
@@ -197,49 +499,18 @@ h3 { font-size: 1.15rem; }
     height: 300px;
 }
 
-/* Scrollbar personnalisée */
-.custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: #F3F4F6;
-    border-radius: 10px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #D1D5DB;
-    border-radius: 10px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #9CA3AF;
-}
-
-/* Badge de notification */
-.notification-badge {
-    position: absolute;
-    top: -4px;
-    right: -4px;
-    min-width: 18px;
-    height: 18px;
-    background: #EF4444;
-    color: white;
-    border-radius: 9999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: 600;
-    border: 2px solid white;
-}
-
-/* Gradient de fond */
+/**
+ * Gradient de fond
+ * Dégradé violet/pourpre pour les sections importantes
+ */
 .gradient-bg {
     background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
 }
 
-/* Avatar avec border animé */
+/**
+ * Avatar avec bordure animée
+ * Effet de rotation pour les avatars spéciaux
+ */
 .avatar-border {
     position: relative;
 }
@@ -249,50 +520,589 @@ h3 { font-size: 1.15rem; }
     position: absolute;
     inset: -3px;
     border-radius: 50%;
-    background: linear-gradient(45deg, #6366F1, #8B5CF6, #EC4899);
+    background: linear-gradient(45deg, var(--primary-500), #8B5CF6, #EC4899);
     z-index: -1;
     animation: rotate 3s linear infinite;
 }
 
-@keyframes rotate {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
+/**
+ * Panel coulissant
+ * Conteneur pour les panels qui slide depuis la droite
+ */
+.slide-panel {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    max-width: 400px;
+    height: 100vh;
+    background: white;
+    transition: right var(--transition-base);
+    z-index: var(--z-modal);
+    box-shadow: var(--shadow-2xl);
 }
 
-/* Menu mobile overlay */
-.mobile-menu-overlay {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
+.slide-panel.active {
+    right: 0;
 }
 
-/* Post card shadow */
+/**
+ * Item de conversation
+ * Style pour les éléments de la liste de conversations
+ */
+.conversation-item {
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.conversation-item:hover {
+    background-color: var(--gray-50);
+}
+
+.conversation-item.active {
+    background-color: var(--primary-50);
+    border-left: 3px solid var(--primary-500);
+}
+
+/**
+ * Indicateur de statut en ligne
+ * Point vert pour indiquer la présence
+ */
+.status-online {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    background-color: var(--success);
+    border: 2px solid white;
+    border-radius: 50%;
+}
+
+/**
+ * Indicateur de message non lu
+ * Point bleu pour les notifications non lues
+ */
+.unread-indicator {
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary-500);
+    border-radius: 50%;
+}
+
+/**
+ * Bulle de message
+ * Style pour les messages dans les conversations
+ */
+.message-bubble {
+    max-width: 70%;
+    word-wrap: break-word;
+    padding: 0.75rem 1rem;
+    border-radius: 1.125rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+/**
+ * Bulle de message envoyé
+ */
+.message-bubble.sent {
+    background-color: var(--primary-500);
+    color: white;
+    border-radius: 1.125rem 1.125rem 0.25rem 1.125rem;
+}
+
+/**
+ * Bulle de message reçu
+ */
+.message-bubble.received {
+    background-color: var(--gray-100);
+    color: var(--text-primary);
+    border-radius: 1.125rem 1.125rem 1.125rem 0.25rem;
+}
+
+/**
+ * Indicateur de saisie (typing)
+ * Animation des trois points pour "est en train d'écrire"
+ */
+.typing-indicator {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--gray-400);
+    animation: typing 1.4s infinite;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+/**
+ * Carte de post
+ * Style pour les posts dans le feed
+ */
 .post-card {
-    transition: all 0.3s ease;
+    transition: all var(--transition-base);
     border: 1px solid var(--border-color);
+    background: white;
 }
 
 .post-card:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-500);
 }
 
-/* Button loading animation */
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
+/**
+ * Spinner de chargement
+ */
 .spinner {
-    border: 2px solid #f3f3f3;
-    border-top: 2px solid var(--primary-color);
+    border: 2px solid var(--gray-200);
+    border-top: 2px solid var(--primary-500);
     border-radius: 50%;
     width: 16px;
     height: 16px;
     animation: spin 1s linear infinite;
 }
+
+/**
+ * Skeleton loader
+ * Placeholder animé pour le chargement
+ */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--gray-200) 0px,
+        var(--gray-100) 40px,
+        var(--gray-200) 80px
+    );
+    background-size: 1000px;
+    animation: shimmer 2s infinite;
+}
+
+/* ============================================================================
+   7. LAYOUTS
+   ============================================================================ */
+
+/**
+ * Container principal
+ */
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/**
+ * Grid system personnalisé
+ */
+.grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+/**
+ * Flex utilities
+ */
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.flex-1 {
+    flex: 1 1 0%;
+}
+
+/* ============================================================================
+   8. UTILITAIRES
+   ============================================================================ */
+
+/**
+ * Visibilité
+ */
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    display: block;
+}
+
+/**
+ * Opacité
+ */
+.opacity-0 { opacity: 0; }
+.opacity-50 { opacity: 0.5; }
+.opacity-100 { opacity: 1; }
+
+/**
+ * Transitions
+ */
+.transition-all {
+    transition: all var(--transition-base);
+}
+
+.transition-fast {
+    transition: all var(--transition-fast);
+}
+
+.transition-slow {
+    transition: all var(--transition-slow);
+}
+
+/**
+ * Curseurs
+ */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.cursor-not-allowed {
+    cursor: not-allowed;
+}
+
+/**
+ * Overflow
+ */
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.overflow-auto {
+    overflow: auto;
+}
+
+.overflow-y-auto {
+    overflow-y: auto;
+}
+
+/**
+ * Position
+ */
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.sticky {
+    position: sticky;
+}
+
+/**
+ * Z-index
+ */
+.z-10 { z-index: 10; }
+.z-20 { z-index: 20; }
+.z-30 { z-index: 30; }
+.z-40 { z-index: 40; }
+.z-50 { z-index: 50; }
+
+/**
+ * Ombres
+ */
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.shadow-xl { box-shadow: var(--shadow-xl); }
+.shadow-2xl { box-shadow: var(--shadow-2xl); }
+
+/**
+ * Border radius
+ */
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-xl { border-radius: var(--radius-xl); }
+.rounded-2xl { border-radius: var(--radius-2xl); }
+.rounded-full { border-radius: var(--radius-full); }
+
+/* ============================================================================
+   9. RESPONSIVE
+   ============================================================================ */
+
+/**
+ * Breakpoints:
+ * - sm: 640px
+ * - md: 768px
+ * - lg: 1024px
+ * - xl: 1280px
+ * - 2xl: 1536px
+ */
+
+/**
+ * Mobile first - Styles par défaut pour mobile
+ */
+@media (max-width: 639px) {
+    /* Panel en plein écran sur mobile */
+    .slide-panel {
+        max-width: 100%;
+    }
+    
+    /* Réduire la taille des titres sur mobile */
+    h1 { font-size: 1.875rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+    
+    /* Padding réduit sur mobile */
+    .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+}
+
+/**
+ * Tablet
+ */
+@media (min-width: 640px) {
+    .sm\:block {
+        display: block;
+    }
+    
+    .sm\:hidden {
+        display: none;
+    }
+}
+
+/**
+ * Desktop
+ */
+@media (min-width: 768px) {
+    .md\:flex {
+        display: flex;
+    }
+    
+    .md\:hidden {
+        display: none;
+    }
+    
+    .md\:block {
+        display: block;
+    }
+}
+
+/**
+ * Large desktop
+ */
+@media (min-width: 1024px) {
+    .lg\:block {
+        display: block;
+    }
+    
+    .lg\:hidden {
+        display: none;
+    }
+    
+    .lg\:flex {
+        display: flex;
+    }
+    
+    .lg\:grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* ============================================================================
+   10. DARK MODE (Préparation pour future implémentation)
+   ============================================================================ */
+
+/**
+ * Variables pour le dark mode
+ * À décommenter et adapter quand le dark mode sera implémenté
+ */
+/*
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #1F2937;
+        --background-secondary: #111827;
+        --text-primary: #F9FAFB;
+        --text-secondary: #D1D5DB;
+        --border-color: #374151;
+    }
+}
+*/
+
+/* ============================================================================
+   11. ACCESSIBILITÉ
+   ============================================================================ */
+
+/**
+ * Focus visible pour l'accessibilité au clavier
+ */
+*:focus-visible {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
+/**
+ * Réduire les animations pour les utilisateurs qui préfèrent
+ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/**
+ * Classe pour cacher visuellement mais garder accessible aux lecteurs d'écran
+ */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* ============================================================================
+   12. PRINT STYLES
+   ============================================================================ */
+
+/**
+ * Styles pour l'impression
+ */
+@media print {
+    /* Cacher les éléments non nécessaires à l'impression */
+    header,
+    .slide-panel,
+    .modal-overlay,
+    button,
+    .notification-badge {
+        display: none !important;
+    }
+    
+    /* Optimiser les couleurs pour l'impression */
+    body {
+        color: black;
+        background: white;
+    }
+    
+    /* Éviter les sauts de page à l'intérieur des éléments */
+    .card-hover,
+    .post-card {
+        page-break-inside: avoid;
+    }
+}
+
+/* ============================================================================
+   13. UTILITIES SUPPLÉMENTAIRES
+   ============================================================================ */
+
+/**
+ * Truncate text avec ellipsis
+ */
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/**
+ * Line clamp (limiter le nombre de lignes)
+ */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/**
+ * Aspect ratio
+ */
+.aspect-square {
+    aspect-ratio: 1 / 1;
+}
+
+.aspect-video {
+    aspect-ratio: 16 / 9;
+}
+
+/**
+ * Object fit
+ */
+.object-cover {
+    object-fit: cover;
+}
+
+.object-contain {
+    object-fit: contain;
+}
+
+/**
+ * Selection personnalisée
+ */
+::selection {
+    background-color: var(--primary-200);
+    color: var(--primary-900);
+}
+
+/**
+ * Placeholder personnalisé
+ */
+::placeholder {
+    color: var(--gray-400);
+    opacity: 1;
+}
+
+/* ============================================================================
+   FIN DU FICHIER
+   ============================================================================ */
+
+/**
+ * Note: Ce fichier CSS est conçu pour fonctionner avec Tailwind CSS.
+ * Les classes Tailwind sont utilisées dans le HTML, et ce fichier fournit
+ * des styles personnalisés supplémentaires et des animations.
+ */
