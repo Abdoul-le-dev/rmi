@@ -60,7 +60,7 @@
                     </button>
 
                     <!-- Notifications -->
-                    <button class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                    <button class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors" id ="notification" >
                         <i class="fas fa-bell text-gray-600 text-lg"></i>
                         <span class="notification-badge pulse-dot">3</span>
                     </button>
@@ -177,7 +177,101 @@
             <!-- ========================================
                  COLONNE CENTRALE - FEED
             ======================================== -->
-            <main class="lg:col-span-6">
+            <div class="notifications-container">
+                <h1>Notifications</h1>
+                
+                <div class="notification featured">
+                    <div class="notification-icon">🎉</div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            <span class="name">Cher utilisateur,</span> <span class="action">Nous avons mis en place de nouvelles fonctionnalités</span>
+                        </div>
+                        <div class="notification-time">Allez les consulter !</div>
+                    </div>
+                </div>
+
+                <div class="notification">
+                    <div class="avatar">JA</div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            <span class="name">Jordis AMEGAN</span> <span class="action">Souhaite collaborer avec vous</span>
+                        </div>
+                        <div class="notification-time">Il y a 5 jours</div>
+                    </div>
+                </div>
+
+                <div class="notification">
+                    <div class="avatar">JK</div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            <span class="name">Judith KOSSOU</span> <span class="action">vous invite à rejoindre une session</span>
+                        </div>
+                        <div class="notification-time">Il y a 5 jours</div>
+                    </div>
+                </div>
+
+                <div class="notification">
+                    <div class="avatar">PH</div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            <span class="name">Patrice HOUNGUE</span> <span class="action">vous invite à rejoindre une session</span>
+                        </div>
+                        <div class="notification-time">Il y a 5 jours</div>
+                    </div>
+                </div>
+
+                <div class="notification">
+                    <div class="avatar">JZ</div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            <span class="name">Josué ZINSALO</span> <span class="action">vous souhaite la bienvenue</span>
+                        </div>
+                        <div class="notification-time">Il y a 5 jours</div>
+                    </div>
+                </div>
+
+                <div class="notification">
+                    <div class="avatar">JT</div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            <span class="name">Jack TITOUAN</span> <span class="action">vous invite à rejoindre une session</span>
+                        </div>
+                        <div class="notification-time">Il y a 5 jours</div>
+                    </div>
+                </div>
+
+                <div class="notification">
+                    <div class="avatar">JK</div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            <span class="name">Judith KOSSOU</span> <span class="action">vous invite à rejoindre une session</span>
+                        </div>
+                        <div class="notification-time">Il y a 5 jours</div>
+                    </div>
+                </div>
+
+                <div class="notification">
+                    <div class="avatar">EA</div>
+                    <div class="notification-content">
+                        <div class="notification-text">
+                            <span class="name">Edies ANASSOU</span> <span class="action">vous invite à rejoindre une session</span>
+                        </div>
+                        <div class="notification-time">Il y a 5 jours</div>
+                    </div>
+                </div>
+
+                <div class="notification">
+                    <div class="avatar">📝</div>
+                    <div class="notification-content">
+                        <div class="notification-text long-text">
+                            Hey Peter, we've got a c.unt team is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500's...
+                        </div>
+                        <div class="notification-time">Il y a 1 mois</div>
+                    </div>
+                </div>
+            </div>
+
+            <main class="lg:col-span-6 main" id="menu_menu">
                 
                 <!-- Message de bienvenue -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 fade-in">

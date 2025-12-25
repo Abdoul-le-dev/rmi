@@ -27,6 +27,16 @@ mobileMenuOverlay?.addEventListener('click', closeMobileMenuFn);
 // ========================================
 const userMenuBtn = document.getElementById('user-menu-btn');
 const userDropdown = document.getElementById('user-dropdown');
+const notification_button = document.getElementById('notification');
+const menu_menu = document.getElementById('menu_menu');
+
+//Notification
+notification_button.addEventiListener('click', (e) =>
+    {
+        notification_button.classList.remove('hidden');
+        menu_menu.classList.add('hidden')
+
+    })
 
 userMenuBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
