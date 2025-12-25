@@ -185,6 +185,18 @@ function preloadImages() {
     });
 }
 
+document.querySelectorAll('.notification-item').forEach(notification => {
+            notification.addEventListener('click', function() {
+                console.log('Notification cliquée');
+                
+                // Animation de clic
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 100);
+            });
+        });
+
 // Précharger au chargement de la page
 window.addEventListener('load', preloadImages);
 
