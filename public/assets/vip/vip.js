@@ -157,7 +157,7 @@ function showNotification(message, type = 'info') {
 // ========================================
 // GESTION DU BOUTON "SUIVRE"
 // ========================================
-document.querySelectorAll('button:contains("Suivre")').forEach(btn => {
+/*document.querySelectorAll('button:contains("Suivre")').forEach(btn => {
     btn.addEventListener('click', function () {
         if (this.textContent.trim() === 'Suivre') {
             this.textContent = 'Suivi';
@@ -171,7 +171,7 @@ document.querySelectorAll('button:contains("Suivre")').forEach(btn => {
         }
     });
 });
-
+*/
 // ========================================
 // PRÉCHARGEMENT DES IMAGES
 // ========================================
