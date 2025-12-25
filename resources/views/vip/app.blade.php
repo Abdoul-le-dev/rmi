@@ -177,7 +177,7 @@
             <!-- ========================================
                  COLONNE CENTRALE - FEED
             ======================================== -->
-            <div class="notifications-container">
+            <div class="notifications-container hidden" id="notification">
                 <h1>Notifications</h1>
                 
                 <div class="notification featured">
