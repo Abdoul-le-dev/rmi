@@ -118,18 +118,6 @@
         <!-- Main Content -->
         <main class="flex-1 min-h-screen">
             <!-- Cover Image -->
-            <div class="cover-image h-48 relative overflow-hidden">
-                <div class="absolute inset-0 opacity-20">
-                    <img src="https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=1200" class="w-full h-full object-cover" alt="Cover">
-                </div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <div class="flex gap-6">
-                        <img src="https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=200&h=200&fit=crop" class="w-20 h-20 rounded-lg shadow-lg opacity-60" alt="Bitcoin">
-                        <img src="https://images.unsplash.com/photo-1622630998477-20aa696ecb05?w=200&h=200&fit=crop" class="w-24 h-24 rounded-lg shadow-xl" alt="Ripple">
-                        <img src="https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=200&h=200&fit=crop" class="w-20 h-20 rounded-lg shadow-lg opacity-60" alt="Ethereum">
-                    </div>
-                </div>
-            </div>
 
             <!-- Profile Header -->
             <div class="bg-white border-b border-gray-200">
