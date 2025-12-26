@@ -135,9 +135,522 @@
             </div>
         </div>
     </div>
-    <script src=" {{ asset('assets/vip/session.js') }}"></script>
 
-    
+    <script>
+        const sessions = [
+            { id: 1, name: 'Formation de Trading 2025 FR', message: 'porro quisquam est qui dolorem ipsum quia...', time: '4:30 PM', sender: 'Alex', avatar: 'FT', unread: 0, active: false },
+            { id: 2, name: 'Binance In Trading 2024 💪', message: '📹 Video Lorem ipsum dolor sit amet...', time: '4:30 PM', sender: 'Sender', avatar: 'BT', unread: 1, active: false },
+            { id: 3, name: 'Trade with French Professionals', message: 'Neque porro quisquam est qui dolorem...', time: '4:30 PM', sender: 'You', avatar: 'TF', unread: 0, active: false },
+            { id: 4, name: 'Trade Your wealth here', message: '🎵 Audio Lorem ipsum dolor sit amet consect...', time: '4:30 PM', sender: 'You', avatar: 'TW', unread: 0, active: false },
+            { id: 5, name: 'Conférence des Traders de Paris', message: '🎉 Félicitations pour la conclusion', time: '4:30 PM', sender: 'You', avatar: 'CT', unread: 0, active: false },
+            { id: 6, name: 'Communauté des Traders 229 🇧🇯', message: '📞 Voice call Lorem ipsum dolor sit amet c...', time: '4:30 PM', sender: 'Sender', avatar: 'CT', unread: 0, active: false },
+            { id: 7, name: 'Traders des Côtes d\'azures FR', message: '✨ Sticker Lorem ipsum dolor sit armt con...', time: '4:30 PM', sender: 'You', avatar: 'TC', unread: 0, active: false },
+            { id: 8, name: 'Welcome Trader Newbie 🌟', message: 'Ce message a été supprimé', time: '4:30 PM', sender: 'Sender', avatar: 'WT', unread: 0, active: false },
+            { id: 9, name: 'Hackaton for Traders EN 🇺🇸', message: '🎬 GIF', time: '4:30 PM', sender: 'Sender', avatar: 'HT', unread: 0, active: false },
+            { id: 10, name: 'Become the best Traders Gen🎉', message: '📄 Document de collaboration', time: '4:30 PM', sender: 'You', avatar: 'BT', unread: 0, active: false },
+            { id: 11, name: 'Solaris : New Gen Traders 📈', message: '📍 Localisation en temps réel', time: '4:30 PM', sender: 'Sender', avatar: 'SG', unread: 0, active: false },
+            { id: 12, name: 'Club des Traders du Bénin 💛', message: '📹 Appel Vidéos', time: '4:30 PM', sender: 'Sender', avatar: 'CB', unread: 0, active: false },
+            { id: 13, name: 'Zone Franche des Traders ⚠️', message: '📎 Document', time: '4:30 PM', sender: 'You', avatar: 'ZF', unread: 0, active: false },
+            { id: 14, name: 'SOLDERS SENDERS TRADERS', message: '👤 Contact', time: '4:30 PM', sender: 'Sender', avatar: 'SS', unread: 0, active: false }
+        ];
+
+        let posts = {};
+        let showComments = {};
+
+        function getAvatarColor(index) {
+            const colors = [
+                'from-blue-500 to-indigo-600',
+                'from-purple-500 to-pink-600',
+                'from-green-500 to-emerald-600',
+                'from-orange-500 to-red-600',
+                'from-cyan-500 to-blue-600',
+                'from-violet-500 to-purple-600',
+                'from-amber-500 to-orange-600',
+                'from-teal-500 to-cyan-600'
+            ];
+            return colors[index % colors.length];
+        }
+
+        function renderSessions() {
+            const list = document.getElementById('sessionsList');
+            list.innerHTML = sessions.map((session, index) => `
+                <div class="flex items-center gap-3 px-4 py-3 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 cursor-pointer transition-all duration-300 ${session.active ? 'bg-gradient-to-r from-indigo-50 to-purple-50 border-l-4 border-indigo-500' : ''} animate-slide-right" 
+                    style="animation-delay: ${index * 0.05}s"
+                    onclick="openSession(${session.id})">
+                    <div class="relative flex-shrink-0">
+                        <div class="w-14 h-14 rounded-full bg-gradient-to-br ${getAvatarColor(index)} flex items-center justify-center text-white font-bold text-sm shadow-md hover-lift transition-all duration-300">
+                            ${session.avatar}
+                        </div>
+                        ${session.unread > 0 ? `<span class="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-full text-xs flex items-center justify-center font-bold shadow-lg animate-pulse">${session.unread}</span>` : ''}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-baseline mb-0.5">
+                            <h3 class="font-semibold text-sm truncate ${session.unread > 0 ? 'text-gray-900' : 'text-gray-700'}">${session.name}</h3>
+                            <span class="text-xs text-gray-500 ml-2 flex-shrink-0">${session.time}</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-indigo-600 font-medium">${session.sender}:</span>
+                            <p class="text-xs ${session.unread > 0 ? 'text-gray-700 font-medium' : 'text-gray-500'} truncate flex-1">${session.message}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleComments(postId) {
+            showComments[postId] = !showComments[postId];
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            if (showComments[postId]) {
+                commentsSection.classList.remove('hidden');
+                commentsSection.classList.add('animate-scale-in');
+            } else {
+                commentsSection.classList.add('hidden');
+            }
+        }
+
+        function toggleLike(postId) {
+            const post = posts[postId];
+            post.liked = !post.liked;
+            post.likes += post.liked ? 1 : -1;
+            
+            const likeBtn = document.getElementById(`like-${postId}`);
+            const likeCount = document.getElementById(`like-count-${postId}`);
+            
+            likeBtn.innerHTML = post.liked 
+                ? '<svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/></svg>'
+                : '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/></svg>';
+            
+            likeCount.textContent = post.likes;
+            
+            // Animation
+            likeBtn.classList.add('scale-125');
+            setTimeout(() => likeBtn.classList.remove('scale-125'), 200);
+        }
+
+        function addComment(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            const post = posts[postId];
+            post.comments.push({
+                id: Date.now(),
+                author: 'Vous',
+                avatar: 'https://ui-avatars.com/api/?name=Vous&background=6366f1&color=fff&size=32',
+                text: text,
+                time: 'À l\'instant'
+            });
+            
+            input.value = '';
+            
+            // Update comments count
+            document.getElementById(`comment-count-${postId}`).textContent = `${post.comments.length} commentaire${post.comments.length > 1 ? 's' : ''}`;
+            
+            // Re-render comments
+            renderComments(postId);
+        }
+
+        function renderComments(postId) {
+            const post = posts[postId];
+            const commentsContainer = document.getElementById(`comments-list-${postId}`);
+            
+            commentsContainer.innerHTML = post.comments.map((comment, index) => `
+                <div class="flex gap-3 animate-slide-in" style="animation-delay: ${index * 0.1}s">
+                    <img src="${comment.avatar}" class="w-10 h-10 rounded-full flex-shrink-0 shadow-sm">
+                    <div class="flex-1">
+                        <div class="bg-gray-100 rounded-2xl rounded-tl-sm px-4 py-3">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="font-semibold text-sm text-gray-900">${comment.author}</span>
+                                <span class="text-xs text-gray-500">${comment.time}</span>
+                            </div>
+                            <p class="text-sm text-gray-700 leading-relaxed">${comment.text}</p>
+                        </div>
+                        <div class="flex items-center gap-4 mt-2 ml-4 text-xs text-gray-600">
+                            <button class="hover:text-indigo-600 font-semibold transition-colors">J'aime</button>
+                            <button class="hover:text-indigo-600 font-semibold transition-colors">Répondre</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openSession(id) {
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebarSessions').classList.add('mobile-hidden');
+                document.getElementById('chatZone').classList.remove('mobile-hidden');
+            }
+            
+            sessions.forEach(s => s.active = s.id === id);
+            renderSessions();
+            loadSessionContent(id);
+        }
+
+        function loadSessionContent(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            const chatZone = document.getElementById('chatZone');
+            
+            // Initialize posts
+            posts = {
+                1: {
+                    id: 1,
+                    likes: 24,
+                    liked: false,
+                    comments: [
+                        { id: 1, author: 'Marie Dubois', avatar: 'https://ui-avatars.com/api/?name=Marie+Dubois&background=ec4899&color=fff&size=32', text: 'Super intéressant ! Hâte de commencer 🚀', time: 'Il y a 2h' },
+                        { id: 2, author: 'Jean Martin', avatar: 'https://ui-avatars.com/api/?name=Jean+Martin&background=10b981&color=fff&size=32', text: 'Merci pour cette session, très instructive !', time: 'Il y a 1h' }
+                    ]
+                },
+                2: {
+                    id: 2,
+                    likes: 42,
+                    liked: false,
+                    comments: [
+                        { id: 1, author: 'Sophie Bernard', avatar: 'https://ui-avatars.com/api/?name=Sophie+Bernard&background=f59e0b&color=fff&size=32', text: 'Excellente formation ! 💯', time: 'Il y a 3h' }
+                    ]
+                }
+            };
+            
+            showComments = {};
+            
+            chatZone.innerHTML = `
+                <div class="flex-1 flex flex-col bg-gradient-to-br from-gray-50 to-gray-100 animate-fade-in">
+                    <!-- Header Session Amélioré -->
+                    <div class="bg-white border-b border-gray-200 shadow-sm">
+                        <div class="max-w-4xl mx-auto px-4 py-4">
+                            <div class="flex justify-between items-start">
+                                <div class="flex items-start gap-4">
+                                    <button class="md:hidden p-2 hover:bg-gray-100 rounded-full transition-all duration-300 mt-1" onclick="backToList()">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br ${getAvatarColor(sessionId - 1)} flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                        ${session.avatar}
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <h2 class="text-xl font-bold text-gray-900">${session.name}</h2>
+                                            <span class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs px-3 py-1 rounded-full font-semibold shadow-sm">Session</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 text-sm text-gray-600">
+                                            <span class="flex items-center gap-1">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+                                                </svg>
+                                                ${Math.floor(Math.random() * 500) + 100} membres
+                                            </span>
+                                            <span>•</span>
+                                            <span class="flex items-center gap-1">
+                                                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                                ${Math.floor(Math.random() * 50) + 20} en ligne
+                                            </span>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">Publications réservées aux administrateurs</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="p-2.5 hover:bg-gray-100 rounded-full transition-all duration-300 group">
+                                        <svg class="w-5 h-5 text-gray-600 group-hover:text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                    <button class="p-2.5 hover:bg-gray-100 rounded-full transition-all duration-300 group">
+                                        <svg class="w-5 h-5 text-gray-600 group-hover:text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Posts avec max-width -->
+                    <div class="flex-1 overflow-y-auto scrollbar-hide">
+                        <div class="max-w-4xl mx-auto px-4 py-6 space-y-6">
+                            <!-- Post 1 - Message de bienvenue -->
+                            <div class="bg-white rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden animate-scale-in">
+                                <!-- Header du post -->
+                                <div class="p-6 pb-4">
+                                    <div class="flex items-start gap-4">
+                                        <img src="https://ui-avatars.com/api/?name=Admin+Trading&background=6366f1&color=fff&size=56" class="w-14 h-14 rounded-full shadow-md ring-4 ring-indigo-50">
+                                        <div class="flex-1">
+                                            <div class="flex items-center gap-2 mb-1">
+                                                <span class="font-bold text-lg text-gray-900">Admin Trading</span>
+                                                <span class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs px-3 py-1 rounded-full font-semibold">Admin</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 text-sm text-gray-500">
+                                                <span>Aujourd'hui à 14:30</span>
+                                                <span>•</span>
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <button class="p-2 hover:bg-gray-100 rounded-full transition-all duration-300">
+                                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Contenu du post -->
+                                <div class="px-6 pb-4">
+                                    <p class="text-gray-700 text-base leading-relaxed">
+                                        🎯 <span class="font-semibold">Bienvenue dans la session de formation Trading 2025 !</span>
+                                    </p>
+                                    <p class="text-gray-600 mt-3 leading-relaxed">
+                                        Cette session est votre espace privilégié pour découvrir nos formations exclusives, recevoir les dernières actualités du trading et accéder à des ressources premium.
+                                    </p>
+                                    <div class="mt-4 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100">
+                                        <p class="text-sm text-gray-700">
+                                            💬 <span class="font-medium">N'hésitez pas à commenter</span> pour partager vos questions et enrichir les discussions avec la communauté !
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Actions et stats -->
+                                <div class="px-6 py-3 border-t border-gray-100 bg-gray-50">
+                                    <div class="flex items-center justify-between mb-3 text-sm text-gray-600">
+                                        <div class="flex items-center gap-2">
+                                            <div class="flex -space-x-2">
+                                                <div class="w-6 h-6 rounded-full bg-red-500 border-2 border-white flex items-center justify-center">
+                                                    <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                                                    </svg>
+                                                </div>
+                                                <div class="w-6 h-6 rounded-full bg-blue-500 border-2 border-white flex items-center justify-center">
+                                                    <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <span id="like-count-1" class="font-medium">24 réactions</span>
+                                        </div>
+                                        <button class="hover:underline" onclick="toggleComments(1)">
+                                            <span id="comment-count-1">2 commentaires</span>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-2">
+                                        <button class="like-btn flex-1 flex items-center justify-center gap-2 py-2.5 px-4 hover:bg-gray-200 rounded-xl transition-all duration-300 group" id="like-1" onclick="toggleLike(1)">
+                                            <svg class="w-5 h-5 text-gray-600 group-hover:text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
+                                            </svg>
+                                            <span class="font-semibold text-sm text-gray-700">J'aime</span>
+                                        </button>
+                                        <button class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 hover:bg-gray-200 rounded-xl transition-all duration-300 group" onclick="toggleComments(1)">
+                                            <svg class="w-5 h-5 text-gray-600 group-hover:text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span class="font-semibold text-sm text-gray-700">Commenter</span>
+                                        </button>
+                                        <button class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 hover:bg-gray-200 rounded-xl transition-all duration-300 group">
+                                            <svg class="w-5 h-5 text-gray-600 group-hover:text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"/>
+                                            </svg>
+                                            <span class="font-semibold text-sm text-gray-700">Partager</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Section Commentaires -->
+                                <div class="hidden border-t border-gray-200" id="comments-1">
+                                    <div class="p-6 space-y-4 max-h-96 overflow-y-auto" id="comments-list-1"></div>
+                                    
+                                    <!-- Input commentaire amélioré -->
+                                    <div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
+                                        <div class="comment-input flex gap-3 bg-white rounded-2xl p-3 shadow-sm transition-all duration-300">
+                                            <img src="https://ui-avatars.com/api/?name=Vous&background=6366f1&color=fff&size=40" class="w-10 h-10 rounded-full">
+                                            <input type="text" 
+                                                id="comment-input-1"
+                                                placeholder="Ajoutez un commentaire..." 
+                                                class="flex-1 bg-transparent outline-none text-sm px-2"
+                                                onkeypress="if(event.key === 'Enter') addComment(1)">
+                                            <button onclick="addComment(1)" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-2.5 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Post 2 - Formation -->
+                            <div class="bg-white rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden animate-scale-in" style="animation-delay: 0.1s">
+                                <!-- Header du post -->
+                                <div class="p-6 pb-4">
+                                    <div class="flex items-start gap-4">
+                                        <img src="https://ui-avatars.com/api/?name=Sophie+Martin&background=ec4899&color=fff&size=56" class="w-14 h-14 rounded-full shadow-md ring-4 ring-pink-50">
+                                        <div class="flex-1">
+                                            <div class="flex items-center gap-2 mb-1">
+                                                <span class="font-bold text-lg text-gray-900">Sophie Martin</span>
+                                                <span class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs px-3 py-1 rounded-full font-semibold">Admin</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 text-sm text-gray-500">
+                                                <span>Hier à 16:45</span>
+                                                <span>•</span>
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <button class="p-2 hover:bg-gray-100 rounded-full transition-all duration-300">
+                                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Contenu -->
+                                <div class="px-6 pb-5">
+                                    <p class="text-gray-700 text-base mb-4">
+                                        📊 <span class="font-semibold">Nouvelle formation exclusive disponible !</span>
+                                    </p>
+                                    
+                                    <!-- Card Formation Premium -->
+                                    <div class="relative overflow-hidden rounded-2xl shadow-lg">
+                                        <div class="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 opacity-95"></div>
+                                        <div class="relative p-8 text-white">
+                                            <div class="flex items-start justify-between mb-6">
+                                                <div>
+                                                    <div class="flex items-center gap-2 mb-3">
+                                                        <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold">Nouveau</span>
+                                                        <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold">Premium</span>
+                                                    </div>
+                                                    <h4 class="text-2xl font-bold mb-2">Formation Analyse Technique Avancée</h4>
+                                                    <p class="text-white/90 text-sm">
+                                                        Maîtrisez les indicateurs, patterns et stratégies de trading des professionnels
+                                                    </p>
+                                                </div>
+                                                <div class="bg-white/20 backdrop-blur-sm p-4 rounded-xl">
+                                                    <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div class="grid grid-cols-3 gap-4 mb-6">
+                                                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
+                                                    <div class="text-2xl font-bold">12h</div>
+                                                    <div class="text-xs text-white/80">de contenu</div>
+                                                </div>
+                                                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
+                                                    <div class="text-2xl font-bold">50+</div>
+                                                    <div class="text-xs text-white/80">vidéos</div>
+                                                </div>
+                                                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
+                                                    <div class="text-2xl font-bold">4.9</div>
+                                                    <div class="text-xs text-white/80">★ notation</div>
+                                                </div>
+                                            </div>
+                                            <button class="w-full bg-white text-indigo-600 px-6 py-3.5 rounded-xl text-sm font-bold hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2">
+                                                Accéder à la formation
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Actions et stats -->
+                                <div class="px-6 py-3 border-t border-gray-100 bg-gray-50">
+                                    <div class="flex items-center justify-between mb-3 text-sm text-gray-600">
+                                        <div class="flex items-center gap-2">
+                                            <div class="flex -space-x-2">
+                                                <div class="w-6 h-6 rounded-full bg-red-500 border-2 border-white"></div>
+                                                <div class="w-6 h-6 rounded-full bg-blue-500 border-2 border-white"></div>
+                                                <div class="w-6 h-6 rounded-full bg-yellow-500 border-2 border-white"></div>
+                                            </div>
+                                            <span id="like-count-2" class="font-medium">42 réactions</span>
+                                        </div>
+                                        <button class="hover:underline" onclick="toggleComments(2)">
+                                            <span id="comment-count-2">1 commentaire</span>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-2">
+                                        <button class="like-btn flex-1 flex items-center justify-center gap-2 py-2.5 px-4 hover:bg-gray-200 rounded-xl transition-all duration-300 group" id="like-2" onclick="toggleLike(2)">
+                                            <svg class="w-5 h-5 text-gray-600 group-hover:text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
+                                            </svg>
+                                            <span class="font-semibold text-sm text-gray-700">J'aime</span>
+                                        </button>
+                                        <button class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 hover:bg-gray-200 rounded-xl transition-all duration-300 group" onclick="toggleComments(2)">
+                                            <svg class="w-5 h-5 text-gray-600 group-hover:text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                                            </svg>
+                                            <span class="font-semibold text-sm text-gray-700">Commenter</span>
+                                        </button>
+                                        <button class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 hover:bg-gray-200 rounded-xl transition-all duration-300 group">
+                                            <svg class="w-5 h-5 text-gray-600 group-hover:text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"/>
+                                            </svg>
+                                            <span class="font-semibold text-sm text-gray-700">Partager</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Section Commentaires -->
+                                <div class="hidden border-t border-gray-200" id="comments-2">
+                                    <div class="p-6 space-y-4 max-h-96 overflow-y-auto" id="comments-list-2"></div>
+                                    
+                                    <!-- Input commentaire -->
+                                    <div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
+                                        <div class="comment-input flex gap-3 bg-white rounded-2xl p-3 shadow-sm transition-all duration-300">
+                                            <img src="https://ui-avatars.com/api/?name=Vous&background=6366f1&color=fff&size=40" class="w-10 h-10 rounded-full">
+                                            <input type="text" 
+                                                id="comment-input-2"
+                                                placeholder="Ajoutez un commentaire..." 
+                                                class="flex-1 bg-transparent outline-none text-sm px-2"
+                                                onkeypress="if(event.key === 'Enter') addComment(2)">
+                                            <button onclick="addComment(2)" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-2.5 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Render existing comments
+            renderComments(1);
+            renderComments(2);
+        }
+
+        function backToList() {
+            document.getElementById('sidebarSessions').classList.remove('mobile-hidden');
+            document.getElementById('chatZone').classList.add('mobile-hidden');
+            
+            const chatZone = document.getElementById('chatZone');
+            chatZone.innerHTML = `
+                <div class="text-center max-w-md px-4 animate-fade-in">
+                    <div class="mb-6 flex justify-center">
+                        <div class="w-32 h-32 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center shadow-lg">
+                            <svg class="w-16 h-16 text-indigo-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"/>
+                                <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-3">Bienvenue sur vos Sessions</h2>
+                    <p class="text-gray-500">
+                        Sélectionnez une session pour découvrir les publications et participer aux discussions
+                    </p>
+                </div>
+            `;
+        }
+
+        renderSessions();
+    </script>
 
 </body>
 </html>
