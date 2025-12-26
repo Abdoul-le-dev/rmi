@@ -61,7 +61,7 @@
                     </button>
 
                     <!-- Notifications -->
-                    <button class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors" id ="notification" >
+                    <button class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors" onclick="toggleNotif()" >
                         <i class="fas fa-bell text-gray-600 text-lg"></i>
                         <span class="notification-badge pulse-dot">3</span>
                     </button>
