@@ -65,6 +65,13 @@
                         <span class="notification-badge pulse-dot">3</span>
                     </button>
 
+                    <div class="hidden absolute top-16 right-5 w-96 max-h-[500px] bg-white rounded-lg shadow-xl flex-col z-50" id="notifPanel">
+                        <div class="p-4 border-b border-gray-200">
+                            <h3 class="text-2xl font-bold">Notifications</h3>
+                        </div>
+                        <div class="overflow-y-auto max-h-96 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100" id="notifList"></div>
+                    </div>
+
                     <!-- Messages -->
                     <button class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
                         <i class="fas fa-comment-dots text-gray-600 text-lg"></i>
