@@ -167,6 +167,12 @@ function preloadImages() {
     });
 }
 
+//message vue
+
+function message_view()
+{
+    window.location.href ="vip/message"
+}
 
 
 // Précharger au chargement de la page

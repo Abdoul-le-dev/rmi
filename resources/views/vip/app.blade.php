@@ -74,7 +74,7 @@
                     </div>
 
                     <!-- Messages -->
-                    <button class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                    <button class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors" onclick="message_view()">
                         <i class="fas fa-comment-dots text-gray-600 text-lg"></i>
                         <span class="notification-badge pulse-dot">2</span>
                     </button>

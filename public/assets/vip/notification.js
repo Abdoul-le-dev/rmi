@@ -19,7 +19,7 @@ function renderNotifications() {
     const list = document.getElementById('notifList');
     list.innerHTML = notifications.map(notif => `
                 <div class="p-3 border-b border-gray-200 cursor-pointer hover:bg-gray-100 transition flex gap-3 ${notif.unread ? 'bg-blue-50 hover:bg-blue-100' : ''}" onclick="markAsRead(${notif.id})">
-                    <div class="w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold flex-shrink-0">
+                    <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold flex-shrink-0">
                         ${notif.user}
                     </div>
                     <div class="flex-1">
