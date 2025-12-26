@@ -11,6 +11,7 @@
 
     {{-- JS global --}}
     <script src="{{ asset('assets/vip/vip.js') }}"></script>
+    <script src="{{ asset('assets/vip/notification.js') }}"></script>
     
 </head>
 <body class="bg-gray-50 text-gray-900 antialiased">
