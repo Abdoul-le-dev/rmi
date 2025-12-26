@@ -166,7 +166,7 @@
                             <i class="fas fa-map-marker-alt text-base"></i>
                             <span class="font-medium">Localisations</span>
                         </a>
-                        <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2 transition-all">
+                        <a href="/vip/session" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2 transition-all">
                             <i class="fas fa-users text-base"></i>
                             <span class="font-medium">Vos Sessions</span>
                         </a>

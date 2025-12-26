@@ -436,6 +436,10 @@ Route::get('/media/temp-url/{path}', [MediaController::class, 'preview'])
         return view('vip.app');
     });
 
-     Route::get('vip/message', function(){
+    Route::get('vip/message', function(){
         return view('vip.message');
+    });
+
+    Route::get('vip/session', function(){
+        return view('vip.session');
     });

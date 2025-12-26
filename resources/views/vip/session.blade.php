@@ -95,6 +95,8 @@
         </div>
     </div>
 
+
+    <script src=" {{ asset('assets/vip/session.js') }}"></script>
     
 </body>
 </html>
