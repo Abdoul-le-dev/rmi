@@ -30,26 +30,7 @@ const userDropdown = document.getElementById('user-dropdown');
 const notification_button = document.getElementById('notification');
 const menu_menu = document.getElementById('menu_menu');
 
-//Notification
-notification_button?.addEventiListener('click', (e) =>
-    {
-        e.stopPropagation();
-        notification_button.classList.remove('hidden');
-        menu_menu.classList.add('hidden')
 
-    })
-
-userMenuBtn?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    userDropdown.classList.toggle('hidden');
-});
-
-// Fermer le dropdown en cliquant ailleurs
-document.addEventListener('click', (e) => {
-    if (!userMenuBtn?.contains(e.target) && !userDropdown?.contains(e.target)) {
-        userDropdown?.classList.add('hidden');
-    }
-});
 
 // ========================================
 // ANIMATIONS AU SCROLL
