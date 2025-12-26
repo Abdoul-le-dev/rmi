@@ -443,3 +443,7 @@ Route::get('/media/temp-url/{path}', [MediaController::class, 'preview'])
     Route::get('vip/session', function(){
         return view('vip.session');
     });
+
+    Route::get('vip/parametre', function(){
+        return view('vip.parametre');
+    });
