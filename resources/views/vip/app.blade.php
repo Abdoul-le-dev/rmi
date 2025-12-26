@@ -63,7 +63,7 @@
                     <!-- Notifications -->
                     <button class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors" onclick="toggleNotif()" >
                         <i class="fas fa-bell text-gray-600 text-lg"></i>
-                        <span class="notification-badge pulse-dot">3</span>
+                        <span class="notification-badge pulse-dot" id="badge">3</span>
                     </button>
 
                     <div class="hidden absolute top-16 right-5 w-96 max-h-[500px] bg-white rounded-lg shadow-xl flex-col z-50" id="notifPanel">
@@ -186,7 +186,7 @@
                  COLONNE CENTRALE - FEED
             ======================================== -->
 
-            <main class="lg:col-span-6 main hidden" id="menu_menu">
+            <main class="lg:col-span-6 main" id="menu_menu">
                 
                 <!-- Message de bienvenue -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 fade-in">
