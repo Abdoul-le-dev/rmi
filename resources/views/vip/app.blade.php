@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="{{ asset('assets/vip/vip.css') }}">
 
     {{-- JS global --}}
-    <script src="{{ asset('assets/vip/vip.js') }}"></script>
-    <script src="{{ asset('assets/vip/notification.js') }}"></script>
+    <script src="{{ asset('assets/vip/vip.js') }}" defer></script>
+    <script src="{{ asset('assets/vip/notification.js') }}" defer></script>
     
 </head>
 <body class="bg-gray-50 text-gray-900 antialiased">
