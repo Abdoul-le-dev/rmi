@@ -122,7 +122,7 @@
             <!-- Profile Header -->
             <div class="bg-white border-b border-gray-200">
                 <div class="max-w-6xl mx-auto px-6">
-                    <div class="flex items-end -mt-16 mb-4 h-96">
+                    <div class="flex items-end -mt-16 mb-4 h-48">
                         <img src="https://ui-avatars.com/api/?name=Abdoulaye+CHOUTI&background=6366f1&color=fff&size=160" 
                             class="w-32 h-32 rounded-full border-4 border-white shadow-xl">
                         <div class="ml-6 pb-2">
