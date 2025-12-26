@@ -1,0 +1,7 @@
+ @media (max-width: 768px) {
+            .sidebar { width: 100%; }
+            .chat-zone.mobile-hidden { display: none; }
+            .sidebar.mobile-hidden { display: none; }
+        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }

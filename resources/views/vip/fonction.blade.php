@@ -3,343 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panneau de Notifications</title>
+    <title>Messagerie - Chat App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        @media (max-width: 768px) {
+            .sidebar { width: 100%; }
+            .chat-zone.mobile-hidden { display: none; }
+            .sidebar.mobile-hidden { display: none; }
         }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f0f2f5;
-            padding: 20px;
-        }
-
-        .navbar {
-            background: #fff;
-            padding: 12px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-        }
-
-        .notif-btn {
-            background: #e4e6eb;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-
-        .notif-btn:hover {
-            background: #d8dadf;
-        }
-
-        .notif-icon {
-            width: 20px;
-            height: 20px;
-        }
-
-        .badge {
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            background: #e41e3f;
-            color: white;
-            border-radius: 10px;
-            padding: 2px 6px;
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        .notif-panel {
-            position: absolute;
-            top: 60px;
-            right: 20px;
-            width: 360px;
-            max-height: 500px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-            display: none;
-            flex-direction: column;
-            z-index: 1000;
-        }
-
-        .notif-panel.active {
-            display: flex;
-        }
-
-        .notif-header {
-            padding: 16px;
-            border-bottom: 1px solid #e4e6eb;
-        }
-
-        .notif-header h3 {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .notif-list {
-            overflow-y: auto;
-            max-height: 400px;
-        }
-
-        .notif-list::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .notif-list::-webkit-scrollbar-track {
-            background: #f0f2f5;
-        }
-
-        .notif-list::-webkit-scrollbar-thumb {
-            background: #bcc0c4;
-            border-radius: 4px;
-        }
-
-        .notif-item {
-            padding: 12px 16px;
-            border-bottom: 1px solid #e4e6eb;
-            cursor: pointer;
-            transition: background 0.2s;
-            display: flex;
-            gap: 12px;
-        }
-
-        .notif-item:hover {
-            background: #f2f3f5;
-        }
-
-        .notif-item.unread {
-            background: #e7f3ff;
-        }
-
-        .notif-item.unread:hover {
-            background: #d8ebff;
-        }
-
-        .notif-avatar {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: #1877f2;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .notif-content {
-            flex: 1;
-        }
-
-        .notif-text {
-            font-size: 14px;
-            line-height: 1.4;
-            color: #050505;
-            margin-bottom: 4px;
-        }
-
-        .notif-time {
-            font-size: 12px;
-            color: #65676b;
-        }
-
-        .notif-dot {
-            width: 8px;
-            height: 8px;
-            background: #1877f2;
-            border-radius: 50%;
-            margin-top: 8px;
-        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 h-screen overflow-hidden">
 
-    <div class="navbar">
-        <h2>Mon Site</h2>
-        <button class="notif-btn" onclick="toggleNotif()">
-            <svg class="notif-icon" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
-            </svg>
-            <span class="badge" id="badge">5</span>
-        </button>
-    </div>
-
-    <div class="notif-panel" id="notifPanel">
-        <div class="notif-header">
-            <h3>Notifications</h3>
+    <div class="flex h-screen">
+        <!-- Sidebar Navigation (Mobile) -->
+        <div class="hidden md:flex flex-col w-20 bg-white border-r border-gray-200">
+            <div class="p-4 flex flex-col items-center gap-6">
+                <button class="p-3 hover:bg-gray-100 rounded-xl transition">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                    </svg>
+                </button>
+                <button class="p-3 bg-indigo-100 text-indigo-600 rounded-xl">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"/><path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"/>
+                    </svg>
+                </button>
+                <button class="p-3 hover:bg-gray-100 rounded-xl transition relative">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
+                    </svg>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                <button class="p-3 hover:bg-gray-100 rounded-xl transition">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.532 1.532 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.532 1.532 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+            </div>
         </div>
-        <div class="notif-list" id="notifList"></div>
+
+        <!-- Liste des conversations -->
+        <div class="sidebar w-full md:w-96 bg-white border-r border-gray-200 flex flex-col" id="sidebarConv">
+            <!-- Header -->
+            <div class="p-4 border-b border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h1 class="text-2xl font-bold">Messages</h1>
+                    <div class="flex gap-2">
+                        <button class="p-2 hover:bg-gray-100 rounded-full transition">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"/><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                        <button class="p-2 hover:bg-gray-100 rounded-full transition">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <!-- Barre de recherche -->
+                <div class="relative">
+                    <input type="text" placeholder="Rechercher une conversation..." 
+                        class="w-full bg-gray-100 rounded-full pl-10 pr-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Liste -->
+            <div class="flex-1 overflow-y-auto scrollbar-hide" id="conversationList"></div>
+        </div>
+
+        <!-- Zone de chat -->
+        <div class="chat-zone flex-1 flex flex-col bg-gray-50" id="chatZone">
+            <!-- Header Chat -->
+            <div class="bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <button class="md:hidden p-2 hover:bg-gray-100 rounded-full" onclick="backToList()">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                    <div class="relative">
+                        <img src="https://ui-avatars.com/api/?name=HOUESSOU+Amour&background=6366f1&color=fff&size=40" 
+                            class="w-10 h-10 rounded-full">
+                        <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+                    </div>
+                    <div>
+                        <h2 class="font-semibold">HOUESSOU Amour</h2>
+                        <p class="text-xs text-green-600">En ligne</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button class="p-2 hover:bg-gray-100 rounded-full transition">
+                        <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                        </svg>
+                    </button>
+                    <button class="p-2 hover:bg-gray-100 rounded-full transition">
+                        <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
+                        </svg>
+                    </button>
+                    <button class="hidden md:block p-2 hover:bg-gray-100 rounded-full transition">
+                        <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-3" id="chatMessages">
+                <!-- Message reçu -->
+                <div class="flex items-start gap-2">
+                    <img src="https://ui-avatars.com/api/?name=HA&background=6366f1&color=fff&size=32" class="w-8 h-8 rounded-full">
+                    <div>
+                        <div class="bg-white rounded-2xl rounded-tl-sm px-4 py-2.5 shadow-sm max-w-xs">
+                            <p class="text-sm">Ou c'est disponible</p>
+                        </div>
+                        <span class="text-xs text-gray-500 ml-2 mt-1 block">4:30 PM</span>
+                    </div>
+                </div>
+
+                <!-- Messages envoyés -->
+                <div class="flex justify-end">
+                    <div>
+                        <div class="bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-2xl rounded-tr-sm px-4 py-2.5 shadow-sm max-w-xs">
+                            <p class="text-sm">Salut, les parts dont tu m'avais parlé, sont dispos ?</p>
+                        </div>
+                        <div class="flex items-center justify-end gap-1 mt-1">
+                            <span class="text-xs text-gray-500">4:55 PM</span>
+                            <svg class="w-4 h-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <div>
+                        <div class="bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-2xl rounded-tr-sm px-4 py-2.5 shadow-sm max-w-xs">
+                            <p class="text-sm">Super, puis-je avoir un aperçu ?</p>
+                        </div>
+                        <div class="flex items-center justify-end gap-1 mt-1">
+                            <span class="text-xs text-gray-500">4:55 PM</span>
+                            <svg class="w-4 h-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message avec média -->
+                <div class="flex items-start gap-2">
+                    <img src="https://ui-avatars.com/api/?name=HA&background=6366f1&color=fff&size=32" class="w-8 h-8 rounded-full">
+                    <div>
+                        <div class="bg-white rounded-2xl rounded-tl-sm p-2 shadow-sm max-w-sm">
+                            <p class="text-sm mb-2 px-2">Bien sûr ! Je t'envoie quelques images !</p>
+                            <img src="https://images.unsplash.com/photo-1556656793-08538906a9f8?w=300&h=200&fit=crop" 
+                                class="rounded-xl w-full mb-2">
+                            <div class="bg-gray-50 rounded-xl p-3">
+                                <p class="text-xs font-semibold mb-2">Sticker Pack Name</p>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <div class="w-14 h-14 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg"></div>
+                                    <div class="w-14 h-14 bg-gradient-to-br from-orange-400 to-red-500 rounded-lg"></div>
+                                    <div class="w-14 h-14 bg-gradient-to-br from-red-400 to-pink-500 rounded-lg"></div>
+                                    <div class="w-14 h-14 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg"></div>
+                                    <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg"></div>
+                                    <div class="w-14 h-14 bg-gradient-to-br from-red-500 to-pink-600 rounded-lg"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2">🔥 4 Replies</p>
+                            </div>
+                        </div>
+                        <span class="text-xs text-gray-500 ml-2 mt-1 block">4:32 PM</span>
+                    </div>
+                </div>
+
+                <!-- Séparateur de date -->
+                <div class="flex justify-center my-4">
+                    <span class="text-xs text-gray-500 bg-white px-4 py-1.5 rounded-full shadow-sm">Aujourd'hui</span>
+                </div>
+
+                <!-- Plus de messages -->
+                <div class="flex justify-end">
+                    <div>
+                        <div class="bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-2xl rounded-tr-sm px-4 py-2.5 shadow-sm max-w-xs">
+                            <p class="text-sm">Merci ! Celle me semble correcte</p>
+                        </div>
+                        <div class="flex items-center justify-end gap-1 mt-1">
+                            <span class="text-xs text-gray-500">4:55 PM</span>
+                            <svg class="w-4 h-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end">
+                    <div>
+                        <div class="bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-2xl rounded-tr-sm px-4 py-2.5 shadow-sm max-w-xs">
+                            <p class="text-sm">Je les prends</p>
+                        </div>
+                        <div class="flex items-center justify-end gap-1 mt-1">
+                            <span class="text-xs text-gray-500">4:55 PM</span>
+                            <svg class="w-4 h-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zone de saisie -->
+            <div class="bg-white border-t border-gray-200 p-4">
+                <div class="flex items-end gap-2">
+                    <button class="p-2.5 text-indigo-600 hover:bg-indigo-50 rounded-full transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                    <div class="flex-1 flex items-center bg-gray-100 rounded-3xl px-4 py-2">
+                        <input type="text" placeholder="Type your message..." 
+                            class="flex-1 bg-transparent outline-none text-sm">
+                        <div class="flex items-center gap-1">
+                            <button class="p-1.5 text-gray-500 hover:text-indigo-600 transition">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                            <button class="p-1.5 text-gray-500 hover:text-indigo-600 transition">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="p-2.5 bg-indigo-600 text-white hover:bg-indigo-700 rounded-full transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        const notifications = [
-            { id: 1, user: 'JD', text: 'Jean Dupont a aimé votre publication', time: 'Il y a 5 min', unread: true },
-            { id: 2, user: 'ML', text: 'Marie Lambert a commenté votre photo', time: 'Il y a 1h', unread: true },
-            { id: 3, user: 'PB', text: 'Pierre Bernard vous a envoyé un message', time: 'Il y a 2h', unread: true },
-            { id: 4, user: 'SD', text: 'Sophie Durand a partagé votre article', time: 'Il y a 3h', unread: true },
-            { id: 5, user: 'AM', text: 'Alexandre Martin a réagi à votre commentaire', time: 'Il y a 5h', unread: true },
-            { id: 6, user: 'CL', text: 'Camille Leroy vous suit maintenant', time: 'Hier', unread: false },
-            { id: 7, user: 'TB', text: 'Thomas Blanc a mentionné votre nom', time: 'Hier', unread: false },
-            { id: 8, user: 'EM', text: 'Emma Moreau a aimé votre commentaire', time: 'Il y a 2 jours', unread: false }
-        ];
-
-        function toggleNotif() {
-            const panel = document.getElementById('notifPanel');
-            panel.classList.toggle('active');
-        }
-
-        function renderNotifications() {
-            const list = document.getElementById('notifList');
-            list.innerHTML = notifications.map(notif => `
-                <div class="notif-item ${notif.unread ? 'unread' : ''}" onclick="markAsRead(${notif.id})">
-                    <div class="notif-avatar">${notif.user}</div>
-                    <div class="notif-content">
-                        <div class="notif-text">${notif.text}</div>
-                        <div class="notif-time">${notif.time}</div>
-                    </div>
-                    ${notif.unread ? '<div class="notif-dot"></div>' : ''}
-                </div>
-            `).join('');
-            updateBadge();
-        }
-
-        function markAsRead(id) {
-            const notif = notifications.find(n => n.id === id);
-            if (notif) notif.unread = false;
-            renderNotifications();
-        }
-
-        function updateBadge() {
-            const count = notifications.filter(n => n.unread).length;
-            const badge = document.getElementById('badge');
-            if (count > 0) {
-                badge.textContent = count;
-                badge.style.display = 'block';
-            } else {
-                badge.style.display = 'none';
-            }
-        }
-
-        // Fermer le panneau si on clique ailleurs
-        document.addEventListener('click', (e) => {
-            const panel = document.getElementById('notifPanel');
-            const btn = document.querySelector('.notif-btn');
-            if (!panel.contains(e.target) && !btn.contains(e.target)) {
-                panel.classList.remove('active');
-            }
-        });
-
-        renderNotifications();
-    </script>
-
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panneau de Notifications</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 p-5">
-
-    <div class="bg-white p-3 shadow-md flex justify-between items-center relative">
-        <h2 class="text-xl font-semibold">Mon Site</h2>
-        <button class="bg-gray-200 hover:bg-gray-300 w-10 h-10 rounded-full relative flex items-center justify-center transition" onclick="toggleNotif()">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
-            </svg>
-            <span class="absolute -top-1 -right-1 bg-red-600 text-white rounded-full px-1.5 py-0.5 text-xs font-bold" id="badge">5</span>
-        </button>
-    </div>
-
-    <div class="hidden absolute top-16 right-5 w-96 max-h-[500px] bg-white rounded-lg shadow-xl flex-col z-50" id="notifPanel">
-        <div class="p-4 border-b border-gray-200">
-            <h3 class="text-2xl font-bold">Notifications</h3>
-        </div>
-        <div class="overflow-y-auto max-h-96 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100" id="notifList"></div>
-    </div>
-
-    <script>
-        const notifications = [
-            { id: 1, user: 'JD', text: 'Jean Dupont a aimé votre publication', time: 'Il y a 5 min', unread: true },
-            { id: 2, user: 'ML', text: 'Marie Lambert a commenté votre photo', time: 'Il y a 1h', unread: true },
-            { id: 3, user: 'PB', text: 'Pierre Bernard vous a envoyé un message', time: 'Il y a 2h', unread: true },
-            { id: 4, user: 'SD', text: 'Sophie Durand a partagé votre article', time: 'Il y a 3h', unread: true },
-            { id: 5, user: 'AM', text: 'Alexandre Martin a réagi à votre commentaire', time: 'Il y a 5h', unread: true },
-            { id: 6, user: 'CL', text: 'Camille Leroy vous suit maintenant', time: 'Hier', unread: false },
-            { id: 7, user: 'TB', text: 'Thomas Blanc a mentionné votre nom', time: 'Hier', unread: false },
-            { id: 8, user: 'EM', text: 'Emma Moreau a aimé votre commentaire', time: 'Il y a 2 jours', unread: false }
-        ];
-
-        function toggleNotif() {
-            const panel = document.getElementById('notifPanel');
-            panel.classList.toggle('hidden');
-            panel.classList.toggle('flex');
-        }
-
-        function renderNotifications() {
-            const list = document.getElementById('notifList');
-            list.innerHTML = notifications.map(notif => `
-                <div class="p-3 border-b border-gray-200 cursor-pointer hover:bg-gray-100 transition flex gap-3 ${notif.unread ? 'bg-blue-50 hover:bg-blue-100' : ''}" onclick="markAsRead(${notif.id})">
-                    <div class="w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold flex-shrink-0">
-                        ${notif.user}
-                    </div>
-                    <div class="flex-1">
-                        <div class="text-sm text-gray-900 leading-5 mb-1">${notif.text}</div>
-                        <div class="text-xs text-gray-600">${notif.time}</div>
-                    </div>
-                    ${notif.unread ? '<div class="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>' : ''}
-                </div>
-            `).join('');
-            updateBadge();
-        }
-
-        function markAsRead(id) {
-            const notif = notifications.find(n => n.id === id);
-            if (notif) notif.unread = false;
-            renderNotifications();
-        }
-
-        function updateBadge() {
-            const count = notifications.filter(n => n.unread).length;
-            const badge = document.getElementById('badge');
-            if (count > 0) {
-                badge.textContent = count;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-        }
-
-        // Fermer le panneau si on clique ailleurs
-        document.addEventListener('click', (e) => {
-            const panel = document.getElementById('notifPanel');
-            const btn = e.target.closest('button');
-            if (!panel.contains(e.target) && !btn) {
-                panel.classList.add('hidden');
-                panel.classList.remove('flex');
-            }
-        });
-
-        renderNotifications();
+        
     </script>
 
 </body>
