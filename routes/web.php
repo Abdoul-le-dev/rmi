@@ -447,3 +447,7 @@ Route::get('/media/temp-url/{path}', [MediaController::class, 'preview'])
     Route::get('vip/parametre', function(){
         return view('vip.parametre');
     });
+
+    Route::get('vip/evenement', function(){
+        return view('vip.evenement');
+    });
