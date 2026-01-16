@@ -183,6 +183,8 @@ class CertificateController extends Controller
 
     public function makeCertificate($quizResultId)
     {
+        
+
         $user = auth()->user();
 
         $makeCertificate = new MakeCertificate();

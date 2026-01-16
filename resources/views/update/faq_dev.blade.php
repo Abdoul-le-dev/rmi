@@ -371,8 +371,8 @@
                                 <div>
                                     <ul id="menu-footer-menu" class="footer-nav-menu">
                                         <li><a href="#">Coaching Privé</a></li>
-                                        <li><a href="#">politique de confidentialité</a></li>
-                                        <li><a href="#">Conditions Générales d'Utilisation</a></li>
+                                           <li><a href="/privacy">Politique de Confidentialité</a></li>
+                                        <li><a href="/cgu">Conditions Générales d'Utilisation</a></li>
                                         <li><a href="#">Contact</a></li>
                                     </ul>
                                 </div>

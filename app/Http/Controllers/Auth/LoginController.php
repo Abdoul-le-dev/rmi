@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class LoginController extends Controller
 {
@@ -276,8 +278,10 @@ class LoginController extends Controller
         $checkLoginDeviceLimit = $this->checkLoginDeviceLimit($user);
         if ($checkLoginDeviceLimit != "ok") {
             $this->guard()->logout();
-            $request->session()->flush();
-            $request->session()->regenerate();
+            // $request->session()->flush();
+            $request->session()->invalidate();
+            // $request->session()->regenerate();
+            $request->session()->regenerateToken();
 
             return $this->sendMaximumActiveSessionResponse();
         }
@@ -299,20 +303,32 @@ class LoginController extends Controller
         }
     }
 
+    // private function checkLoginDeviceLimit($user)
+    // {
+    //     $securitySettings = getGeneralSecuritySettings();
+
+    //     if (!empty($securitySettings) and !empty($securitySettings['login_device_limit'])) {
+    //         $limitCount = !empty($securitySettings['number_of_allowed_devices']) ? $securitySettings['number_of_allowed_devices'] : 1;
+
+    //         $count = $user->logged_count;
+
+    //         if ($count >= $limitCount) {
+    //             return "no";
+    //         }
+    //     }
+
+    //     return 'ok';
+    // }
     private function checkLoginDeviceLimit($user)
     {
-        $securitySettings = getGeneralSecuritySettings();
+        $limit = 2;
+        $lifetime = config('session.lifetime') * 60;
+        $threshold = now()->subSeconds($lifetime)->timestamp;
+        $activeSessionsCount = DB::table('laravel_sessions')
+            ->where('user_id', $user->id)
+            ->where('last_activity', '>=', $threshold)
+            ->count();
 
-        if (!empty($securitySettings) and !empty($securitySettings['login_device_limit'])) {
-            $limitCount = !empty($securitySettings['number_of_allowed_devices']) ? $securitySettings['number_of_allowed_devices'] : 1;
-
-            $count = $user->logged_count;
-
-            if ($count >= $limitCount) {
-                return "no";
-            }
-        }
-
-        return 'ok';
+        return $activeSessionsCount >= $limit ? 'no' : 'ok';
     }
 }

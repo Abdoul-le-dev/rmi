@@ -32,11 +32,13 @@ use App\Models\OrderItem;
 use App\Models\PaymentChannel;
 use App\Models\Subscribe;
 use App\Models\Promo;
+use App\Services\CloudFrontUrlSigner;
 
 class WebinarController extends Controller
 {
     use CheckContentLimitationTrait;
     use InstallmentsTrait;
+  
 
     public function course($slug, $justReturnData = false)
     {
@@ -458,7 +460,7 @@ class WebinarController extends Controller
                 }
 
                 if ($canAccess) {
-                    
+
                     if (preg_match('#^\d+/uploads/.+$#', $file->file)) {
                         $fileName = str_replace(' ', '-', $file->title);
                         $fileName = str_replace('.', '-', $fileName);
@@ -546,54 +548,92 @@ class WebinarController extends Controller
 
     public function getFilePath(Request $request)
     {
-        $this->validate($request, [
-            'file_id' => 'required'
-        ]);
 
-        $file_id = $request->get('file_id');
 
-        $file = File::where('id', $file_id)
-            ->first();
+        try {
+            $this->validate($request, [
+                'file_id' => 'required'
+            ]);
+            $cloudFrontSigner = app(CloudFrontUrlSigner::class);
 
-        if (!empty($file)) {
-            $webinar = Webinar::where('id', $file->webinar_id)
-                ->where('status', 'active')
-                ->with([
-                    'files' => function ($query) {
-                        $query->select('id', 'webinar_id', 'file_type')
-                            ->where('status', 'active')
-                            ->orderBy('order', 'asc');
-                    }
-                ])
+            $file_id = $request->get('file_id');
+
+            $file = File::where('id', $file_id)
                 ->first();
 
-            if (!empty($webinar)) {
-                $canAccess = true;
+            if (!empty($file)) {
+                $webinar = Webinar::where('id', $file->webinar_id)
+                    ->where('status', 'active')
+                    ->with([
+                        'files' => function ($query) {
+                            $query->select('id', 'webinar_id', 'file_type')
+                                ->where('status', 'active')
+                                ->orderBy('order', 'asc');
+                        }
+                    ])
+                    ->first();
 
-                if ($file->accessibility == 'paid') {
-                    $canAccess = $webinar->checkUserHasBought();
-                }
+                if (!empty($webinar)) {
+                    $canAccess = true;
 
-                if ($canAccess) {
-                    $path = $file->file;
-
-                    if ($file->storage == 'upload') {
-                        $path = url("/course/$webinar->slug/file/$file->id/play");
-                    } elseif ($file->storage == 'upload_archive') {
-                        $path = url("/course/$webinar->slug/file/$file->id/showHtml");
+                    if ($file->accessibility == 'paid') {
+                        $canAccess = $webinar->checkUserHasBought();
                     }
 
-                    return response()->json([
-                        'code' => 200,
-                        'storage' => $file->storage,
-                        'path' => $path,
-                        'storageService' => $file->storage
-                    ], 200);
+                    if ($canAccess) {
+                        $path = $file->file;
+
+                        if ($file->storage == 'upload') {
+                            $path = url("/course/$webinar->slug/file/$file->id/play");
+                        } elseif ($file->storage == 'upload_archive') {
+                            $path = url("/course/$webinar->slug/file/$file->id/showHtml");
+                        }
+                        $signedCookies = $cloudFrontSigner->getSignedCookie();
+
+                        $response =  response()->json([
+                            'code' => 200,
+                            'storage' => $file->storage,
+                            'path' => $path,
+                            'storageService' => $file->storage,
+                            'cloudFrontDomain' => config('services.cloudfront.domain'),
+                            'cookiesData' => $signedCookies
+                        ]);
+
+                        foreach ($signedCookies as $name => $value) {
+
+                            $cookie = cookie(
+                                $name,                          // name
+                                $value,                         // value
+                                config('services.cloudfront.url_expiration') / 60, // minutes
+                                '/',                            // path
+                                config('services.cloudfront.cookie_domain'),         // domain
+                                true,                           // secure (HTTPS)
+                                false,                          // httpOnly (false pour debug)
+                                false,                          // raw
+                                'none'                          // sameSite = CRITIQUE!
+                            );
+
+
+                            $response->withCookie($cookie);
+
+                            return $response;
+                        }
+                    }
                 }
             }
-        }
 
-        abort(403);
+            abort(403);
+        } catch (\Exception $e) {
+            \Log::error('getFilePath error', [
+    'file_id' => $request->file_id,
+    'exception' => $e->getMessage()
+]);
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ], 500);
+        }
     }
 
     public function playFile($slug, $file_id)

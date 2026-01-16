@@ -201,7 +201,7 @@ return [
         
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        Mews\Captcha\CaptchaServiceProvider::class,
+        Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
         Jorenvh\Share\Providers\ShareServiceProvider::class,
         //KingFlamez\Rave\RaveServiceProvider::class,
 
@@ -226,7 +226,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'Captcha' => Mews\Captcha\Facades\Captcha::class,
+        'NoCaptcha' => Anhskohbo\NoCaptcha\Facades\NoCaptcha::class,
         'Share' => Jorenvh\Share\ShareFacade::class,
         //'Rave' => KingFlamez\Rave\Facades\Rave::class,
         'Redsys'    => Ssheduardo\Redsys\Facades\Redsys::class,

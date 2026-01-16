@@ -43,7 +43,7 @@ return [
     'select_account_type' => 'Selectionnez le type de compte',
     'account_id' => 'Compte ID',
     'iban' => 'IBAN',
-    'identity_scan' => 'Identity scan',
+    'identity_scan' => 'Scan d\'identité',
     'address' => 'Adresse',
 
     'charge_account' => 'Compte Wallet',
@@ -78,7 +78,8 @@ return [
     'days_remained' => 'Jours restants',
     'select_a_subscribe_plan' => 'Sélectionnez un plan abonnement',
     'subcribe_no_result' => 'Vous n\'avez aucun plan d\'abonnement actif!',
-    'subcribe_no_result_hint' => 'You can choose a subscription plan from the following list and enroll in courses.',
+    'subcribe_no_result_hint' => 'Vous pouvez choisir un plan d\'abonnement dans la liste ci-dessous et vous inscrire aux cours.',
+
 
     'webinar' => 'Cours',
     'Meeting' => 'Réunion',

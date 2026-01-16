@@ -1,4 +1,4 @@
-@extends(getTemplate().'.layouts.app')
+@extends(getTemplate() . '.layouts.app')
 
 @push('styles_top')
     <link rel="stylesheet" href="/assets/default/vendors/select2/select2.min.css">
@@ -26,98 +26,108 @@
                     <form method="post" action="/register" class="mt-35">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-                        @if(!empty($selectRolesDuringRegistration) and count($selectRolesDuringRegistration))
+                        @if (!empty($selectRolesDuringRegistration) and count($selectRolesDuringRegistration))
                             <div class="form-group">
                                 <label class="input-label">{{ trans('financial.account_type') }}</label>
 
                                 <div class="d-flex align-items-center wizard-custom-radio mt-5">
                                     <div class="wizard-custom-radio-item flex-grow-1">
-                                        <input type="radio" name="account_type" value="user" id="role_user" class="" checked>
-                                        <label class="font-12 cursor-pointer px-15 py-10" for="role_user">{{ trans('update.role_user') }}</label>
+                                        <input type="radio" name="account_type" value="user" id="role_user"
+                                            class="" checked>
+                                        <label class="font-12 cursor-pointer px-15 py-10"
+                                            for="role_user">{{ trans('update.role_user') }}</label>
                                     </div>
 
-                                    @foreach($selectRolesDuringRegistration as $selectRole)
+                                    @foreach ($selectRolesDuringRegistration as $selectRole)
                                         <div class="wizard-custom-radio-item flex-grow-1">
-                                            <input type="radio" name="account_type" value="{{ $selectRole }}" id="role_{{ $selectRole }}" class="">
-                                            <label class="font-12 cursor-pointer px-15 py-10" for="role_{{ $selectRole }}">{{ trans('update.role_'.$selectRole) }}</label>
+                                            <input type="radio" name="account_type" value="{{ $selectRole }}"
+                                                id="role_{{ $selectRole }}" class="">
+                                            <label class="font-12 cursor-pointer px-15 py-10"
+                                                for="role_{{ $selectRole }}">{{ trans('update.role_' . $selectRole) }}</label>
                                         </div>
                                     @endforeach
                                 </div>
                             </div>
                         @endif
 
-                        @if($registerMethod == 'mobile')
+                        @if ($registerMethod == 'mobile')
                             @include('web.default.auth.register_includes.mobile_field')
 
-                            @if($showOtherRegisterMethod)
-                                @include('web.default.auth.register_includes.email_field',['optional' => true])
+                            @if ($showOtherRegisterMethod)
+                                @include('web.default.auth.register_includes.email_field', [
+                                    'optional' => true,
+                                ])
                             @endif
                         @else
                             @include('web.default.auth.register_includes.email_field')
 
-                            @if($showOtherRegisterMethod)
-                                @include('web.default.auth.register_includes.mobile_field',['optional' => true])
+                            @if ($showOtherRegisterMethod)
+                                @include('web.default.auth.register_includes.mobile_field', [
+                                    'optional' => true,
+                                ])
                             @endif
                         @endif
 
                         <div class="form-group">
                             <label class="input-label" for="full_name">{{ trans('auth.full_name') }}:</label>
-                            <input name="full_name" type="text" value="{{ old('full_name') }}" class="form-control @error('full_name') is-invalid @enderror">
+                            <input name="full_name" type="text" value="{{ old('full_name') }}"
+                                class="form-control @error('full_name') is-invalid @enderror">
                             @error('full_name')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
 
                         <div class="form-group">
                             <label class="input-label" for="password">{{ trans('auth.password') }}:</label>
                             <input name="password" type="password"
-                                   class="form-control @error('password') is-invalid @enderror" id="password"
-                                   aria-describedby="passwordHelp">
+                                class="form-control @error('password') is-invalid @enderror" id="password"
+                                aria-describedby="passwordHelp">
                             @error('password')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
 
                         <div class="form-group ">
                             <label class="input-label" for="confirm_password">{{ trans('auth.retype_password') }}:</label>
                             <input name="password_confirmation" type="password"
-                                   class="form-control @error('password_confirmation') is-invalid @enderror" id="confirm_password"
-                                   aria-describedby="confirmPasswordHelp">
+                                class="form-control @error('password_confirmation') is-invalid @enderror"
+                                id="confirm_password" aria-describedby="confirmPasswordHelp">
                             @error('password_confirmation')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
 
                         <div class="form-group">
                             <label class="input-label" for="mobile">WhatsApp:</label><br>
-                            <input name="mobile" class="form-control @error('mobile') is-invalid @enderror" type="tel" id="mobile">
+                            <input name="mobile" class="form-control @error('mobile') is-invalid @enderror" type="tel"
+                                id="mobile">
                             <input type="hidden" name="country_code" id="country_code">
                             @error('mobile')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-
-                        <!-- @if($showCertificateAdditionalInRegister)
-                            <div class="form-group">
-                                <label class="input-label" for="certificate_additional">{{ trans('update.certificate_additional') }}</label>
-                                <input name="certificate_additional" id="certificate_additional" class="form-control @error('certificate_additional') is-invalid @enderror"/>
-                                @error('certificate_additional')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
-                                @enderror
-                            </div>
-                        @endif -->
+                            @enderror
+                        </div>
 
-                        @if(getFeaturesSettings('timezone_in_register'))
+                        <!-- @if ($showCertificateAdditionalInRegister)
+    <div class="form-group">
+                                    <label class="input-label" for="certificate_additional">{{ trans('update.certificate_additional') }}</label>
+                                    <input name="certificate_additional" id="certificate_additional" class="form-control @error('certificate_additional') is-invalid @enderror"/>
+                                    @error('certificate_additional')
+        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+    @enderror
+                                </div>
+    @endif -->
+
+                        @if (getFeaturesSettings('timezone_in_register'))
                             @php
                                 $selectedTimezone = getGeneralSettings('default_time_zone');
                             @endphp
@@ -125,82 +135,101 @@
                             <div class="form-group">
                                 <label class="input-label">{{ trans('update.timezone') }}</label>
                                 <select name="timezone" class="form-control select2" data-allow-clear="false">
-                                    <option value="" {{ empty($user->timezone) ? 'selected' : '' }} disabled>{{ trans('public.select') }}</option>
-                                    @foreach(getListOfTimezones() as $timezone)
-                                        <option value="{{ $timezone }}" @if($selectedTimezone == $timezone) selected @endif>{{ $timezone }}</option>
+                                    <option value="" {{ empty($user->timezone) ? 'selected' : '' }} disabled>
+                                        {{ trans('public.select') }}</option>
+                                    @foreach (getListOfTimezones() as $timezone)
+                                        <option value="{{ $timezone }}"
+                                            @if ($selectedTimezone == $timezone) selected @endif>{{ $timezone }}</option>
                                     @endforeach
                                 </select>
                                 @error('timezone')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
                                 @enderror
                             </div>
                         @endif
 
-                        @if(!empty($referralSettings) and $referralSettings['status'])
+                        @if (!empty($referralSettings) and $referralSettings['status'])
                             <div class="form-group ">
-                                <label class="input-label" for="referral_code">{{ trans('financial.referral_code') }}:</label>
+                                <label class="input-label"
+                                    for="referral_code">{{ trans('financial.referral_code') }}:</label>
                                 <input name="referral_code" type="text"
-                                       class="form-control @error('referral_code') is-invalid @enderror" id="referral_code"
-                                       value="{{ !empty($referralCode) ? $referralCode : old('referral_code') }}"
-                                       aria-describedby="confirmPasswordHelp">
+                                    class="form-control @error('referral_code') is-invalid @enderror" id="referral_code"
+                                    value="{{ !empty($referralCode) ? $referralCode : old('referral_code') }}"
+                                    aria-describedby="confirmPasswordHelp">
                                 @error('referral_code')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
                                 @enderror
                             </div>
                         @endif
 
                         <div class="js-form-fields-card">
-                            @if(!empty($formFields))
+                            @if (!empty($formFields))
                                 {!! $formFields !!}
                             @endif
                         </div>
 
-                        @if(!empty(getGeneralSecuritySettings('captcha_for_register')))
+                        @if (!empty(getGeneralSecuritySettings('captcha_for_register')))
                             @include('web.default.includes.captcha_input')
                         @endif
 
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" name="term" value="1" {{ (!empty(old('term')) and old('term') == '1') ? 'checked' : '' }} class="custom-control-input @error('term') is-invalid @enderror" id="term">
+                            <input type="checkbox" name="term" value="1"
+                                {{ (!empty(old('term')) and old('term') == '1') ? 'checked' : '' }}
+                                class="custom-control-input @error('term') is-invalid @enderror" id="term">
                             <label class="custom-control-label font-14" for="term">{{ trans('auth.i_agree_with') }}
-                                <a href="pages/terms" target="_blank" class="text-secondary font-weight-bold font-14">{{ trans('auth.terms_and_rules') }}</a>
+                                <a href="pages/terms" target="_blank"
+                                    class="text-secondary font-weight-bold font-14">{{ trans('auth.terms_and_rules') }}</a>
                             </label>
 
                             @error('term')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
                         @error('term')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
 
                         <div class="custom-control custom-checkbox mt-3">
-                            <input type="checkbox" name="news" value="1" {{ (!empty(old('news')) and old('news') == '1') ? 'checked' : '' }} class="custom-control-input @error('news') is-invalid @enderror" id="news">
-                            <label class="custom-control-label font-14" for="news">{{ trans('auth.i_agree_with_newsletter') }}
-                                <span class="text-secondary font-weight-bold font-14">{{ trans('auth.newsletter') }}</span> {{ trans('auth.rmi_newsletter') }}  <span class="text-secondary font-weight-bold font-14">{{ trans('auth.newsletter_email') }}</span>
+                            <input type="checkbox" name="news" value="1"
+                                {{ (!empty(old('news')) and old('news') == '1') ? 'checked' : '' }}
+                                class="custom-control-input @error('news') is-invalid @enderror" id="news">
+                            <label class="custom-control-label font-14"
+                                for="news">{{ trans('auth.i_agree_with_newsletter') }}
+                                <span
+                                    class="text-secondary font-weight-bold font-14">{{ trans('auth.newsletter') }}</span>
+                                {{ trans('auth.rmi_newsletter') }} <span
+                                    class="text-secondary font-weight-bold font-14">{{ trans('auth.newsletter_email') }}</span>
                                 {{-- <a href="#" target="_blank" class="text-secondary font-weight-bold font-14">{{ trans('auth.terms_and_rules') }}</a> --}}
                             </label>
 
                             @error('news')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
                         @error('news')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
 
-                        <button type="submit" class="btn btn-primary btn-block mt-20">{{ trans('auth.signup') }}</button>
+                        {!! NoCaptcha::display() !!}
+
+                        @error('g-recaptcha-response')
+                            <span class="text-red-500">{{ $message }}</span>
+                        @enderror
+
+                        <button type="submit"
+                            class="btn btn-primary btn-block mt-20">{{ trans('auth.signup') }}</button>
                     </form>
 
                     <div class="text-center mt-20">
@@ -224,41 +253,42 @@
     <script src="/assets/default/js/parts/register.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/intlTelInput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/utils.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var input = document.querySelector("#mobile");
-    var countryCodeInput = document.querySelector("#country_code");
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var input = document.querySelector("#mobile");
+            var countryCodeInput = document.querySelector("#country_code");
 
-    // Initialize intl-tel-input
-    var iti = window.intlTelInput(input, {
-        initialCountry: "US", // Set default country code
-        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/utils.js"
-    });
+            // Initialize intl-tel-input
+            var iti = window.intlTelInput(input, {
+                initialCountry: "US", // Set default country code
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/utils.js"
+            });
 
-    // Update hidden input with the selected country code on country change
-    input.addEventListener("countrychange", function() {
-        var selectedCountryData = iti.getSelectedCountryData();
-        countryCodeInput.value = selectedCountryData.dialCode;
-    });
+            // Update hidden input with the selected country code on country change
+            input.addEventListener("countrychange", function() {
+                var selectedCountryData = iti.getSelectedCountryData();
+                countryCodeInput.value = selectedCountryData.dialCode;
+            });
 
-    // Handle form submission
-    document.querySelector('form').addEventListener('submit', function(event) {
-        // Prevent the default form submission
-        event.preventDefault();
+            // Handle form submission
+            document.querySelector('form').addEventListener('submit', function(event) {
+                // Prevent the default form submission
+                event.preventDefault();
 
-        // Get the full international number
-        var fullNumber = iti.getNumber();
+                // Get the full international number
+                var fullNumber = iti.getNumber();
 
-        // Set the input value to the full number
-        input.value = fullNumber;
+                // Set the input value to the full number
+                input.value = fullNumber;
 
-        // Submit the form
-        this.submit();
-    });
+                // Submit the form
+                this.submit();
+            });
 
-    // Trigger the countrychange event manually to set the initial country code
-    var event = new Event('countrychange');
-    input.dispatchEvent(event);
-});
-</script>
+            // Trigger the countrychange event manually to set the initial country code
+            var event = new Event('countrychange');
+            input.dispatchEvent(event);
+        });
+    </script>
 @endpush

@@ -24,8 +24,8 @@ return [
     'error_saving_time' => 'Erreur lors de l\'enregistrement de temps',
     'note_to_time_must_greater_from_time' => 'L\'heure de fin doit être supérieure à l\'heure de début.',
     'error_times' => 'Erreur de temps',
-    'success_save_time' => 'Plage horaire enregistré avec succès',
-    'success_delete_time' => 'Plage horaire supprimé avec succès',
+    'success_save_time' => 'Plage horaire enregistrée avec succès',
+    'success_delete_time' => 'Plage horaire supprimée avec succès',
     'error_delete_time' => 'Erreur lors de la suppression de l\'heure',
     'save_meeting_setting_success' => 'Opération effectuée avec succès.',
 

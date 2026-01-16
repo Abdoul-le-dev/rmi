@@ -1226,7 +1226,7 @@
             <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/financial/purchase-model*', false))) ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fas fa-cart-plus"></i>
-                    <span>{{ trans('admin/main.purchase_module') }}</span>
+                    <span>{{ trans('admin/main.subscribe_packages') }}</span>
                 </a>
                 <ul class="dropdown-menu">
                     <li class="{{ (request()->is(getAdminPanelUrl('/financial/purchase-model', false))) ? 'active' : '' }}">

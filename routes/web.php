@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\CourseVideoController;
 use App\Http\Controllers\MediaController;
+use App\Services\CloudFrontUrlSigner;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -101,6 +103,8 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
      Route::get('/communaute', 'update_landing_page@communaute');
     Route::get('/faq', 'update_landing_page@faq_dev');
     Route::get('/instructeurs', 'update_landing_page@instructeurs');
+    Route::get('/privacy', 'update_landing_page@privacy');
+    Route::get('/cgu', 'update_landing_page@cgu');
     #Route::get('/', 'update_landing_page@index');
 
     //Route::get('/', function () {
@@ -421,13 +425,26 @@ Route::get('/media/temp-url/{path}', [MediaController::class, 'preview'])
     ->where('path', '.*')
     ->name('media.preview');
 
-// routes/web.php
-// Route::get('/media/temp-url/{path}', function($path) {
-//     $temporaryUrl = \App\Helpers\S3Helper::getTemporaryUrl($path, 60);
-    
-//     if (!$temporaryUrl) {
-//         return response()->json(['error' => 'File not found'], 404);
-//     }
-    
-//     return response()->json(['url' => $temporaryUrl]);
-// })->where('path', '.*')->name('media.temp-url');
+
+Route::get('/videos/{video}', [CourseVideoController::class, 'show']);
+
+
+Route::get('/test-cloudfront', function (CloudFrontUrlSigner $signer) {
+    try {
+        $signedUrl = $signer->getSignedUrl('image.png');
+        
+        return response()->json([
+            'success' => true,
+            'signed_url' => $signedUrl,
+            'message' => 'URL signée générée avec succès!'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage()
+        ]);
+    }
+});
+
+
+Route::get('/player/test-cloudfront-view', [CourseVideoController::class, 'testCloudFrontCookies']);

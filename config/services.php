@@ -51,4 +51,12 @@ return [
         'industry_type' => env('PAYTM_INDUSTRY_TYPE'),
     ],
 
+    'cloudfront' => [
+        'domain' => env('CLOUDFRONT_DOMAIN', 'media.societedesbots.com'),
+        'key_pair_id' => env('CLOUDFRONT_KEY_PAIR_ID'),
+        'private_key_path' => env('CLOUDFRONT_PRIVATE_KEY_PATH'),
+        'url_expiration' => env('CLOUDFRONT_URL_EXPIRATION', 3600),
+        'cookie_domain' => env('CLOUDFRONT_COOKIE_DOMAIN', '.societedesbots.com'),
+    ],
+
 ];

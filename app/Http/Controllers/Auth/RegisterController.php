@@ -103,12 +103,13 @@ class RegisterController extends Controller
             'full_name' => 'required|string|min:3',
             'password' => 'required|string|min:6|confirmed',
             'password_confirmation' => 'required|same:password',
-            'referral_code' => 'nullable|exists:affiliates_codes,code'
+            'referral_code' => 'nullable|exists:affiliates_codes,code',
+            'g-recaptcha-response' => 'required|captcha',
         ];
 
-        if (!empty(getGeneralSecuritySettings('captcha_for_register'))) {
-            $rules['captcha'] = 'required|captcha';
-        }
+        // if (!empty(getGeneralSecuritySettings('captcha_for_register'))) {
+        //     $rules['captcha'] = 'required|captcha';
+        // }
 
         return Validator::make($data, $rules);
     }

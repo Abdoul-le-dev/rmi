@@ -12,38 +12,84 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class MakeCertificate
 {
+    // public function makeQuizCertificate($quizResult)
+    // {
+    //     $template = CertificateTemplate::where('status', 'publish')
+    //         ->where('type', 'quiz')
+    //         ->first();
+
+    //     if (!empty($template)) {
+    //         $quiz = $quizResult->quiz;
+    //         $user = $quizResult->user;
+
+    //         $userCertificate = $this->saveQuizCertificate($user, $quiz, $quizResult);
+
+    //         $body = $this->makeBody(
+    //             $template,
+    //             $userCertificate,
+    //             $user,
+    //             $template->body,
+    //             $quiz->webinar ? $quiz->webinar->title : '-',
+    //             $quizResult->user_grade,
+    //             $quiz->webinar->teacher->id,
+    //             $quiz->webinar->teacher->full_name,
+    //             $quiz->webinar->duration);
+
+    //         $data = [
+    //             'body' => $body
+    //         ];
+
+    //         $html = (string)view()->make('admin.certificates.create_template.show_certificate', $data);
+    //         return $this->sendToApi($userCertificate, $html);
+    //     }
+
+    //     abort(404);
+    // }
+
+
+
+
     public function makeQuizCertificate($quizResult)
     {
-        $template = CertificateTemplate::where('status', 'publish')
-            ->where('type', 'quiz')
-            ->first();
 
-        if (!empty($template)) {
-            $quiz = $quizResult->quiz;
-            $user = $quizResult->user;
 
-            $userCertificate = $this->saveQuizCertificate($user, $quiz, $quizResult);
+        $quiz = $quizResult->quiz;
+        $user = $quizResult->user;
 
-            $body = $this->makeBody(
-                $template,
-                $userCertificate,
-                $user,
-                $template->body,
-                $quiz->webinar ? $quiz->webinar->title : '-',
-                $quizResult->user_grade,
-                $quiz->webinar->teacher->id,
-                $quiz->webinar->teacher->full_name,
-                $quiz->webinar->duration);
-
-            $data = [
-                'body' => $body
-            ];
-
-            $html = (string)view()->make('admin.certificates.create_template.show_certificate', $data);
-            return $this->sendToApi($userCertificate, $html);
+        if (!$quiz || !$user) {
+            abort(404);
         }
+        $userCertificate = $this->saveQuizCertificate($user, $quiz, $quizResult);
 
-        abort(404);
+        $fileName = 'certificate_' . $userCertificate->id . '.pdf';
+        $path = auth()->id() . '/certificates/';
+        $filePath =  $path . $fileName;
+
+        $pdf = Pdf::loadView('certificat.template', [
+            'user' => $user,
+            'userCertificate'=> $userCertificate,
+        ]);
+
+
+
+        // Storage::disk('s3')->put(
+        //     $filePath,
+        //     $pdf->output(),
+        //     ['ContentType' => 'application/pdf']
+        // );
+
+        // return redirect(
+        //     Storage::disk('s3')->temporaryUrl(
+        //         $filePath,
+        //         now()->addMinutes(5)
+        //     )
+        // );
+
+        // Sauvegarde du PDF
+        Storage::disk('public')->put($filePath, $pdf->output());
+
+        // Téléchargement automatique
+        return Storage::disk('public')->download($filePath, $fileName);
     }
 
     public function saveQuizCertificate($user, $quiz, $quizResult)
@@ -176,7 +222,8 @@ class MakeCertificate
                 null,
                 $course->teacher->id,
                 $course->teacher->full_name,
-                $course->duration);
+                $course->duration
+            );
 
             $data = [
                 'body' => $body

@@ -36,5 +36,15 @@ class update_landing_page extends Controller
         return view("update.a_propos");
     }
 
+     public function privacy(Request $request)
+    {
+        return view("update.privacy");
+    }
+
+     public function cgu(Request $request)
+    {
+        return view("update.cgu");
+    }
+
     
 }

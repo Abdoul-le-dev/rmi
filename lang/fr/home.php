@@ -22,8 +22,8 @@ return [
 'skillful_teachers' => 'Instructeurs qualifiés',
 'skillful_teachers_hint' => 'Commencez à apprendre avec des instructeurs expérimentés.',
 
-'live_classes' => 'Cours en direct',
-'live_classes_hint' => 'Améliorez vos compétences grâce à des cours en direct.',
+'live_classes' => 'Live Classes',
+'live_classes_hint' => 'Améliorez vos compétences grâce à des Live Classes.',
 
 'happy_students' => 'Étudiants satisfaits',
 'happy_students_hint' => 'Inscrits à nos cours et ont amélioré leurs compétences.',
