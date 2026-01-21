@@ -1,0 +1,614 @@
+/* ============================================
+   POST CREATOR - CSS CUSTOM (Complément Tailwind)
+   ============================================ */
+
+/* Badge notifications */
+.post-badge {
+    position: absolute;
+    top: -0.25rem;
+    right: -0.25rem;
+    background: #4f46e5;
+    color: white;
+    font-size: 0.75rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Animations de dropdown */
+.post-dropdown {
+    animation: postSlideDown 0.3s ease-out;
+}
+
+@keyframes postSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Template cards effet ripple */
+.template-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.template-card::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.08);
+    transform: translate(-50%, -50%);
+    transition: width 0.5s, height 0.5s;
+}
+
+.template-card:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Compteur caractères - warning & danger */
+#char-counter.warning {
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+#char-counter.danger {
+    color: #ef4444;
+    font-weight: 700;
+    animation: postShake 0.5s;
+}
+
+@keyframes postShake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+    20%, 40%, 60%, 80% { transform: translateX(3px); }
+}
+
+/* Progress circle SVG */
+.post-progress-svg {
+    transform: rotate(-90deg);
+}
+
+.post-progress-circle {
+    stroke-dasharray: 87.96;
+    stroke-dashoffset: 87.96;
+    transition: stroke-dashoffset 0.3s ease, stroke 0.3s ease;
+}
+
+.post-progress-circle.warning {
+    stroke: #f59e0b;
+}
+
+.post-progress-circle.danger {
+    stroke: #ef4444;
+    animation: postPulseCircle 1s ease-in-out infinite;
+}
+
+@keyframes postPulseCircle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Suggestions dropdown */
+.post-suggestions {
+    animation: postFadeUp 0.2s ease-out;
+}
+
+@keyframes postFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.post-suggestions .suggestion-item {
+    padding: 0.625rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+}
+
+.post-suggestions .suggestion-item:hover {
+    background: #f9fafb;
+    transform: translateX(3px);
+}
+
+/* Media preview grid */
+.post-media-grid {
+    animation: postFadeIn 0.3s ease-out;
+}
+
+@keyframes postFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.post-media-grid > div {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.post-media-grid > div:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Drop zone */
+.post-dropzone.drag-over {
+    background: #e0e7ff;
+    border-color: #4f46e5;
+    transform: scale(1.02);
+}
+
+.post-dropzone-icon {
+    animation: postFloat 2s ease-in-out infinite;
+}
+
+@keyframes postFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Link preview */
+.post-link-preview {
+    animation: postSlideUp 0.3s ease-out;
+}
+
+@keyframes postSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.post-link-preview:hover .post-link-img {
+    transform: scale(1.05);
+    transition: transform 0.3s;
+}
+
+/* Upload progress */
+.post-upload-progress {
+    animation: postSlideDown 0.3s ease-out;
+}
+
+.post-upload-bar {
+    position: relative;
+}
+
+.post-upload-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: postShimmer 1.5s infinite;
+}
+
+@keyframes postShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Schedule background animation */
+.post-schedule::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+    animation: postRotate 10s linear infinite;
+    z-index: 0;
+}
+
+@keyframes postRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Emoji picker */
+.post-emoji-picker {
+    animation: postScaleIn 0.2s ease-out;
+}
+
+@keyframes postScaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.emoji-cat-active {
+    background: #4f46e5 !important;
+    color: white !important;
+    transform: scale(1.05);
+}
+
+.emoji-btn:hover {
+    transform: scale(1.25) rotate(5deg);
+}
+
+.emoji-btn:active {
+    transform: scale(1.1);
+}
+
+#recent-emojis button {
+    animation: postPopIn 0.3s ease-out backwards;
+}
+
+@keyframes postPopIn {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+#recent-emojis button:nth-child(1) { animation-delay: 0.05s; }
+#recent-emojis button:nth-child(2) { animation-delay: 0.1s; }
+#recent-emojis button:nth-child(3) { animation-delay: 0.15s; }
+#recent-emojis button:nth-child(4) { animation-delay: 0.2s; }
+#recent-emojis button:nth-child(5) { animation-delay: 0.25s; }
+
+/* Send button animations */
+.post-send-btn {
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.post-send-btn:hover {
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+    transform: translateY(-2px);
+}
+
+.post-send-btn:active {
+    transform: translateY(0);
+}
+
+.post-send-btn.sending {
+    cursor: not-allowed;
+    opacity: 0.9;
+}
+
+.post-send-btn.sending::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(45deg, #818cf8, #c084fc, #818cf8);
+    border-radius: 0.625rem;
+    opacity: 0.5;
+    filter: blur(8px);
+    animation: postGlowPulse 1.5s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes postGlowPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.8; }
+}
+
+#send-icon.spin-and-fly {
+    animation: postSpinFly 0.5s ease-in-out infinite;
+}
+
+@keyframes postSpinFly {
+    0% { transform: rotate(0deg) translateX(0); }
+    50% { transform: rotate(180deg) translateX(5px); }
+    100% { transform: rotate(360deg) translateX(0); }
+}
+
+.post-send-btn.propulsion-animation {
+    animation: postPropulsion 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes postPropulsion {
+    0% { transform: scale(1) translateX(0); }
+    30% { transform: scale(0.9) translateX(-5px); }
+    60% { transform: scale(1.1) translateX(10px); }
+    100% { transform: scale(1) translateX(0); }
+}
+
+.post-send-btn.shake-animation {
+    animation: postShake 0.5s ease-in-out;
+}
+
+/* Textarea aspiration */
+#post-textarea.aspiration-animation {
+    animation: postAspiration 0.6s ease-out forwards;
+}
+
+@keyframes postAspiration {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.98); opacity: 0.7; }
+    100% { transform: scale(0.95); opacity: 0.4; }
+}
+
+/* Particles */
+.post-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0;
+}
+
+.post-particles.particles-active .post-particle:nth-child(1) {
+    animation: postParticle1 0.8s ease-out;
+    top: 50%; left: 50%;
+}
+
+.post-particles.particles-active .post-particle:nth-child(2) {
+    animation: postParticle2 0.9s ease-out 0.05s;
+    top: 50%; left: 50%;
+}
+
+.post-particles.particles-active .post-particle:nth-child(3) {
+    animation: postParticle3 0.85s ease-out 0.1s;
+    top: 50%; left: 50%;
+}
+
+.post-particles.particles-active .post-particle:nth-child(4) {
+    animation: postParticle4 0.95s ease-out 0.15s;
+    top: 50%; left: 50%;
+}
+
+.post-particles.particles-active .post-particle:nth-child(5) {
+    animation: postParticle5 0.9s ease-out 0.2s;
+    top: 50%; left: 50%;
+}
+
+@keyframes postParticle1 {
+    0% { transform: translate(0, 0) scale(1); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translate(60px, -40px) scale(0); opacity: 0; }
+}
+
+@keyframes postParticle2 {
+    0% { transform: translate(0, 0) scale(1); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translate(70px, -20px) scale(0); opacity: 0; }
+}
+
+@keyframes postParticle3 {
+    0% { transform: translate(0, 0) scale(1); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translate(80px, -5px) scale(0); opacity: 0; }
+}
+
+@keyframes postParticle4 {
+    0% { transform: translate(0, 0) scale(1); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translate(70px, 10px) scale(0); opacity: 0; }
+}
+
+@keyframes postParticle5 {
+    0% { transform: translate(0, 0) scale(1); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translate(60px, 25px) scale(0); opacity: 0; }
+}
+
+/* Confetti */
+.post-confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    animation: postConfettiFall 3s ease-out forwards;
+}
+
+@keyframes postConfettiFall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(500px) rotate(720deg); opacity: 0; }
+}
+
+.post-confetti:nth-child(1) { background: #ef4444; left: 10%; animation-delay: 0s; }
+.post-confetti:nth-child(2) { background: #f59e0b; left: 20%; animation-delay: 0.1s; }
+.post-confetti:nth-child(3) { background: #10b981; left: 30%; animation-delay: 0.2s; }
+.post-confetti:nth-child(4) { background: #3b82f6; left: 40%; animation-delay: 0.3s; }
+.post-confetti:nth-child(5) { background: #8b5cf6; left: 50%; animation-delay: 0.4s; }
+.post-confetti:nth-child(6) { background: #ec4899; left: 60%; animation-delay: 0.5s; }
+.post-confetti:nth-child(7) { background: #f59e0b; left: 70%; animation-delay: 0.6s; }
+.post-confetti:nth-child(8) { background: #10b981; left: 80%; animation-delay: 0.7s; }
+
+/* Typing indicator */
+.post-typing {
+    animation: postFadeIn 0.3s ease-out;
+}
+
+.post-typing-dot {
+    animation: postTypingBounce 1.4s ease-in-out infinite;
+}
+
+.post-typing-dot:nth-child(1) { animation-delay: 0ms; }
+.post-typing-dot:nth-child(2) { animation-delay: 150ms; }
+.post-typing-dot:nth-child(3) { animation-delay: 300ms; }
+
+@keyframes postTypingBounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-8px); }
+}
+
+/* Toast notifications - DÉGRADÉ BLANC-VIOLET */
+.post-toast {
+    background: linear-gradient(135deg, #ffffff 0%, #f3e8ff 40%, #e9d5ff 100%);
+    color: #6b21a8;
+    padding: 0.875rem 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 30px rgba(109, 40, 217, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    animation: postToastSlideIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    position: relative;
+    overflow: hidden;
+}
+
+.post-toast::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%);
+}
+
+.post-toast::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+    animation: postToastShimmer 2s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes postToastSlideIn {
+    from {
+        transform: translateX(400px) scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes postToastShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.post-toast.removing {
+    animation: postToastSlideOut 0.4s ease-in forwards;
+}
+
+@keyframes postToastSlideOut {
+    from {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px) scale(0.9);
+        opacity: 0;
+    }
+}
+
+.post-toast i {
+    font-size: 1.25rem;
+    color: #8b5cf6;
+    animation: postToastIconPulse 2s ease-in-out infinite;
+}
+
+@keyframes postToastIconPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.post-toast.success {
+    background: linear-gradient(135deg, #ffffff 0%, #d1fae5 40%, #a7f3d0 100%);
+    color: #065f46;
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+.post-toast.success::before {
+    background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+}
+
+.post-toast.success i {
+    color: #10b981;
+}
+
+.post-toast.error {
+    background: linear-gradient(135deg, #ffffff 0%, #fee2e2 40%, #fecaca 100%);
+    color: #991b1b;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.post-toast.error::before {
+    background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+}
+
+.post-toast.error i {
+    color: #ef4444;
+}
+
+.post-toast.warning {
+    background: linear-gradient(135deg, #ffffff 0%, #fef3c7 40%, #fde68a 100%);
+    color: #92400e;
+    border-color: rgba(245, 158, 11, 0.2);
+}
+
+.post-toast.warning::before {
+    background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+}
+
+.post-toast.warning i {
+    color: #f59e0b;
+}
+
+/* Custom scrollbar */
+.post-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.post-scrollbar::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 10px;
+}
+
+.post-scrollbar::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 10px;
+    transition: background 0.2s;
+}
+
+.post-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #8b5cf6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .post-emoji-picker {
+        width: calc(100vw - 2rem);
+        max-width: 20rem;
+    }
+    
+    .post-toast {
+        max-width: calc(100vw - 2rem);
+    }
+}

@@ -119,8 +119,8 @@ if ('IntersectionObserver' in window) {
 function showNotification(message, type = 'info') {
     const toast = document.createElement('div');
     toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg text-white z-50 fade-in ${type === 'success' ? 'bg-green-500' :
-            type === 'error' ? 'bg-red-500' :
-                'bg-indigo-500'
+        type === 'error' ? 'bg-red-500' :
+            'bg-indigo-500'
         }`;
     toast.textContent = message;
 
@@ -169,9 +169,8 @@ function preloadImages() {
 
 //message vue
 
-function message_view()
-{
-    window.location.href ="vip/message"
+function message_view() {
+    window.location.href = "vip/message"
 }
 
 
@@ -187,4 +186,126 @@ if ('performance' in window) {
         const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
         console.log(`Page chargée en ${pageLoadTime}ms`);
     });
+}
+
+// Fonction pour déplacer le bouton cliqué en haut
+function moveToTop(clickedElement) {
+    const container = document.getElementById('sidebar-buttons');
+    const firstElement = container.firstElementChild;
+
+    // Si l'élément cliqué n'est pas déjà le premier
+    if (clickedElement !== firstElement) {
+        // Insérer l'élément cliqué avant le premier élément
+        container.insertBefore(clickedElement, firstElement);
+    }
+}
+
+// Tableau de fonctions pour générer différents sons de clic
+const clickSounds = [
+    // Son 1: Clic moderne et élégant
+    function (audioContext) {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(900, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(450, audioContext.currentTime + 0.08);
+
+        gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.08);
+
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.08);
+    },
+
+    // Son 2: Clic doux et raffiné
+    function (audioContext) {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.type = 'triangle';
+        oscillator.frequency.setValueAtTime(1200, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAt(600, audioContext.currentTime + 0.06);
+
+        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAt(0.01, audioContext.currentTime + 0.06);
+
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.06);
+    },
+
+    // Son 3: Clic tech et précis
+    function (audioContext) {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.type = 'square';
+        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAt(400, audioContext.currentTime + 0.05);
+
+        gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAt(0.01, audioContext.currentTime + 0.05);
+
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.05);
+    },
+
+    // Son 4: Clic subtil et premium
+    function (audioContext) {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAt(500, audioContext.currentTime + 0.07);
+
+        gainNode.gain.setValueAtTime(0.22, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAt(0.01, audioContext.currentTime + 0.07);
+
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.07);
+    },
+
+    // Son 5: Clic vif et énergique
+    function (audioContext) {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(1100, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAt(550, audioContext.currentTime + 0.09);
+
+        gainNode.gain.setValueAtTime(0.28, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAt(0.01, audioContext.currentTime + 0.09);
+
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.09);
+    }
+];
+
+// Fonction pour jouer un son aléatoire parmi les 5
+function playRandomClickSound() {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Choisir un son aléatoire parmi les 5
+    const randomIndex = Math.floor(Math.random() * clickSounds.length);
+    const selectedSound = clickSounds[randomIndex];
+
+    // Jouer le son sélectionné
+    selectedSound(audioContext);
 }

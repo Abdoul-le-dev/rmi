@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MediaController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ForumController;
 
 /*
 |--------------------------------------------------------------------------
@@ -432,9 +433,11 @@ Route::get('/media/temp-url/{path}', [MediaController::class, 'preview'])
 //     return response()->json(['url' => $temporaryUrl]);
 // })->where('path', '.*')->name('media.temp-url');
 
-    Route::get('vip', function(){
+Route::get('vip', function(){
         return view('vip.app');
     });
+
+Route::post('vip', [ForumController::class, 'new_index']);
 
     Route::get('vip/message', function(){
         return view('vip.message');

@@ -1,142 +1,321 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sessions - Groupes Trading</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes slideRight {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        .animate-slide-in { animation: slideIn 0.4s ease-out; }
-        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
-        .animate-scale-in { animation: scaleIn 0.3s ease-out; }
-        .animate-slide-right { animation: slideRight 0.3s ease-out; }
-        
-        @media (max-width: 768px) {
-            .sidebar { width: 100%; }
-            .chat-zone.mobile-hidden { display: none; }
-            .sidebar.mobile-hidden { display: none; }
-        }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        .comment-input:focus-within {
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-        }
-        
-        .like-btn:active {
-            transform: scale(0.9);
-        }
-        
-        .hover-lift:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-        }
-        
-        .gradient-text {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-    </style>
-</head>
-<body class="bg-gradient-to-br from-gray-50 to-gray-100 h-screen overflow-hidden">
-
-    <div class="flex h-screen">
-        <!-- Sidebar Navigation (Desktop) -->
-        <div class="hidden md:flex flex-col w-20 bg-white border-r border-gray-200 shadow-sm">
-            <div class="p-4 flex flex-col items-center gap-6">
-                <button class="p-3 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50 rounded-xl transition-all duration-300 group">
-                    <svg class="w-6 h-6 text-gray-600 group-hover:text-indigo-600 transition-colors" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
-                    </svg>
-                </button>
-                <button class="p-3 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50 rounded-xl transition-all duration-300 group">
-                    <svg class="w-6 h-6 text-gray-600 group-hover:text-indigo-600 transition-colors" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"/><path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"/>
-                    </svg>
-                </button>
-                <button class="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl relative shadow-lg shadow-indigo-200">
-                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
-                    </svg>
-                    <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full animate-pulse"></span>
-                </button>
-                <button class="p-3 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50 rounded-xl transition-all duration-300 relative group">
-                    <svg class="w-6 h-6 text-gray-600 group-hover:text-indigo-600 transition-colors" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
-                    </svg>
-                </button>
-                <button class="p-3 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50 rounded-xl transition-all duration-300 group mt-auto">
-                    <svg class="w-6 h-6 text-gray-600 group-hover:text-indigo-600 transition-colors" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.532 1.532 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.532 1.532 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
-                    </svg>
-                </button>
-            </div>
+<!-- Zone de création de post -->
+<div class="bg-white shadow-sm border border-gray-200 p-6 mb-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-4">
+        <div>
+            <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                Bienvenue Abdoulaye 👋 ? Que pensez-vous aujourd'hui ?
+            </h2>
+            <p class="text-xs text-gray-500 mt-1">Advertising ...</p>
         </div>
 
-        <!-- Liste des Sessions -->
-        <div class="sidebar w-full md:w-96 bg-white border-r border-gray-200 flex flex-col shadow-sm" id="sidebarSessions">
-            <!-- Header -->
-            <div class="p-4 border-b border-gray-200 bg-gradient-to-r from-white to-gray-50">
-                <div class="flex justify-between items-center mb-4">
-                    <h1 class="text-2xl font-bold gradient-text">Sessions</h1>
-                    <button class="p-2 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50 rounded-full transition-all duration-300">
-                        <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
-                        </svg>
-                    </button>
-                </div>
-                <!-- Barre de recherche -->
-                <div class="relative group">
-                    <input type="text" placeholder="Rechercher une session..." 
-                        class="w-full bg-gray-100 rounded-full pl-10 pr-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all duration-300">
-                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3 group-focus-within:text-indigo-500 transition-colors" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
-                    </svg>
-                </div>
-            </div>
+        <!-- Actions rapides -->
+        <div class="flex items-center gap-2">
+            <button type="button" onclick="toggleDrafts()" class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Brouillons">
+                <i class="fas fa-file-alt text-gray-600"></i>
+                <span id="draft-count" class="post-badge hidden">0</span>
+            </button>
 
-            <!-- Liste -->
-            <div class="flex-1 overflow-y-auto scrollbar-hide" id="sessionsList"></div>
-        </div>
+            <button type="button" onclick="toggleTemplates()" class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Templates">
+                <i class="fas fa-bookmark text-gray-600"></i>
+            </button>
 
-        <!-- Zone vide (état initial) -->
-        <div class="chat-zone flex-1 flex items-center justify-center" id="chatZone">
-            <div class="text-center max-w-md px-4 animate-fade-in">
-                <div class="mb-6 flex justify-center">
-                    <div class="w-32 h-32 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center shadow-lg">
-                        <svg class="w-16 h-16 text-indigo-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"/>
-                            <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"/>
-                        </svg>
-                    </div>
-                </div>
-                <h2 class="text-3xl font-bold text-gray-800 mb-3">Bienvenue sur vos Sessions</h2>
-                <p class="text-gray-500">
-                    Sélectionnez une session pour découvrir les publications et participer aux discussions
-                </p>
-            </div>
+            <button type="button" onclick="togglePreview()" class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Aperçu">
+                <i class="fas fa-eye text-gray-600"></i>
+            </button>
         </div>
     </div>
 
-    
+    <!-- Dropdown Brouillons -->
+    <div id="drafts-dropdown" class="post-dropdown hidden mb-4 bg-gray-50 rounded-lg p-4 border border-gray-200">
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="font-semibold text-gray-900 text-sm">Brouillons sauvegardés</h3>
+            <button onclick="clearAllDrafts()" class="text-xs text-red-600 hover:text-red-700 transition-colors">
+                <i class="fas fa-trash mr-1"></i>Tout supprimer
+            </button>
+        </div>
+        <div id="drafts-list" class="space-y-2 max-h-48 overflow-y-auto post-scrollbar"></div>
+    </div>
 
-</body>
-</html>
+    <!-- Dropdown Templates -->
+    <div id="templates-dropdown" class="post-dropdown hidden mb-4 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg p-4 border border-indigo-200">
+        <h3 class="font-semibold text-gray-900 text-sm mb-3">Templates de trading</h3>
+        <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="useTemplate('analysis')" class="template-card p-3 bg-white rounded-lg hover:bg-indigo-50 transition-all text-left border border-indigo-100">
+                <div class="flex items-center gap-2 mb-1">
+                    <i class="fas fa-chart-line text-indigo-600 text-sm"></i>
+                    <span class="font-semibold text-sm">Analyse technique</span>
+                </div>
+                <p class="text-xs text-gray-600">Structure pour une analyse de marché</p>
+            </button>
+
+            <button type="button" onclick="useTemplate('trade')" class="template-card p-3 bg-white rounded-lg hover:bg-green-50 transition-all text-left border border-green-100">
+                <div class="flex items-center gap-2 mb-1">
+                    <i class="fas fa-exchange-alt text-green-600 text-sm"></i>
+                    <span class="font-semibold text-sm">Rapport de trade</span>
+                </div>
+                <p class="text-xs text-gray-600">Partager un trade gagnant/perdant</p>
+            </button>
+
+            <button type="button" onclick="useTemplate('question')" class="template-card p-3 bg-white rounded-lg hover:bg-orange-50 transition-all text-left border border-orange-100">
+                <div class="flex items-center gap-2 mb-1">
+                    <i class="fas fa-question-circle text-orange-600 text-sm"></i>
+                    <span class="font-semibold text-sm">Question</span>
+                </div>
+                <p class="text-xs text-gray-600">Poser une question à la communauté</p>
+            </button>
+
+            <button type="button" onclick="useTemplate('tip')" class="template-card p-3 bg-white rounded-lg hover:bg-yellow-50 transition-all text-left border border-yellow-100">
+                <div class="flex items-center gap-2 mb-1">
+                    <i class="fas fa-lightbulb text-yellow-600 text-sm"></i>
+                    <span class="font-semibold text-sm">Conseil/Astuce</span>
+                </div>
+                <p class="text-xs text-gray-600">Partager un conseil de trading</p>
+            </button>
+        </div>
+    </div>
+
+    <!-- Preview Panel -->
+    <div id="preview-panel" class="post-dropdown hidden mb-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="font-semibold text-gray-900 text-sm flex items-center gap-2">
+                <i class="fas fa-eye text-indigo-600"></i>Aperçu de votre publication
+            </h3>
+            <button onclick="togglePreview()" class="text-gray-600 hover:text-gray-900 transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="preview-content" class="bg-white rounded-lg p-4 border border-gray-200"></div>
+    </div>
+
+    <!-- Formulaire -->
+    <form id="post-form" class="space-y-4">
+        <div>
+            <!-- Textarea -->
+            <div class="relative">
+                <textarea 
+                    id="post-textarea"
+                    placeholder="Partagez vos idées, stratégies de trading... (@ pour mentionner, # pour hashtag)"
+                    class="w-full p-4 pr-16 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none transition-all duration-300"
+                    rows="3"
+                    oninput="handleTextInput()"
+                    onkeydown="handleKeyPress(event)"></textarea>
+
+                <!-- Compteur -->
+                <div class="absolute bottom-3 right-3 flex items-center gap-2">
+                    <span id="char-counter" class="text-xs text-gray-400 transition-all duration-300">0 / 5000</span>
+                    <div class="w-8 h-8">
+                        <svg class="post-progress-svg" width="32" height="32">
+                            <circle cx="16" cy="16" r="14" stroke="#e5e7eb" stroke-width="2" fill="none"/>
+                            <circle id="char-progress-circle" class="post-progress-circle" cx="16" cy="16" r="14" stroke="#4f46e5" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Suggestions mentions -->
+                <div id="mention-suggestions" class="post-suggestions hidden absolute z-50 bg-white border border-gray-200 rounded-lg shadow-xl mt-1 max-h-48 overflow-y-auto"></div>
+
+                <!-- Suggestions hashtags -->
+                <div id="hashtag-suggestions" class="post-suggestions hidden absolute z-50 bg-white border border-gray-200 rounded-lg shadow-xl mt-1 max-h-48 overflow-y-auto"></div>
+            </div>
+
+            <!-- Media Preview -->
+            <div id="media-preview" class="post-media-grid hidden mt-3 grid grid-cols-3 gap-2"></div>
+
+            <!-- Drop Zone -->
+            <div id="drop-zone" class="post-dropzone hidden mt-3 border-2 border-dashed border-indigo-300 rounded-lg p-8 text-center bg-indigo-50 transition-all">
+                <i class="fas fa-cloud-upload-alt post-dropzone-icon text-4xl text-indigo-400 mb-2"></i>
+                <p class="text-sm text-indigo-600 font-semibold">Déposez vos fichiers ici</p>
+                <p class="text-xs text-gray-500 mt-1">Images, vidéos ou GIFs</p>
+            </div>
+
+            <!-- Link Preview -->
+            <div id="link-preview" class="post-link-preview hidden mt-3 border border-gray-200 rounded-lg overflow-hidden hover:border-indigo-300 transition-all">
+                <div class="flex">
+                    <img id="link-preview-image" class="w-32 h-32 object-cover post-link-img" src="" alt="">
+                    <div class="flex-1 p-3">
+                        <h4 id="link-preview-title" class="font-semibold text-sm text-gray-900 mb-1"></h4>
+                        <p id="link-preview-description" class="text-xs text-gray-600 line-clamp-2 mb-2"></p>
+                        <p id="link-preview-url" class="text-xs text-indigo-600"></p>
+                    </div>
+                    <button onclick="removeLinkPreview()" class="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Upload Progress -->
+            <div id="upload-progress" class="post-upload-progress hidden mt-3">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs text-gray-600">Upload en cours...</span>
+                    <span id="upload-percentage" class="text-xs text-indigo-600 font-semibold">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                    <div id="upload-progress-bar" class="post-upload-bar bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Poll Container -->
+            <div id="poll-container" class="post-dropdown hidden mt-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div class="flex items-center justify-between mb-3">
+                    <h4 class="font-semibold text-sm text-gray-900">Créer un sondage</h4>
+                    <button type="button" onclick="removePoll()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <input type="text" id="poll-question" placeholder="Quelle est votre question ?" class="w-full p-2 border border-gray-300 rounded-lg text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                <div id="poll-options" class="space-y-2">
+                    <input type="text" placeholder="Option 1" class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                    <input type="text" placeholder="Option 2" class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                </div>
+                <button type="button" onclick="addPollOption()" class="mt-2 text-xs text-indigo-600 hover:text-indigo-700 font-semibold transition-colors">
+                    <i class="fas fa-plus mr-1"></i>Ajouter une option
+                </button>
+            </div>
+
+            <!-- Schedule Container -->
+            <div id="schedule-container" class="post-dropdown post-schedule hidden mt-3 p-4 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+                <div class="flex items-center justify-between mb-3 relative z-10">
+                    <h4 class="font-semibold text-sm text-gray-900 flex items-center gap-2">
+                        <i class="fas fa-clock text-purple-600"></i>Planifier la publication
+                    </h4>
+                    <button type="button" onclick="removeSchedule()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="grid grid-cols-2 gap-3 relative z-10">
+                    <input type="date" id="schedule-date" class="p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all">
+                    <input type="time" id="schedule-time" class="p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all">
+                </div>
+                <p class="text-xs text-gray-600 mt-2 relative z-10">
+                    <i class="fas fa-info-circle text-purple-600 mr-1"></i>
+                    Votre post sera publié automatiquement à la date et l'heure choisies
+                </p>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <!-- Emoji Picker -->
+                <div class="relative">
+                    <button type="button" onclick="toggleEmojiPicker()" class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Emoji">
+                        <i class="far fa-smile text-gray-600 text-lg"></i>
+                    </button>
+
+                    <div id="emoji-picker" class="post-emoji-picker hidden absolute z-50 bg-white border border-gray-200 rounded-lg shadow-xl p-3 mt-2 w-80">
+                        <input type="text" id="emoji-search" placeholder="Rechercher..." class="w-full p-2 border border-gray-300 rounded-lg text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-500" oninput="searchEmojis()">
+                        
+                        <div class="flex gap-2 mb-3 overflow-x-auto">
+                            <button type="button" onclick="filterEmojis('recent')" class="emoji-cat px-3 py-1 text-xs rounded-full bg-gray-100 hover:bg-indigo-100 transition-colors whitespace-nowrap">
+                                <i class="fas fa-clock"></i>
+                            </button>
+                            <button type="button" onclick="filterEmojis('smileys')" class="emoji-cat px-3 py-1 text-xs rounded-full bg-gray-100 hover:bg-indigo-100 transition-colors whitespace-nowrap">
+                                😀
+                            </button>
+                            <button type="button" onclick="filterEmojis('trading')" class="emoji-cat emoji-cat-active px-3 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700 transition-colors whitespace-nowrap">
+                                📈
+                            </button>
+                            <button type="button" onclick="filterEmojis('symbols')" class="emoji-cat px-3 py-1 text-xs rounded-full bg-gray-100 hover:bg-indigo-100 transition-colors whitespace-nowrap">
+                                ⚡
+                            </button>
+                        </div>
+
+                        <div id="emoji-grid" class="grid grid-cols-8 gap-2 max-h-64 overflow-y-auto post-scrollbar">
+                            <button type="button" onclick="insertEmoji('📈')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Hausse">📈</button>
+                            <button type="button" onclick="insertEmoji('📉')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Baisse">📉</button>
+                            <button type="button" onclick="insertEmoji('💰')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Argent">💰</button>
+                            <button type="button" onclick="insertEmoji('💎')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Diamant">💎</button>
+                            <button type="button" onclick="insertEmoji('🚀')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Fusée">🚀</button>
+                            <button type="button" onclick="insertEmoji('💪')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Force">💪</button>
+                            <button type="button" onclick="insertEmoji('🔥')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Feu">🔥</button>
+                            <button type="button" onclick="insertEmoji('⚡')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Éclair">⚡</button>
+                            <button type="button" onclick="insertEmoji('🎯')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Cible">🎯</button>
+                            <button type="button" onclick="insertEmoji('💡')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Idée">💡</button>
+                            <button type="button" onclick="insertEmoji('✨')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Étoiles">✨</button>
+                            <button type="button" onclick="insertEmoji('🎉')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Fête">🎉</button>
+                            <button type="button" onclick="insertEmoji('👍')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Pouce">👍</button>
+                            <button type="button" onclick="insertEmoji('❤️')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Coeur">❤️</button>
+                            <button type="button" onclick="insertEmoji('😀')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Sourire">😀</button>
+                            <button type="button" onclick="insertEmoji('😊')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Heureux">😊</button>
+                            <button type="button" onclick="insertEmoji('🤔')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Réfléchir">🤔</button>
+                            <button type="button" onclick="insertEmoji('😎')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Cool">😎</button>
+                            <button type="button" onclick="insertEmoji('🤑')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Argent">🤑</button>
+                            <button type="button" onclick="insertEmoji('😤')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Déterminé">😤</button>
+                            <button type="button" onclick="insertEmoji('📊')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Graphique">📊</button>
+                            <button type="button" onclick="insertEmoji('💼')" class="emoji-btn text-2xl p-1 rounded hover:bg-gray-100 transition-all" title="Business">💼</button>
+                        </div>
+
+                        <div id="recent-emojis" class="mt-3 pt-3 border-t border-gray-200">
+                            <p class="text-xs text-gray-500 mb-2">Récemment utilisés</p>
+                            <div class="flex gap-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Image -->
+                <button type="button" onclick="document.getElementById('image-upload').click()" class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Image">
+                    <i class="far fa-image text-gray-600 text-lg"></i>
+                </button>
+                <input type="file" id="image-upload" accept="image/*" multiple class="hidden" onchange="handleImageUpload(event)">
+
+                <!-- Upload Video -->
+                <button type="button" onclick="document.getElementById('video-upload').click()" class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Vidéo">
+                    <i class="fas fa-video text-gray-600 text-lg"></i>
+                </button>
+                <input type="file" id="video-upload" accept="video/*" class="hidden" onchange="handleVideoUpload(event)">
+
+                <!-- Poll -->
+                <button type="button" onclick="togglePoll()" class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Sondage">
+                    <i class="fas fa-poll text-gray-600 text-lg"></i>
+                </button>
+
+                <!-- Schedule -->
+                <button type="button" onclick="toggleSchedule()" class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Planifier">
+                    <i class="fas fa-clock text-gray-600 text-lg"></i>
+                </button>
+
+                <!-- Divider -->
+                <div class="h-6 w-px bg-gray-300"></div>
+
+                <!-- Formatting -->
+                <button type="button" onclick="formatText('bold')" class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Gras">
+                    <i class="fas fa-bold text-gray-600"></i>
+                </button>
+                <button type="button" onclick="formatText('link')" class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Lien">
+                    <i class="fas fa-link text-gray-600"></i>
+                </button>
+            </div>
+
+            <!-- Send Button -->
+            <button type="button" id="send-button" onclick="sendMessage()" class="post-send-btn relative px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-all overflow-hidden group">
+                <span class="relative z-10 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+                    <i id="send-icon" class="fas fa-paper-plane mr-2 transition-all duration-300"></i>
+                    <span id="send-text">Envoyer</span>
+                </span>
+                <div class="post-send-gradient absolute inset-0 bg-gradient-to-r from-indigo-700 via-purple-600 to-indigo-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div id="send-particles" class="post-particles absolute inset-0 pointer-events-none opacity-0">
+                    <div class="post-particle"></div>
+                    <div class="post-particle"></div>
+                    <div class="post-particle"></div>
+                    <div class="post-particle"></div>
+                    <div class="post-particle"></div>
+                </div>
+                <div id="confetti-container" class="post-confetti-container absolute inset-0 pointer-events-none opacity-0"></div>
+            </button>
+        </div>
+    </form>
+
+    <!-- Typing Indicator -->
+    <div id="typing-indicator" class="post-typing hidden flex items-center gap-2 text-sm text-gray-600 mt-4">
+        <div class="flex gap-1">
+            <span class="post-typing-dot w-2 h-2 bg-indigo-600 rounded-full"></span>
+            <span class="post-typing-dot w-2 h-2 bg-indigo-600 rounded-full"></span>
+            <span class="post-typing-dot w-2 h-2 bg-indigo-600 rounded-full"></span>
+        </div>
+        <span>Préparation de votre publication...</span>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2"></div>

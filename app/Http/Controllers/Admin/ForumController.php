@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Forum;
+use App\Models\Post;
 use App\Models\ForumTopic;
 use App\Models\ForumTopicPost;
 use App\Models\Group;
@@ -306,5 +307,54 @@ class ForumController extends Controller
             ->delete();
 
         return true;
+    }
+
+
+    //teams abdoulledev
+
+    public function new_index(Request $request)
+    {
+        dd($request->all());
+        DB::transaction(function() use ($request)
+        {
+
+            //post 
+            $post = Post::create([
+            'user_id'      => auth()->id(),
+            'forum_id'   => $request->forum_id, // nullable
+            'content'      => $request->description,
+            'type'         => $request->type ?? 'text',
+            'status'       => $request->scheduled,
+            'scheduled_at' => $request->scheduled_at
+            ]);
+
+            if ($request->hasFile('media')) {
+                foreach ($request->file('media') as $index => $file) {
+                    $path = $file->store('posts', 'public');
+
+                    $post->media()->create([
+                        'path'  => $path,
+            
+                    ]);
+            }
+
+            if ($request->poll) {
+                $poll = $post->poll()->create([
+                    'question' => $request->poll['question'],
+                ]);
+
+                foreach ($request->poll['options'] as $option) {
+                    $poll->options()->create([
+                        'option' => $option,
+                    ]);
+                }
+            }
+
+
+        }
+
+        return response()->json(['message' => 'Post créé avec succès',], 201);
+
+        });
     }
 }
