@@ -433,24 +433,22 @@ Route::get('/media/temp-url/{path}', [MediaController::class, 'preview'])
 //     return response()->json(['url' => $temporaryUrl]);
 // })->where('path', '.*')->name('media.temp-url');
 
-Route::get('vip', function(){
-        return view('vip.app');
-    });
+Route::get('vip', [ForumController::class, 'home_index']);
 
 Route::post('vip', [ForumController::class, 'new_index']);
 
-    Route::get('vip/message', function(){
+Route::get('vip/message', function(){
         return view('vip.message');
     });
 
-    Route::get('vip/session', function(){
+Route::get('vip/session', function(){
         return view('vip.session');
     });
 
-    Route::get('vip/parametre', function(){
+Route::get('vip/parametre', function(){
         return view('vip.parametre');
     });
 
-    Route::get('vip/evenement', function(){
+Route::get('vip/evenement', function(){
         return view('vip.evenement');
     });

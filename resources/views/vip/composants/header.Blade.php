@@ -11,13 +11,7 @@
 
                 <!-- Logo -->
                 <div class="flex items-center space-x-2 cursor-pointer">
-                    <div
-                        class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
-                        <i class="fas fa-play text-white text-xs"></i>
-                    </div>
-                    <span class="text-lg font-bold">
-                        Trade <span class="text-indigo-600">Hub</span>
-                    </span>
+                    <img alt="logo" src="{{ asset('assets/vip/logo_rmi.png') }}">
                 </div>
             </div>
 

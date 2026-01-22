@@ -376,4 +376,10 @@ class ForumController extends Controller
 
         return response()->json(['message' => $request->all(),], 201);
     }
+
+    public function home_index()
+    {
+        
+
+    }
 }
