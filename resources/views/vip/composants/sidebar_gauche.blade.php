@@ -9,89 +9,279 @@
                 <div class="absolute bottom-2 right-2 w-3 h-3 bg-green-500 border-3 border-white rounded-full">
                 </div>
             </div>
-            <h3 class="font-bold text-white text-base ">CHOUTI Abdoulaye</h3>
-            <p class="text-indigo-100 text-xs change">Modérateur</p>
+            <h3 class="font-bold text-white text-base ">{{ $userData['user_name'] }}</h3>
+            <p class="text-indigo-100 text-xs change">{{ $userData['user_status'] }}</p>
+            <!-- Moderator
             <div class="flex items-center justify-center space-x-1 mt-1">
                 <i class="fas fa-check-circle text-white text-xs"></i>
                 <span class="text-white text-xs change">Vérifié</span>
-            </div>
+            </div>-->
         </div>
 
         <!-- Tier Progress -->
         <div class=" backdrop-blur-sm rounded-2xl p-5 mb-3">
             <div class="flex items-center justify-between mb-3">
                 <span class="text-sm text-gray-300 font-medium">Progression vers Diamond</span>
-                <span class="text-sm text-amber-400 font-bold">75%</span>
+                <span class="text-sm text-amber-400 font-bold">{{ $userData['montant_restant'] }}%</span>
             </div>
 
             <!-- Progress Bar -->
             <div class="relative h-3 bg-gray-700/50 rounded-full overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-r from-indigo-500 via-orange-800 to-yellow-500 rounded-full"
-                    style="width: 75%">
+                    style="width: {{ $userData['percent'] }}%">
                     <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
                 </div>
             </div>
 
             <div class="flex items-center justify-between mt-3 text-xs">
-                <span class="text-gray-400">$45,000 / $60,000</span>
-                <span class="text-amber-400 font-medium">+$15K restants</span>
+                <span class="text-gray-400">${{ $userData['montant_total'] }} / $100,000</span>
+                <span class="text-amber-400 font-medium">+${{ $userData['montant_restant'] }}K restants</span>
             </div>
         </div>
 
 
 
+       
         <!-- Tier Badges Grid -->
-        <div class="grid grid-cols-4 gap-x-2 mb-6 ">
-            <!-- Bronze -->
-            <div class="flex flex-col items-center group cursor-pointer">
-                <div
-                    class="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-800 to-orange-600 flex items-center justify-center  shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
-                    <svg class="w-5 h-5 text-orange-100" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                </div>
-                <span class="text-xs text-orange-400 mt-1.5 font-medium">Bronze</span>
-            </div>
+        <div class="grid grid-cols-4 gap-x-2 mb-6">
 
-            <!-- Silver -->
-            <div class="flex flex-col items-center group cursor-pointer">
-                <div
-                    class="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-400 to-gray-300 flex items-center justify-center shadow-lg shadow-gray-300/20 group-hover:scale-110 transition-transform">
-                    <svg class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                </div>
-                <span class="text-xs text-gray-400 mt-1.5 font-medium">Silver</span>
-            </div>
-
-            <!-- Gold - Active -->
-            <div class="flex flex-col items-center group cursor-pointer">
-                <div
-                    class="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center  shadow-lg shadow-amber-500/50 group-hover:scale-110 transition-transform relative">
-                    <svg class="w-5 h-5 text-amber-50" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                    <!-- Active indicator -->
-                    <div class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-pulse">
+            {{-- BADGE BRONZE --}}
+            @if($userData['plaque'] == 'bronze')
+                <!-- Bronze - Active -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-800 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform relative">
+                        <svg class="w-5 h-5 text-orange-100" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
                     </div>
+                    <span class="text-xs text-orange-400 mt-1.5 font-bold">Bronze</span>
                 </div>
-                <span class="text-xs text-amber-400 mt-1.5 font-bold">Gold</span>
-            </div>
+                <!-- Silver - Locked -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center shadow-lg opacity-40 group-hover:opacity-60 transition-opacity">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1.5 font-medium">Silver</span>
+                </div>
+                <!-- Gold - Locked -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center shadow-lg opacity-40 group-hover:opacity-60 transition-opacity">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1.5 font-medium">Gold</span>
+                </div>
+                <!-- Diamond - Locked -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center shadow-lg opacity-40 group-hover:opacity-60 transition-opacity">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1.5 font-medium">Diamond</span>
+                </div>
 
-            <!-- Diamond - Locked -->
-            <div class="flex flex-col items-center group cursor-pointer">
-                <div
-                    class="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center  shadow-lg opacity-40 group-hover:opacity-60 transition-opacity">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
+                {{-- BADGE SILVER --}}
+            @elseif($userData['plaque'] == 'silver')
+                <!-- Bronze - Unlocked -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-800 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-orange-100" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-orange-400 mt-1.5 font-medium">Bronze</span>
                 </div>
-                <span class="text-xs text-gray-500 mt-1.5 font-medium">Diamond</span>
-            </div>
+                <!-- Silver - Active -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-400 to-gray-300 flex items-center justify-center shadow-lg shadow-gray-300/20 group-hover:scale-110 transition-transform relative">
+                        <svg class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
+                    </div>
+                    <span class="text-xs text-gray-400 mt-1.5 font-bold">Silver</span>
+                </div>
+                <!-- Gold - Locked -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center shadow-lg opacity-40 group-hover:opacity-60 transition-opacity">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1.5 font-medium">Gold</span>
+                </div>
+                <!-- Diamond - Locked -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center shadow-lg opacity-40 group-hover:opacity-60 transition-opacity">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1.5 font-medium">Diamond</span>
+                </div>
+
+                {{-- BADGE GOLD --}}
+            @elseif($userData['plaque'] == 'gold')
+                <!-- Bronze - Unlocked -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-800 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-orange-100" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-orange-400 mt-1.5 font-medium">Bronze</span>
+                </div>
+                <!-- Silver - Unlocked -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-400 to-gray-300 flex items-center justify-center shadow-lg shadow-gray-300/20 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-400 mt-1.5 font-medium">Silver</span>
+                </div>
+                <!-- Gold - Active -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-lg shadow-amber-500/50 group-hover:scale-110 transition-transform relative">
+                        <svg class="w-5 h-5 text-amber-50" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
+                    </div>
+                    <span class="text-xs text-amber-400 mt-1.5 font-bold">Gold</span>
+                </div>
+                <!-- Diamond - Locked -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center shadow-lg opacity-40 group-hover:opacity-60 transition-opacity">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1.5 font-medium">Diamond</span>
+                </div>
+
+                {{-- BADGE DIAMOND --}}
+            @elseif($userData['plaque'] == 'diamond')
+                <!-- Bronze - Unlocked -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-800 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-orange-100" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-orange-400 mt-1.5 font-medium">Bronze</span>
+                </div>
+                <!-- Silver - Unlocked -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-400 to-gray-300 flex items-center justify-center shadow-lg shadow-gray-300/20 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-400 mt-1.5 font-medium">Silver</span>
+                </div>
+                <!-- Gold - Unlocked -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-lg shadow-amber-500/50 group-hover:scale-110 transition-transform">
+                        <svg class="w-5 h-5 text-amber-50" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-amber-400 mt-1.5 font-medium">Gold</span>
+                </div>
+                <!-- Diamond - Active -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/50 group-hover:scale-110 transition-transform relative">
+                        <svg class="w-5 h-5 text-cyan-50" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
+                    </div>
+                    <span class="text-xs text-cyan-400 mt-1.5 font-bold">Diamond</span>
+                </div>
+
+                {{-- PAS DE BADGE (none) --}}
+            @else
+                <!-- Tous verrouillés -->
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center shadow-lg opacity-40 group-hover:opacity-60 transition-opacity">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1.5 font-medium">Bronze</span>
+                </div>
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center shadow-lg opacity-40 group-hover:opacity-60 transition-opacity">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1.5 font-medium">Silver</span>
+                </div>
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center shadow-lg opacity-40 group-hover:opacity-60 transition-opacity">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1.5 font-medium">Gold</span>
+                </div>
+                <div class="flex flex-col items-center group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center shadow-lg opacity-40 group-hover:opacity-60 transition-opacity">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1.5 font-medium">Diamond</span>
+                </div>
+            @endif
+
         </div>
 
 

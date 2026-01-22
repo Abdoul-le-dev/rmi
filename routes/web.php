@@ -452,3 +452,12 @@ Route::get('vip/parametre', function(){
 Route::get('vip/evenement', function(){
         return view('vip.evenement');
     });
+
+Route::middleware(['auth'])->group(function () {
+    // Récupérer les posts
+    Route::post('/posts/fetch', [ForumController::class, 'fetchPosts'])->name('posts.fetch');
+    Route::post('/posts/delete', [ForumController::class, 'deletePost']);
+    // Voter sur un sondage
+     Route::post('/posts/share', [ForumController::class, 'share'])->name('posts.share');
+    Route::post('/polls/vote', [ForumController::class, 'vote'])->name('polls.vote');
+});    

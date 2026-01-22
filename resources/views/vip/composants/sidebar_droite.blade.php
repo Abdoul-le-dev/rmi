@@ -37,7 +37,7 @@
                     <div class="p-4 text-center group hover:bg-blue-50 transition-colors cursor-pointer">
                         <div class="flex flex-col items-center gap-1">
 
-                            <p class="font-bold text-gray-900 text-lg">500K</p>
+                            <p class="font-bold text-gray-900 text-lg">{{ $userData['nombre_posts'] }} </p>
                             <p class="text-xs text-gray-500 font-medium">Posts</p>
                         </div>
                     </div>
@@ -46,7 +46,7 @@
                     <div class="p-4 text-center group hover:bg-indigo-50 transition-colors cursor-pointer">
                         <div class="flex flex-col items-center gap-1">
 
-                            <p class="font-bold text-gray-900 text-lg">23.5M</p>
+                            <p class="font-bold text-gray-900 text-lg">{{ $userData['nombre_etudiants'] }}</p>
                             <p class="text-xs text-gray-500 font-medium">Étudiants</p>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                         <div class="flex flex-col items-center gap-1">
 
                             <p class="font-bold text-gray
-                                    -900 text-lg">50</p>
+                                    -900 text-lg">{{ $userData['students_online'] }}</p>
                             <p class="text-xs text-gray-500 font-medium">En ligne</p>
                         </div>
                     </div>

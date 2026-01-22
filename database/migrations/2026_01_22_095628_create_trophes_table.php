@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('trophes', function (Blueprint $table) {
-            $table->id();
-            $table->increments('user_id');
+            $table->increments('id');
+            $table->unsignedInteger('user_id');
             $table->string('montant_généré');
             $table->string('path');
             $table->enum('status',['load','validated','rejected'])->default('load');

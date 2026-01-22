@@ -8,9 +8,9 @@
     <title>VIP RMI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     @include('vip/composants/css')
-   
+
 
 </head>
 
@@ -47,12 +47,13 @@
                         <!-- Ligne du haut -->
                         <div class="flex items-center justify-between">
                             <h3 class="text-lg font-bold text-gray-900">
-                                Bienvenue Abdoulaye 👋
+                                Bienvenue {{ $userData['user_name'] }} 👋
                             </h3>
 
                             <!-- Actions rapides -->
                             <div class="flex items-center gap-2">
-                                <button onclick="toggleDrafts()"  class="hidden md:block p-2 rounded-lg hover:bg-gray-100">
+                                <button onclick="toggleDrafts()"
+                                    class="hidden md:block p-2 rounded-lg hover:bg-gray-100">
                                     <i class="fas fa-file-alt text-gray-600"></i>
                                     <span id="draft-count" class="post-badge hidden">0</span>
                                 </button>
@@ -73,7 +74,7 @@
                             Advertising ...
                         </p>
                     </div>
-                    
+
 
                     <!-- Dropdown Brouillons -->
                     <div id="drafts-dropdown"
@@ -147,8 +148,9 @@
                     </div>
 
                     <!-- Formulaire -->
-                    <form id="post-form" onsubmit="sendMessage(event); return false;" class="space-y-4" method="POST"  enctype="multipart/form-data">
-                       @csrf
+                    <form id="post-form" onsubmit="sendMessage(event); return false;" class="space-y-4" method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
                         <div>
                             <!-- Textarea -->
                             <div class="relative">
@@ -196,8 +198,8 @@
                             <!-- Link Preview -->
                             <div id="link-preview"
                                 class="post-link-preview hidden mt-3 border border-gray-200 rounded-lg overflow-hidden hover:border-indigo-300 transition-all">
-                                <div class="flex">                                 <img id="link-preview-image" class="w-32 h-32 object-cover post-link-img" src=""
-                                        alt="">
+                                <div class="flex"> <img id="link-preview-image"
+                                        class="w-32 h-32 object-cover post-link-img" src="" alt="">
                                     <div class="flex-1 p-3">
                                         <h4 id="link-preview-title" class="font-semibold text-sm text-gray-900 mb-1">
                                         </h4>
@@ -235,7 +237,8 @@
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </div>
-                                <input type="text" id="poll-question" name="poll[question]" placeholder="Quelle est votre question ?"
+                                <input type="text" id="poll-question" name="poll[question]"
+                                    placeholder="Quelle est votre question ?"
                                     class="w-full p-2 border border-gray-300 rounded-lg text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
                                 <div id="poll-options" class="space-y-2">
                                     <input type="text" placeholder="Option 1" name="poll[option_1]"
@@ -392,20 +395,21 @@
                                     class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Image">
                                     <i class="far fa-image text-gray-600 text-lg"></i>
                                 </button>
-                                <input type="file" id="image-upload" accept="image/*" name="media[]" multiple class="hidden"
-                                    onchange="handleImageUpload(event)">
+                                <input type="file" id="image-upload" accept="image/*" name="media[]" multiple
+                                    class="hidden" onchange="handleImageUpload(event)">
 
                                 <!-- Upload Video -->
                                 <button type="button" onclick="document.getElementById('video-upload').click()"
                                     class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Vidéo">
                                     <i class="fas fa-video text-gray-600 text-lg"></i>
                                 </button>
-                                <input type="file" id="video-upload" accept="video/*" class="hidden" name="media[]" multiple
-                                    onchange="handleVideoUpload(event)">
+                                <input type="file" id="video-upload" accept="video/*" class="hidden" name="media[]"
+                                    multiple onchange="handleVideoUpload(event)">
 
                                 <!-- Poll -->
                                 <button type="button" onclick="togglePoll()"
-                                    class="hidden md:block p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Sondage">
+                                    class="hidden md:block p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                                    title="Sondage">
                                     <i class="fas fa-poll text-gray-600 text-lg"></i>
                                 </button>
 
@@ -433,7 +437,7 @@
                             </div>
 
                             <!-- Send Button -->
-                            <button type="submit" id="send-button"  
+                            <button type="submit" id="send-button"
                                 class="post-send-btn relative px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-all overflow-hidden group">
                                 <span
                                     class="relative z-10 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
@@ -475,177 +479,15 @@
 
 
 
-                <!-- Posts Feed -->
-                <div class="space-y-4">
-                    
+                <!-- Posts Feed --> 
 
-                    <!-- Post 1 -->
-                    <article class="bg-white rounded-xl shadow-sm post-card p-6 fade-in">
-                        <!-- Header du post -->
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-center space-x-3">
-                                <img src="https://i.pravatar.cc/150?img=33" alt="Junior TOSSA"
-                                    class="w-12 h-12 rounded-full object-cover">
-                                <div>
-                                    <h4 class="font-semibold text-gray-900">Junior TOSSA</h4>
-                                    <p class="text-xs text-gray-500">Modérateur</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-3">
-                                <span class="text-xs text-gray-400">il y a 1 min</span>
-                                <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                                    <i class="fas fa-ellipsis-h text-gray-400"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Contenu du post -->
-                        <div class="mb-4">
-                            <p class="text-gray-700 leading-relaxed mb-2">
-                                🚀👍<br>
-                                Le marché ne dort jamais... mais ton plan de trading, oui : il doit être clair et
-                                discipliné.
-                            </p>
-                            <p class="text-indigo-600 font-semibold">
-                                Trade avec la tête, pas avec le stress !
-                            </p>
-                        </div>
-
-                        <!-- Interactions -->
-                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                            <div class="flex items-center space-x-6">
-                                <button
-                                    class="flex items-center space-x-2 text-gray-500 hover:text-indigo-600 transition-colors">
-                                    <i class="far fa-comment"></i>
-                                    <span class="text-xs font-medium">47.5k</span>
-                                </button>
-                                <button
-                                    class="flex items-center space-x-2 text-gray-500 hover:text-red-500 transition-colors">
-                                    <i class="far fa-heart"></i>
-                                    <span class="text-xs font-medium">650.3k</span>
-                                </button>
-                            </div>
-                            <div class="flex -space-x-2">
-                                <img src="https://i.pravatar.cc/150?img=1"
-                                    class="w-8 h-8 rounded-full border-2 border-white" alt="">
-                                <img src="https://i.pravatar.cc/150?img=2"
-                                    class="w-8 h-8 rounded-full border-2 border-white" alt="">
-                                <img src="https://i.pravatar.cc/150?img=3"
-                                    class="w-8 h-8 rounded-full border-2 border-white" alt="">
-                                <img src="https://i.pravatar.cc/150?img=4"
-                                    class="w-8 h-8 rounded-full border-2 border-white" alt="">
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Post 2 avec image -->
-                    <article class="bg-white rounded-xl shadow-sm post-card p-6 fade-in">
-                        <!-- Header du post -->
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-center space-x-3">
-                                <img src="https://i.pravatar.cc/150?img=45" alt="Zeynab HOUNGBE"
-                                    class="w-12 h-12 rounded-full object-cover">
-                                <div>
-                                    <h4 class="font-semibold text-gray-900">Zeynab HOUNGBE</h4>
-                                    <p class="text-xs text-gray-500">Coach</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-3">
-                                <span class="text-xs text-gray-400">il y a 2 heures</span>
-                                <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                                    <i class="fas fa-ellipsis-h text-gray-400"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Contenu du post -->
-                        <div class="mb-4">
-                            <p class="text-gray-700 leading-relaxed mb-4">
-                                🚀🔥<br>
-                                Un bon trade, c'est 80% de patience et 20% d'action.<br>
-                                Attends le bon signal, pas le frisson.
-                            </p>
-
-                            <!-- Image du post -->
-                            <div class="rounded-lg overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800"
-                                    alt="Bitcoin"
-                                    class="w-full h-64 object-cover hover:scale-105 transition-transform duration-300">
-                            </div>
-                        </div>
-
-                        <!-- Interactions -->
-                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                            <div class="flex items-center space-x-6">
-                                <button
-                                    class="flex items-center space-x-2 text-gray-500 hover:text-indigo-600 transition-colors">
-                                    <i class="far fa-comment"></i>
-                                    <span class="text-xs font-medium">234</span>
-                                </button>
-                                <button
-                                    class="flex items-center space-x-2 text-gray-500 hover:text-red-500 transition-colors">
-                                    <i class="far fa-heart"></i>
-                                    <span class="text-xs font-medium">5.2k</span>
-                                </button>
-                            </div>
-                            <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                                <i class="fas fa-share text-gray-500"></i>
-                            </button>
-                        </div>
-                    </article>
-
-                    <!-- Post 3 -->
-                    <article class="bg-white rounded-xl shadow-sm post-card p-6 fade-in">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-center space-x-3">
-                                <img src="https://i.pravatar.cc/150?img=68" alt="Sarah MARTIN"
-                                    class="w-12 h-12 rounded-full object-cover">
-                                <div>
-                                    <h4 class="font-semibold text-gray-900">Sarah MARTIN</h4>
-                                    <p class="text-xs text-gray-500">Trader Pro</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-3">
-                                <span class="text-xs text-gray-400">il y a 5 heures</span>
-                                <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                                    <i class="fas fa-ellipsis-h text-gray-400"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <p class="text-gray-700 leading-relaxed">
-                                📊 Analyse du jour : Le marché montre des signes de consolidation.
-                                C'est le moment parfait pour affiner votre stratégie et attendre les bonnes
-                                opportunités.
-                                <span class="text-indigo-600 font-semibold">#Trading #Strategy #Patience</span>
-                            </p>
-                        </div>
-
-                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                            <div class="flex items-center space-x-6">
-                                <button
-                                    class="flex items-center space-x-2 text-gray-500 hover:text-indigo-600 transition-colors">
-                                    <i class="far fa-comment"></i>
-                                    <span class="text-xs font-medium">89</span>
-                                </button>
-                                <button
-                                    class="flex items-center space-x-2 text-gray-500 hover:text-red-500 transition-colors">
-                                    <i class="far fa-heart"></i>
-                                    <span class="text-xs font-medium">1.8k</span>
-                                </button>
-                            </div>
-                            <div class="flex -space-x-2">
-                                <img src="https://i.pravatar.cc/150?img=5"
-                                    class="w-8 h-8 rounded-full border-2 border-white" alt="">
-                                <img src="https://i.pravatar.cc/150?img=6"
-                                    class="w-8 h-8 rounded-full border-2 border-white" alt="">
-                                <img src="https://i.pravatar.cc/150?img=7"
-                                    class="w-8 h-8 rounded-full border-2 border-white" alt="">
-                            </div>
-                        </div>
-                    </article>
-                </div>
+                <style>
+                    .post-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+                    .post-card:hover { transform: translateY(-2px); }
+                    .vote-btn:active { transform: scale(0.95) !important; }
+                </style>
+               <div id="posts" class="max-w-2xl mx-auto transition-opacity duration-200"></div>
+               <div id="toast" class="transform translate-y-40"></div>
 
                 <!-- Bouton charger plus -->
                 <div class="mt-6 text-center">
@@ -659,11 +501,11 @@
             <!-- ========================================
                  SIDEBAR DROITE - SUGGESTIONS
             ======================================== -->
-            
+
             @include('vip/composants/sidebar_droite')
 
         </div>
-       
+
     </div>
     </div>
 
@@ -781,8 +623,8 @@
         </div>
     </div>
 
-     
-     @include('vip/composants/js')
+
+    @include('vip/composants/js')
 </body>
 
 </html>
