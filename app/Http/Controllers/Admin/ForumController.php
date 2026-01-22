@@ -314,18 +314,35 @@ class ForumController extends Controller
 
     public function new_index(Request $request)
     {
-        dd($request->all());
+
+       
+
+       
+
+        
         DB::transaction(function() use ($request)
         {
-
+            
+    
+            $scheduledAt = null;
+            if ($request->scheduled_at_date && $request->scheduled_at_time) {
+                $scheduledAt = $request->scheduled_at_date . ' ' . $request->scheduled_at_time . ':00';
+            }
+            
+            
+            $status = $scheduledAt ? 'sheduled' : 'published'; 
+            if ($request->hasFile('media')){ $type = "media";}
+             if ($request->poll){ $type ="sondage";}
+            
             //post 
+           
             $post = Post::create([
-            'user_id'      => auth()->id(),
+            'user_id'      => 2233,
             'forum_id'   => $request->forum_id, // nullable
-            'content'      => $request->description,
-            'type'         => $request->type ?? 'text',
-            'status'       => $request->scheduled,
-            'scheduled_at' => $request->scheduled_at
+            'content'      => $request->contents,
+            'type'         => $type ?? 'text',
+            'status'       => $status,
+            'scheduled_at' => $scheduledAt,
             ]);
 
             if ($request->hasFile('media')) {
@@ -336,7 +353,7 @@ class ForumController extends Controller
                         'path'  => $path,
             
                     ]);
-            }
+            }}
 
             if ($request->poll) {
                 $poll = $post->poll()->create([
@@ -351,10 +368,12 @@ class ForumController extends Controller
             }
 
 
-        }
+        
 
-        return response()->json(['message' => 'Post créé avec succès',], 201);
+       
 
         });
+
+        return response()->json(['message' => $request->all(),], 201);
     }
 }

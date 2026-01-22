@@ -176,18 +176,6 @@ function message_view() {
 
 // Précharger au chargement de la page
 window.addEventListener('load', preloadImages);
-
-// ========================================
-// PERFORMANCE MONITORING
-// ========================================
-if ('performance' in window) {
-    window.addEventListener('load', () => {
-        const perfData = window.performance.timing;
-        const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
-        console.log(`Page chargée en ${pageLoadTime}ms`);
-    });
-}
-
 // Fonction pour déplacer le bouton cliqué en haut
 function moveToTop(clickedElement) {
     const container = document.getElementById('sidebar-buttons');

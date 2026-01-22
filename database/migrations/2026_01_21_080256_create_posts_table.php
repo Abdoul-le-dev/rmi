@@ -19,8 +19,8 @@ return new class extends Migration
             $table->unsignedInteger('forum_id')->nullable();
            
             $table->longText('content')->nullable();
-            $table->enum('type',['text','image','video','mixte']);
-            $table->timestamp('scheduled_at')->nullable();
+            $table->enum('type',['text','media','sondage']);
+            $table->string('scheduled_at')->nullable();
             $table->enum('status',['validation','sheduled','published'])->default('published');
             $table->unsignedBigInteger('likes_count')->default(0);
             $table->unsignedBigInteger('comments_count')->default(0);

@@ -1,16 +1,10 @@
-/* ============================================
-   POST CREATOR - JAVASCRIPT COMPLET
-   Version: 1.0.0
-   Description: Système complet de création de posts avec toutes les fonctionnalités avancées
-   ============================================ */
+function handleTextInput() {
+    // temporaire : juste éviter l’erreur
+}
 
-/**
- * ============================================
- * CONFIGURATION & VARIABLES GLOBALES
- * ============================================
- */
-
-// Configuration générale
+function handleKeyPress(event) {
+    // temporaire : juste éviter l’erreur
+}
 const POST_CONFIG = {
     MAX_CHARS: 5000,              // Limite de caractères
     AUTO_SAVE_DELAY: 2000,        // Délai avant auto-save (ms)
@@ -93,16 +87,6 @@ const POPULAR_HASHTAGS = [
     { tag: 'Bitcoin', count: 876 },
     { tag: 'Ethereum', count: 543 }
 ];
-
-/**
- * ============================================
- * INITIALISATION
- * ============================================
- */
-
-/**
- * Initialise l'application au chargement du DOM
- */
 document.addEventListener('DOMContentLoaded', function () {
     initializeApp();
 });
@@ -117,8 +101,6 @@ function initializeApp() {
     setupKeyboardShortcuts();
     loadRecentEmojis();
     setupClickOutsideHandlers();
-
-    console.log('✅ Post Creator initialisé avec succès');
 }
 
 /**
@@ -1204,19 +1186,28 @@ function setupKeyboardShortcuts() {
  * Envoie le message avec toutes les animations
  */
 function sendMessage() {
+
+    if (event) event.preventDefault();
     const button = document.getElementById('send-button');
     const icon = document.getElementById('send-icon');
     const text = document.getElementById('send-text');
     const textarea = document.getElementById('post-textarea');
     const particles = document.getElementById('send-particles');
     const preview = document.getElementById('media-preview');
+    const scheduleDate = document.getElementById('schedule-date');
+    const scheduleTime = document.getElementById('schedule-time');
+    const scheduleContainer = document.getElementById('schedule-container');
 
     const form = document.getElementById('post-form');
 
     const formData = new FormData(form);//récupérer le formulaire de façon dynamique
-    const date = formData.get('scheduled_at_date');
-    const time = formData.get('scheduled_at_time');
     const pollContainer = document.getElementById('poll-container')
+    
+    // Ajouter scheduled_at SEULEMENT si les deux champs sont remplis
+    if (scheduleDate && scheduleDate.value && scheduleTime && scheduleTime.value) {
+        formData.append('scheduled_at_date', scheduleDate.value);
+        formData.append('scheduled_at_time', scheduleTime.value);
+    }
 
 
 
@@ -1228,9 +1219,12 @@ function sendMessage() {
         return;
     }
 
-    if (date && time) {
-        formData.append('scheduled_at', '${date}-${time}:00')
-    }
+    formData.delete('poll[question]');
+    formData.delete('poll[option_1]');
+    formData.delete('poll[option_2]');
+
+    let optionIndex = 0;
+
 
     if (!pollContainer.classList.contains('hidden')) {
         const question = document.getElementById('poll-question').value.trim();
@@ -1245,36 +1239,18 @@ function sendMessage() {
         document.querySelectorAll('#poll-options input').forEach(input => {
             if (input.value.trim()) {
                 formData.append('poll[options][]', input.value.trim());
+                optionIndex++;
             }
+            
+
+            
         });
+
+        if (optionIndex < 2) {
+                showToast("Au moins 2 options sont requises", 'warning');
+                return;
+            }
     }
-
-
-    //envoi via js
-
-
-    console.log(
-        document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
-    );
-
-    fetch('/vip', {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': document
-                .querySelector('meta[name="csrf-token"]')
-                .getAttribute('content')
-        },
-        body: formData
-    })
-        .then(res => res.json())
-        .then(data => {          // ✅ data = réponse serveur
-            alert(JSON.stringify(data));
-            form.reset();
-            console.log(data);
-            console.log('Post envoyé');
-        })
-        .catch(err => console.error(err));
-
 
 
     // Désactiver le bouton
@@ -1352,7 +1328,47 @@ function sendMessage() {
         removeLinkPreview();
 
         // Success toast
-        showToast('Message envoyé avec succès ! 🎉', 'success');
+        fetch('/vip', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute('content'),
+                'Accept': 'application/json'
+            },
+            body: formData
+        })
+            .then(async res => {
+                console.log('STATUS:', res.status);
+                const contentType = res.headers.get("content-type");
+
+                if (contentType && contentType.includes("application/json")) {
+                    const data = await res.json();
+                    
+
+                    if (res.ok) {
+
+                        // Phase 5: Reset après succès
+                        
+                        showToast('Votre post à été publié ! 🎉', 'success');
+
+                        // Optionnel : Recharger ou ajouter le post à la page
+                        // location.reload();
+                    } else {
+                        showToast(data.message || 'Erreur lors de l\'envoi', 'error');
+                       
+                    }
+                } else {
+                    const text = await res.text();
+                    console.log('RESPONSE TEXT:', text);
+                    
+                   
+                }
+            })
+            .catch(err => {
+               
+              location.reload();
+            });
 
         // TODO: Appel API pour envoyer le post
 
@@ -1517,23 +1533,6 @@ window.addEventListener('beforeunload', function (e) {
     }
 });
 
-/**
- * ============================================
- * LOG FINAL
- * ============================================
- */
-console.log('🚀 Post Creator v1.0.0 - Prêt à l\'emploi !');
-console.log('📝 Fonctionnalités actives:', {
-    brouillons: true,
-    templates: true,
-    preview: true,
-    mentions: true,
-    hashtags: true,
-    emojis: true,
-    upload: true,
-    dragDrop: true,
-    polls: true,
-    schedule: true,
-    keyboard: true,
-    toastViolet: true
-});
+
+
+

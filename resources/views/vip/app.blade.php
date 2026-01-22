@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>VIP RMI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -147,7 +147,7 @@
                     </div>
 
                     <!-- Formulaire -->
-                    <form id="post-form" class="space-y-4" method="POST" action="/vip" enctype="multipart/form-data">
+                    <form id="post-form" onsubmit="sendMessage(event); return false;" class="space-y-4" method="POST"  enctype="multipart/form-data">
                        @csrf
                         <div>
                             <!-- Textarea -->
@@ -279,7 +279,7 @@
                             <div class="flex items-center gap-2">
                                 <!-- Emoji Picker -->
                                 <div class="relative">
-                                    <button type="button onclick="toggleEmojiPicker()"
+                                    <button type="button" onclick="toggleEmojiPicker()"
                                         class="sm:hidden md:hiddden lg:block  p-2 rounded-lg hover:bg-gray-100 transition-colors"
                                         title="Emoji">
                                         <i class="far fa-smile text-gray-600 text-lg"></i>
@@ -433,7 +433,7 @@
                             </div>
 
                             <!-- Send Button -->
-                            <button type="submit" id="send-button" 
+                            <button type="submit" id="send-button"  
                                 class="post-send-btn relative px-6 py-2 bg-indigo-600 text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-all overflow-hidden group">
                                 <span
                                     class="relative z-10 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
