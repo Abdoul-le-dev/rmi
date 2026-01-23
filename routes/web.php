@@ -6,6 +6,7 @@ use App\Http\Controllers\LiveClassRecordingController;
 use App\Http\Controllers\MediaController;
 use App\Services\CloudFrontUrlSigner;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ForumController;
 
 /*
 |--------------------------------------------------------------------------
@@ -488,3 +489,32 @@ Route::middleware(['web.auth'])->group(function () {
         });
     });
 });
+
+Route::get('vip', [ForumController::class, 'home_index']);
+
+Route::post('vip', [ForumController::class, 'new_index']);
+
+Route::get('vip/message', function(){
+        return view('vip.message');
+    });
+
+Route::get('vip/session', function(){
+        return view('vip.session');
+    });
+
+Route::get('vip/parametre', function(){
+        return view('vip.parametre');
+    });
+
+Route::get('vip/evenement', function(){
+        return view('vip.evenement');
+    });
+
+Route::middleware(['auth'])->group(function () {
+    // Récupérer les posts
+    Route::post('/posts/fetch', [ForumController::class, 'fetchPosts'])->name('posts.fetch');
+    Route::post('/posts/delete', [ForumController::class, 'deletePost']);
+    // Voter sur un sondage
+     Route::post('/posts/share', [ForumController::class, 'share'])->name('posts.share');
+    Route::post('/polls/vote', [ForumController::class, 'vote'])->name('polls.vote');
+});    

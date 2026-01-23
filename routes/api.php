@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ForumController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,3 +37,6 @@ Route::group(['prefix' => '/development'], function () {
 
 
 });
+
+
+ Route::post('vip', [ForumController::class, 'new_index']);

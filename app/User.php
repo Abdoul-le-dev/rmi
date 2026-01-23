@@ -20,6 +20,8 @@ use App\Models\Region;
 use App\Models\ReserveMeeting;
 use App\Models\RewardAccounting;
 use App\Models\Role;
+use App\Models\Post;
+use App\Models\Trophe;
 use App\Models\Follow;
 use App\Models\Sale;
 use App\Models\Section;
@@ -71,6 +73,20 @@ class User extends Authenticatable
     private $permissions;
     private $user_group;
     private $userInfo;
+
+    //team abdoulledev
+
+    public function posts()
+    {
+       return $this->hasMany(Post::class);
+    }
+
+    public function trophes()
+    {
+       return $this->hasMany(Trophe::class);
+    }
+
+    //end
 
 
     static function getMainAdmin()

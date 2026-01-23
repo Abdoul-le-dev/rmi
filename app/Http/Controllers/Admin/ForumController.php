@@ -3,16 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Forum;
 use App\Models\ForumTopic;
 use App\Models\ForumTopicPost;
 use App\Models\Group;
+use App\Models\PollOption;
+use App\Models\Post;
 use App\Models\Role;
-use App\Models\Translation\CategoryTranslation;
 use App\Models\Translation\ForumTranslation;
+use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{DB,Log, Cache};
 
 class ForumController extends Controller
 {
@@ -25,7 +27,7 @@ class ForumController extends Controller
         $subForums = $request->get('subForums');
 
         $forums = Forum::where(function ($query) use ($subForums) {
-            if (!empty($subForums)) {
+            if (! empty($subForums)) {
                 $query->where('parent_id', $subForums);
             } else {
                 $query->whereNull('parent_id');
@@ -79,7 +81,7 @@ class ForumController extends Controller
         $data = [
             'pageTitle' => trans('update.new_forum'),
             'userGroups' => $userGroups,
-            'roles' => $roles
+            'roles' => $roles,
         ];
 
         return view('admin.forums.create', $data);
@@ -105,7 +107,7 @@ class ForumController extends Controller
             'group_id' => $data['group_id'] ?? null,
             'role_id' => $data['role_id'] ?? null,
             'status' => $data['status'],
-            'close' => (!empty($data['close']) and $data['close'] == 1),
+            'close' => (! empty($data['close']) and $data['close'] == 1),
         ]);
 
         ForumTranslation::updateOrCreate([
@@ -116,7 +118,7 @@ class ForumController extends Controller
             'description' => $data['description'],
         ]);
 
-        $hasSubForum = (!empty($request->get('has_sub')) and $request->get('has_sub') == 'on');
+        $hasSubForum = (! empty($request->get('has_sub')) and $request->get('has_sub') == 'on');
         $this->setSubForum($forum, $request->get('sub_forums'), $hasSubForum, $data['locale']);
 
         removeContentLocale();
@@ -147,7 +149,7 @@ class ForumController extends Controller
             'forum' => $forum,
             'subForums' => $subForums,
             'userGroups' => $userGroups,
-            'roles' => $roles
+            'roles' => $roles,
         ];
 
         return view('admin.forums.create', $data);
@@ -174,7 +176,7 @@ class ForumController extends Controller
             'group_id' => $data['group_id'] ?? null,
             'role_id' => $data['role_id'] ?? null,
             'status' => $data['status'],
-            'close' => (!empty($data['close']) and $data['close'] == 1),
+            'close' => (! empty($data['close']) and $data['close'] == 1),
         ]);
 
         ForumTranslation::updateOrCreate([
@@ -185,7 +187,7 @@ class ForumController extends Controller
             'description' => $data['description'],
         ]);
 
-        $hasSubForums = (!empty($request->get('has_sub')) and $request->get('has_sub') == 'on');
+        $hasSubForums = (! empty($request->get('has_sub')) and $request->get('has_sub') == 'on');
         $this->setSubForum($forum, $request->get('sub_forums'), $hasSubForums, $data['locale']);
 
         removeContentLocale();
@@ -199,7 +201,7 @@ class ForumController extends Controller
 
         $forum = Forum::where('id', $id)->first();
 
-        if (!empty($forum)) {
+        if (! empty($forum)) {
             Forum::where('parent_id', $forum->id)
                 ->delete();
 
@@ -246,7 +248,7 @@ class ForumController extends Controller
         $order = 1;
         $oldIds = [];
 
-        if ($hasSubForums and !empty($subForums) and count($subForums)) {
+        if ($hasSubForums and ! empty($subForums) and count($subForums)) {
 
             foreach ($subForums as $key => $subForum) {
                 $check = Forum::where('id', $key)->first();
@@ -255,15 +257,15 @@ class ForumController extends Controller
                     $oldIds[] = $key;
                 }
 
-                if (!empty($subForum['title'])) {
-                    if (!empty($check)) {
+                if (! empty($subForum['title'])) {
+                    if (! empty($check)) {
                         $check->update([
                             'order' => $order,
                             'icon' => $subForum['icon'],
                             'group_id' => $subForum['group_id'] ?? null,
                             'role_id' => $subForum['role_id'] ?? null,
                             'status' => $subForum['status'],
-                            'close' => $forum->close || ((!empty($subForum['close']) and $subForum['close'] == 1)),
+                            'close' => $forum->close || ((! empty($subForum['close']) and $subForum['close'] == 1)),
                         ]);
 
                         ForumTranslation::updateOrCreate([
@@ -282,7 +284,7 @@ class ForumController extends Controller
                             'group_id' => $subForum['group_id'] ?? null,
                             'role_id' => $subForum['role_id'] ?? null,
                             'status' => $subForum['status'],
-                            'close' => $forum->close || ((!empty($subForum['close']) and $subForum['close'] == 1)),
+                            'close' => $forum->close || ((! empty($subForum['close']) and $subForum['close'] == 1)),
                         ]);
 
                         ForumTranslation::updateOrCreate([
@@ -306,5 +308,521 @@ class ForumController extends Controller
             ->delete();
 
         return true;
+    }
+
+    // teams abdoulledev
+
+    public function new_index(Request $request)
+    {
+
+        DB::transaction(function () use ($request) {
+
+            $scheduledAt = null;
+            if ($request->scheduled_at_date && $request->scheduled_at_time) {
+                $scheduledAt = $request->scheduled_at_date.' '.$request->scheduled_at_time.':00';
+            }
+
+            $status = $scheduledAt ? 'sheduled' : 'published';
+            if ($request->hasFile('media')) {
+                $type = 'media';
+            }
+            if ($request->poll) {
+                $type = 'sondage';
+            }
+
+            // post
+
+            $post = Post::create([
+                'user_id' => 2233,
+                'forum_id' => $request->forum_id, // nullable
+                'content' => $request->contents,
+                'type' => $type ?? 'text',
+                'status' => $status,
+                'scheduled_at' => $scheduledAt,
+            ]);
+
+            if ($request->hasFile('media')) {
+                foreach ($request->file('media') as $index => $file) {
+                    $path = $file->store('posts', 'public');
+
+                    $post->media()->create([
+                        'path' => $path,
+
+                    ]);
+                }
+            }
+
+            if ($request->poll) {
+                $poll = $post->poll()->create([
+                    'question' => $request->poll['question'],
+                ]);
+
+                foreach ($request->poll['options'] as $option) {
+                    $poll->options()->create([
+                        'option' => $option,
+                    ]);
+                }
+            }
+
+        });
+
+        return response()->json(['message' => $request->all()], 201);
+    }
+
+    public function home_index_test()
+    {
+
+        // Vérifier si l'utilisateur est connecté
+        if (Auth::check()) {
+            // Utilisateur connecté
+            $userId = Auth::id();
+            $user_name = Auth::user()->full_name;
+            $user_status = Auth::user()->role_name;
+
+            if ($user_status == 'user') {
+                $user_status = 'Etudiant';
+            }
+
+            // Récupérer l'utilisateur avec ses trophées
+            $user = User::with(['trophes' => function ($query) {
+                $query->where('status', 'validated');
+            }])->find($userId);
+
+            // Vérifier si l'utilisateur a des trophées et calculer la somme
+            if ($user->trophes->isEmpty()) {
+                $montant_total = 0;
+            } else {
+                // Calculer la somme des montants générés
+                $montant_total = $user->trophes->sum('montant_genere');
+            }
+            // Déterminer la plaque selon le montant
+
+            if ($montant_total >= 100000) {
+                $plaque = 'diamond';
+            } elseif ($montant_total >= 20000) {
+                $plaque = 'gold';
+            } elseif ($montant_total >= 10000) {
+                $plaque = 'silver';
+
+            } elseif ($montant_total >= 5000) {
+                $plaque = 'bronze';
+            } else {
+                $plaque = 'none';
+            }
+
+            $montant_restant = (100000 - $montant_total) / 1000;
+
+            // nombre d'etudiant
+
+            $user_totale = User::count();
+            $user_totale = ($user_totale - 10) / 1000;
+
+            // Nombre de post
+
+            $nbre_post_1 = Post::count();
+            $nbre_post_2 = ForumTopic::count();
+            $nbre_posts = $nbre_post_1 + $nbre_post_2;
+
+            // nombre d'etudiant en ligne
+
+            $students_online = 0;
+
+            // image et description des objectif
+
+            $link_image = '';
+            $description = '';
+
+            // meilleure trader ou top, par defaut les coachs
+
+            $userData = [
+                'user_id' => $userId,
+                'user_name' => $user_name,
+                'user_status' => $user_status,
+                'montant_total' => $montant_total,
+                'montant_restant' => $montant_restant,
+                'plaque' => 'bronze',
+                'nombre_etudiants' => $user_totale,
+                'nombre_posts' => $nbre_posts,
+                'students_online' => $students_online,
+                'link_image' => $link_image,
+                'description' => $description,
+            ];
+
+            return view('vip.app', compact('userData'));
+        } else {
+            // Utilisateur non connecté
+            return redirect()->route('login')->with('error', 'Vous devez être connecté');
+        }
+
+    }
+
+    public function home_index()
+    {
+
+        $user = auth()->user();
+
+        $validatedTrophes = $user->trophes()
+            ->where('status', 'validated')
+            ->get();
+
+        $montantTotal = $validatedTrophes->sum('montant_genere');
+
+        $percent = ($montantTotal / 1000) + 1;
+
+        $userData = [
+            'user_id' => $user->id,
+            'user_name' => $user->full_name,
+            'user_status' => $this->formatRole($user->role_name),
+            'montant_total' => $montantTotal,
+            'montant_restant' => $this->montantRestant($montantTotal),
+            'plaque' => $this->resolvePlaque($montantTotal),
+            'percent' => $percent,
+            'nombre_etudiants' => $this->nombreEtudiants(),
+            'nombre_posts' => $this->nombrePosts(),
+            'students_online' => 0,
+            'link_image' => '',
+            'description' => '',
+        ];
+
+        return view('vip.app', compact('userData'));
+
+    }
+
+    public function fetchPosts__(Request $request)
+    {
+        $request->validate([
+            'limit' => 'integer|min:1|max:50',
+            'last_update' => 'nullable|integer',
+        ]);
+
+        $limit = $request->input('limit', 10);
+        $lastUpdate = $request->input('last_update');
+
+        $query = Post::with([
+            'user:id,full_name,role_name,avatar',
+            'media',
+            'poll.options',
+        ])
+            ->where('status', 'published');
+
+        if ($lastUpdate) {
+            $query->where('updated_at', '>', date('Y-m-d H:i:s', $lastUpdate / 1000));
+        }
+
+        $posts = $query->latest()->take($limit)->get()->map(function ($post) {
+            return [
+                'id' => $post->id,
+                'content' => $post->content,
+                'type' => $post->type,
+                'status' => $post->status,
+                'likes_count' => $post->likes_count,
+                'comments_count' => $post->comments_count,
+                'shares_count' => $post->shares_count,
+                'created_at' => $post->created_at,
+                'user' => [
+                    'id' => $post->user->id,
+                    'name' => $post->user->full_name,
+                    'role' => $post->user->role_name,
+                    'avatar' => $post->user->avatar ?? '/default-avatar.png',
+                ],
+                'media' => $post->media->map(function ($media) {
+                    return [
+                        'type' => $this->getMediaType($media->path),
+                        'path' => $media->path,
+                    ];
+                }),
+                'poll' => $post->poll ? [
+                    'id' => $post->poll->id,
+                    'question' => $post->poll->question,
+                    'options' => $post->poll->options->map(function ($option) {
+                        return [
+                            'id' => $option->id,
+                            'option' => $option->option,
+                            'votes' => $option->votes,
+                        ];
+                    }),
+                ] : null,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'posts' => $posts,
+            'current_user' => [
+                'id' => Auth::id(),
+                'role' => Auth::user()->role_name,
+            ],
+        ]);
+    }
+
+    public function deletePost_(Request $request)
+    {
+        $request->validate([
+            'post_id' => 'required|exists:posts,id',
+        ]);
+
+        $post = Post::findOrFail($request->post_id);
+
+        // Vérifier les permissions
+        if (Auth::user()->role_name !== 'admin' && $post->user_id !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Non autorisé',
+            ], 403);
+        }
+
+        $post->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Post supprimé avec succès',
+        ]);
+    }
+
+    private function getMediaType($path)
+    {
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
+        $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $videoExtensions = ['mp4', 'mov', 'avi', 'webm'];
+
+        if (in_array(strtolower($extension), $imageExtensions)) {
+            return 'image';
+        }
+        if (in_array(strtolower($extension), $videoExtensions)) {
+            return 'video';
+        }
+
+        return 'unknown';
+    }
+
+    public function vote_(Request $request)
+    {
+        $request->validate([
+            'poll_id' => 'required|exists:polls,id',
+            'option_id' => 'required|exists:poll_options,id',
+        ]);
+
+        // Vérifier que l'option appartient bien au poll
+        $option = PollOption::where('id', $request->option_id)
+            ->where('poll_id', $request->poll_id)
+            ->firstOrFail();
+
+        // Incrémenter les votes
+        $option->increment('votes');
+
+        // Récupérer le total de votes pour ce poll
+        $totalVotes = PollOption::where('poll_id', $request->poll_id)->sum('votes');
+
+        return response()->json([
+            'success' => true,
+            'votes' => $option->votes,
+            'total_votes' => $totalVotes,
+            'message' => 'Vote enregistré avec succès',
+        ]);
+    }
+
+    private function formatRole(string $role): string
+    {
+        return $role === 'user' ? 'Etudiant' : ucfirst($role);
+    }
+
+    private function resolvePlaque(float $montant): string
+    {
+        return match (true) {
+            $montant >= 100000 => 'diamond',
+            $montant >= 20000 => 'gold',
+            $montant >= 10000 => 'silver',
+            $montant >= 5000 => 'bronze',
+            default => 'none',
+        };
+    }
+
+    private function montantRestant(float $montant): float
+    {
+        return max(0, (100000 - $montant) / 1000);
+    }
+
+    private function nombreEtudiants(): float
+    {
+        return (User::count() - 10) / 1000;
+    }
+
+    private function nombrePosts(): int
+    {
+        return Post::count() + ForumTopic::count();
+    }
+
+    public function fetchPosts(Request $request)
+    {
+        try {
+            $request->validate(['limit' => 'integer|min:1|max:50']);
+            $limit = $request->input('limit', 10);
+
+            // Cache par utilisateur (5 secondes)
+            $cacheKey = "posts_user_" . Auth::id();
+            
+            $data = Cache::remember($cacheKey, 5, function() use ($limit) {
+                return $this->loadPosts($limit);
+            });
+
+            return response()->json($data);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    private function loadPosts($limit)
+    {
+        $posts = Post::with([
+            'user:id,full_name,role_name,avatar',
+            'media:id,post_id,path',
+            'poll.options:id,poll_id,option,votes'
+        ])
+        ->where('status', 'published')
+        ->latest()
+        ->take($limit)
+        ->get()
+        ->map(function($post) {
+            return [
+                'id' => $post->id,
+                'content' => $post->content,
+                'type' => $post->type,
+                'likes_count' => $post->likes_count ?? 0,
+                'comments_count' => $post->comments_count ?? 0,
+                'shares_count' => $post->shares_count ?? 0,
+                'created_at' => $post->created_at->toISOString(),
+                'user' => [
+                    'id' => $post->user->id,
+                    'name' => $post->user->full_name ?? 'Utilisateur',
+                    'role' => $post->user->role_name ?? 'user',
+                    'avatar' => $post->user->avatar
+                ],
+                'plaque' => $this->getUserPlaque($post->user_id),
+                'montant' => $this->getUserMontant($post->user_id),
+                'media' => $post->media->map(fn($m) => [
+                    'type' => str_ends_with(strtolower($m->path), '.mp4') ? 'video' : 'image',
+                    'path' => $m->path
+                ]),
+                'poll' => $post->poll ? [
+                    'id' => $post->poll->id,
+                    'question' => $post->poll->question,
+                    'options' => $post->poll->options->map(fn($o) => [
+                        'id' => $o->id,
+                        'option' => $o->option,
+                        'votes' => $o->votes ?? 0
+                    ])
+                ] : null
+            ];
+        });
+
+        return [
+            'success' => true,
+            'posts' => $posts->values(),
+            'current_user' => [
+                'id' => Auth::id(),
+                'role' => Auth::user()->role_name ?? 'user'
+            ]
+        ];
+    }
+
+    private function getUserMontant($userId)
+    {
+        // Cache montant utilisateur (60 secondes)
+        return Cache::remember("user_montant_{$userId}", 60, function() use ($userId) {
+            return (float) DB::table('trophes')
+                ->where('user_id', $userId)
+                ->where('status', 'validated')
+                ->sum('montant_généré') ?? 0;
+        });
+    }
+
+    private function getUserPlaque($userId)
+    {
+        // Cache plaque utilisateur (60 secondes)
+        return Cache::remember("user_plaque_{$userId}", 60, function() use ($userId) {
+            $montant = $this->getUserMontant($userId);
+            
+            return match(true) {
+                $montant >= 100000 => 'diamond',
+                $montant >= 20000 => 'gold',
+                $montant >= 10000 => 'silver',
+                $montant >= 5000 => 'bronze',
+                default => 'none'
+            };
+        });
+    }
+
+    public function vote(Request $request)
+    {
+        try {
+            $request->validate([
+                'poll_id' => 'required|exists:polls,id',
+                'option_id' => 'required|exists:poll_options,id'
+            ]);
+
+            $option = PollOption::where('id', $request->option_id)
+                ->where('poll_id', $request->poll_id)
+                ->firstOrFail();
+
+            $option->increment('votes');
+
+            // Invalider cache posts
+            $this->clearPostsCache();
+
+            return response()->json(['success' => true, 'votes' => $option->votes]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function share(Request $request)
+    {
+        try {
+            $request->validate(['post_id' => 'required|exists:posts,id']);
+            
+            Post::where('id', $request->post_id)->increment('shares_count');
+            
+            // Invalider cache posts
+            $this->clearPostsCache();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function deletePost(Request $request)
+    {
+        try {
+            $request->validate(['post_id' => 'required|exists:posts,id']);
+            
+            $post = Post::findOrFail($request->post_id);
+
+            if (Auth::user()->role_name !== 'admin' && $post->user_id !== Auth::id()) {
+                return response()->json(['success' => false, 'error' => 'Non autorisé'], 403);
+            }
+
+            $post->delete();
+            
+            // Invalider cache posts
+            $this->clearPostsCache();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    private function clearPostsCache()
+    {
+        // Invalider le cache de tous les utilisateurs
+        Cache::flush(); // Simple mais efficace
+        
+        // OU plus ciblé si vous avez beaucoup d'utilisateurs :
+        // Cache::forget("posts_user_" . Auth::id());
     }
 }
