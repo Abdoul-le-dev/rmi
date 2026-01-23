@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\CourseVideoController;
+use App\Http\Controllers\LiveClassController;
+use App\Http\Controllers\LiveClassRecordingController;
 use App\Http\Controllers\MediaController;
 use App\Services\CloudFrontUrlSigner;
 use Illuminate\Support\Facades\Route;
@@ -448,3 +450,41 @@ Route::get('/test-cloudfront', function (CloudFrontUrlSigner $signer) {
 
 
 Route::get('/player/test-cloudfront-view', [CourseVideoController::class, 'testCloudFrontCookies']);
+
+
+Route::get('/live-class/public/{token}', [LiveClassController::class, 'joinPublic'])
+    ->name('live-class.join-public');
+Route::post('/live-class/public/{token}', [LiveClassController::class, 'joinPublic']);
+
+// Routes authentifiées
+Route::middleware(['web.auth'])->group(function () {
+    
+    // Dashboard étudiant
+    Route::get('/my-live-classes', [LiveClassController::class, 'studentDashboard'])
+        ->name('live-classes.student-dashboard');
+
+    // Gestion des live classes (instructeur)
+    Route::prefix('live-classes')->name('live-classes.')->group(function () {
+        Route::get('/', [LiveClassController::class, 'index'])->name('index');
+        Route::get('/create', [LiveClassController::class, 'create'])->name('create');
+        Route::post('/', [LiveClassController::class, 'store'])->name('store');
+        Route::get('/{liveClass}', [LiveClassController::class, 'show'])->name('show');
+        Route::put('/{liveClass}', [LiveClassController::class, 'update'])->name('update');
+        Route::delete('/{liveClass}', [LiveClassController::class, 'destroy'])->name('destroy');
+        
+        // Actions sur les live classes
+        Route::get('/{liveClass}/enroll', [LiveClassController::class, 'enroll'])->name('enroll');
+        Route::post('/{liveClass}/unenroll', [LiveClassController::class, 'unenroll'])->name('unenroll');
+        Route::post('/{liveClass}/start', [LiveClassController::class, 'start'])->name('start');
+        Route::post('/{liveClass}/join', [LiveClassController::class, 'join'])->name('join');
+        Route::post('/{liveClass}/end', [LiveClassController::class, 'end'])->name('end');
+
+           // Enregistrements
+        Route::prefix('{liveClass}/recordings')->name('recordings.')->group(function () {
+            Route::get('/', [LiveClassRecordingController::class, 'index'])->name('index');
+            Route::get('/{recording}/download', [LiveClassRecordingController::class, 'download'])->name('download');
+            Route::get('/{recording}/stream', [LiveClassRecordingController::class, 'stream'])->name('stream');
+            Route::delete('/{recording}', [LiveClassRecordingController::class, 'destroy'])->name('destroy');
+        });
+    });
+});
