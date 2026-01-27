@@ -490,6 +490,8 @@ Route::middleware(['web.auth'])->group(function () {
     });
 });
 
+Route::view('/offline', 'offline');
+
 Route::get('vip', [ForumController::class, 'home_index']);
 
 Route::post('vip', [ForumController::class, 'new_index']);

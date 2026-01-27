@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('room_name')->unique();
+            $table->string('live_cover')->nullable();
             $table->dateTime('scheduled_at');
             $table->integer('duration_minutes'); // Durée en minutes
             $table->dateTime('started_at')->nullable();
@@ -31,8 +32,8 @@ return new class extends Migration
             $table->boolean('is_public')->default(false); // false = seulement apprenants, true = public avec lien
             $table->boolean('auto_record')->default(false);
             $table->boolean('is_being_recorded')->default(false);
-            $table->string('public_token', 191)->nullable()->unique(); // Token pour le lien public
-            $table->enum('status', ['scheduled', 'live', 'ended', 'cancelled'])->default('scheduled');
+            $table->string('public_token')->nullable()->unique(); // Token pour le lien public
+            $table->enum('status', ['scheduled', 'live', 'ended', 'cancelled','pending'])->default('pending');
             $table->integer('max_participants')->nullable();
             $table->json('settings')->nullable(); // Paramètres additionnels (enregistrement, etc.)
              

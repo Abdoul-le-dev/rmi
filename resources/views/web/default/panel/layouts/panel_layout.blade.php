@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="/assets/default/vendors/simplebar/simplebar.css">
     <link rel="stylesheet" href="/assets/default/css/app.css">
     <link rel="stylesheet" href="/assets/default/css/panel.css">
+    @include('partials.pwa')
 
     @if ($isRtl)
         <link rel="stylesheet" href="/assets/default/css/rtl-app.css">

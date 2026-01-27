@@ -24,12 +24,12 @@ class LiveClassController extends Controller
      */
     public function index()
     {
-        $authUser=Auth::user();
+        $authUser = Auth::user();
         $liveClasses = LiveClass::where('instructor_id', Auth::id())
             ->orderBy('scheduled_at', 'desc')
             ->paginate(10);
 
-        return view('live-classes.index', compact('liveClasses','authUser'));
+        return view('live-classes.index', compact('liveClasses', 'authUser'));
     }
 
     /**
@@ -37,8 +37,8 @@ class LiveClassController extends Controller
      */
     public function create()
     {
-        $authUser=Auth::user();
-        return view('liveclass.create',compact('authUser'));
+        $authUser = Auth::user();
+        return view('liveclass.create', compact('authUser'));
     }
 
     /**
@@ -50,11 +50,21 @@ class LiveClassController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'scheduled_at' => 'required|date|after:now',
-            'duration_minutes' => 'required|integer|min:15|max:480', // 15min à 8h
+            'duration_minutes' => 'required|integer|min:15|max:480',
             'is_public' => 'required|boolean',
             'auto_record' => 'required|boolean',
             'max_participants' => 'nullable|integer|min:1|max:1000',
+            'live_cover' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
+
+        // Upload de l'image si présente
+        $coverPath = null;
+        if ($request->hasFile('live_cover')) {
+            $coverPath = $request->file('live_cover')->store(
+                'live-covers',
+                'public' //  disk
+            );
+        }
 
         $liveClass = LiveClass::create([
             'instructor_id' => Auth::id(),
@@ -64,13 +74,15 @@ class LiveClassController extends Controller
             'duration_minutes' => $validated['duration_minutes'],
             'is_public' => $validated['is_public'],
             'auto_record' => $validated['auto_record'],
-            'max_participants' => $validated['max_participants'] ?? config('jitsi.live_class.default_max_participants'),
+            'max_participants' => $validated['max_participants']
+                ?? config('jitsi.live_class.default_max_participants'),
             'status' => 'scheduled',
+            // 'live_cover' => $coverPath,
         ]);
 
         return redirect()
             ->route('live-classes.show', $liveClass)
-            ->with('success', 'Live class créé avec succès!');
+            ->with('success', 'Live class créé avec succès !');
     }
 
     /**
@@ -81,11 +93,11 @@ class LiveClassController extends Controller
         $this->authorize('view', $liveClass);
 
         $liveClass->load(['instructor', 'enrollments.user']);
-        
+
         $enrolledCount = $liveClass->getEnrolledCount();
         $isEnrolled = Auth::check() && $liveClass->isEnrolled(Auth::user());
-        $authUser=Auth::user();
-        return view('liveclass.show', compact('liveClass', 'enrolledCount', 'isEnrolled','authUser'));
+        $authUser = Auth::user();
+        return view('liveclass.show', compact('liveClass', 'enrolledCount', 'isEnrolled', 'authUser'));
     }
 
     /**
@@ -187,7 +199,6 @@ class LiveClassController extends Controller
 
             // Rediriger vers la salle Jitsi
             return redirect($tokenData['url']);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Erreur lors du démarrage: ' . $e->getMessage());
@@ -246,7 +257,6 @@ class LiveClassController extends Controller
 
             // Rediriger vers la salle Jitsi
             return redirect($tokenData['url']);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Erreur lors de la connexion: ' . $e->getMessage());
@@ -302,7 +312,6 @@ class LiveClassController extends Controller
                 DB::commit();
 
                 return redirect($tokenData['url']);
-
             } catch (\Exception $e) {
                 DB::rollBack();
                 return back()->with('error', 'Erreur: ' . $e->getMessage());
@@ -337,28 +346,28 @@ class LiveClassController extends Controller
     public function studentDashboard()
     {
         $upcomingClasses = LiveClass::whereHas('enrollments', function ($query) {
-                $query->where('user_id', Auth::id());
-            })
+            $query->where('user_id', Auth::id());
+        })
             ->where('status', 'scheduled')
             ->where('scheduled_at', '>', now())
             ->orderBy('scheduled_at', 'asc')
             ->get();
 
         $liveClasses = LiveClass::whereHas('enrollments', function ($query) {
-                $query->where('user_id', Auth::id());
-            })
+            $query->where('user_id', Auth::id());
+        })
             ->where('status', 'live')
             ->get();
 
         $pastClasses = LiveClass::whereHas('enrollments', function ($query) {
-                $query->where('user_id', Auth::id());
-            })
+            $query->where('user_id', Auth::id());
+        })
             ->where('status', 'ended')
             ->orderBy('ended_at', 'desc')
             ->limit(5)
             ->get();
-             $authUser=Auth::user();
+        $authUser = Auth::user();
 
-        return view('liveclass.student-dashboard', compact('upcomingClasses', 'liveClasses', 'pastClasses','authUser'));
+        return view('liveclass.student-dashboard', compact('upcomingClasses', 'liveClasses', 'pastClasses', 'authUser'));
     }
 }

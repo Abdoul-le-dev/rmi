@@ -18,6 +18,7 @@ class LiveClass extends Model
         'title',
         'description',
         'room_name',
+        'live_cover',
         'scheduled_at',
         'duration_minutes',
         'started_at',

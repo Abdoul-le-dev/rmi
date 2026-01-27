@@ -23,7 +23,7 @@
     <link rel="stylesheet" type="text/css" href="update/css/main.css" />
     <link rel="stylesheet" type="text/css" href="update/css/megamenu.css" />
     <link rel="stylesheet" type="text/css" href="update/css/responsive.css" />
-
+    @include('partials.pwa')
 </head>
 
 
