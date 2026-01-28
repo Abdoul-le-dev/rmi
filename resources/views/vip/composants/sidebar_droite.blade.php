@@ -55,8 +55,7 @@
                     <div class="p-4 text-center group hover:bg-green-50 transition-colors cursor-pointer">
                         <div class="flex flex-col items-center gap-1">
 
-                            <p class="font-bold text-gray
-                                    -900 text-lg">{{ $userData['students_online'] }}</p>
+                            <p class="font-bold text-gray-900 text-lg">{{ $userData['students_online'] }}</p>
                             <p class="text-xs text-gray-500 font-medium">En ligne</p>
                         </div>
                     </div>

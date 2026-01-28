@@ -1,0 +1,56 @@
+.calendar-grid {
+    display: grid;
+    grid-template-columns: 60px repeat(7, 1fr);
+    min-width: 900px;
+}
+
+@media (max-width: 768px) {
+    .calendar-grid {
+        grid-template-columns: 50px repeat(7, minmax(100px, 1fr));
+        min-width: 750px;
+    }
+}
+
+.time-slot {
+    border-right: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    min-height: 64px;
+}
+
+.day-column {
+    position: relative;
+}
+
+/* Modal */
+.modal-backdrop {
+    backdrop-filter: blur(4px);
+    transition: opacity 0.2s ease;
+}
+
+.modal-content {
+    transform: scale(0.95);
+    opacity: 0;
+    transition: all 0.2s ease;
+}
+
+.modal-backdrop.active .modal-content {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Animation événement en cours */
+@keyframes pulse-live {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.live-badge {
+    animation: pulse-live 2s ease-in-out infinite;
+}

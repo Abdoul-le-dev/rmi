@@ -1,318 +1,1162 @@
-// CONFIG
-const C = {
-    REFRESH: 60000,  // ✅ 60 secondes au lieu de 10
-    POSTS_URL: '/posts/fetch',
-    VOTE_URL: '/polls/vote',
-    DEL_URL: '/posts/delete',
-    SHARE_URL: '/posts/share',
-    DEFAULT_AVATAR: 'https://api.dicebear.com/7.x/avataaars/svg?seed='
-};
 
-const S = { 
-    posts: [], 
-    user: null, 
-    voted: new Set(),
-    isLoading: false,
-    isActive: true
-};
+// Toggle menu d'options
+function toggleOptions(button) {
+    const menu = button.nextElementSibling;
+    const allMenus = document.querySelectorAll('.options-menu');
 
-// UTILS
-const $ = (s) => document.querySelector(s);
-const csrf = () => $('meta[name="csrf-token"]').content;
+    // Fermer tous les autres menus
+    allMenus.forEach(m => {
+        if (m !== menu) m.classList.remove('active');
+    });
 
-// COOKIES
-const Cookie = {
-    get: (k) => (document.cookie.match(`(^|;)\\s*${k}\\s*=\\s*([^;]+)`) || [])[2],
-    set: (k, v, d = 10) => {
-        const e = new Date(Date.now() + d * 864e5);
-        document.cookie = `${k}=${v};expires=${e.toUTCString()};path=/`;
-    }
-};
+    menu.classList.toggle('active');
+}
 
-// API avec gestion d'erreur
-const api = async (url, data) => {
-    try {
-        const r = await fetch(url, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json', 
-                'X-CSRF-TOKEN': csrf(),
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(data)
+// Fermer les menus au clic à l'extérieur
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.post-options')) {
+        document.querySelectorAll('.options-menu').forEach(menu => {
+            menu.classList.remove('active');
         });
-        
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return await r.json();
-    } catch (e) {
-        console.error('API Error:', e);
-        return { success: false, error: e.message };
     }
-};
+});
 
-// PERMISSIONS
-const canDel = (p) => S.user && (S.user.role === 'admin' || p.user.id === S.user.id);
+// Modifier un post
+function editPost(button, id) {
+    const post = button.closest('.post-card');
 
-// TIME
-const ago = (d) => {
-    const s = ~~((Date.now() - new Date(d)) / 1000);
-    return s < 60 ? '1min' : s < 3600 ? `${~~(s/60)}min` : s < 86400 ? `${~~(s/3600)}h` : `${~~(s/86400)}j`;
-};
+    // Détecter le type de post
+    const hasMedia = post.querySelector('.media-grid');
+    const hasPoll = post.querySelector('.poll-option');
+    const hasText = post.querySelector('.p-4 > p:not(.text-xs)');
 
-// VOTED
-const hasVoted = (id) => {
-    if (S.voted.has(id)) return true;
-    const v = Cookie.get('votes');
-    return v && JSON.parse(v).includes(id);
-};
+    // Fermer le menu
+    button.closest('.options-menu').classList.remove('active');
 
-const addVote = (id) => {
-    S.voted.add(id);
-    const v = Cookie.get('votes');
-    const arr = v ? JSON.parse(v) : [];
-    if (!arr.includes(id)) {
-        arr.push(id);
-        Cookie.set('votes', JSON.stringify(arr));
+    if (hasPoll) {
+        openEditPollModal(post);
+    } else if (hasMedia) {
+        openEditMediaModal(post);
+    } else {
+        openEditTextModal(post);
     }
-};
+}
 
-// RENDER
-const avatar = (u) => u.avatar || `${C.DEFAULT_AVATAR}${encodeURIComponent(u.name)}`;
+// Modal d'édition pour post texte
+function openEditTextModal(post) {
+    const contentText = post.querySelector('.p-4 > p:not(.text-xs)');
+    const currentText = contentText.textContent.trim();
 
-const badge = (p) => {
-    const b = { bronze: '🥉', silver: '🥈', gold: '🥇', diamond: '💎', none: '⭐' };
-    return `<span class="text-xl">${b[p] || '⭐'}</span>`;
-};
+    const modalContent = document.getElementById('editModalContent');
+    modalContent.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-base">Modifier le post</h3>
+                    <button onclick="closeEditModal()" class="p-1 text-gray-400 hover:text-gray-600 rounded-lg transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="edit-option-item">
+                    <label class="edit-label">Contenu du post</label>
+                    <textarea id="editTextContent" class="edit-textarea">${escapeHtml(currentText)}</textarea>
+                </div>
+                
+                <div class="flex gap-2 mt-4">
+                    <button onclick="closeEditModal()" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm">
+                        Annuler
+                    </button>
+                    <button onclick="saveTextEdit({{ $post->id }})" class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium text-sm">
+                        Enregistrer
+                    </button>
+                </div>
+            `;
 
-const card = (u, p, m) => `
-    <div class="absolute left-0 top-12 w-60 bg-white rounded-xl shadow-2xl p-4 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none">
-        <div class="flex items-center gap-3 mb-3">
-            <img src="${avatar(u)}" class="w-12 h-12 rounded-full" onerror="this.src='${C.DEFAULT_AVATAR}${encodeURIComponent(u.name)}'">
-            <div>
-                <p class="font-bold text-sm text-gray-900">${u.name}</p>
-                <p class="text-xs text-gray-500">${u.role}</p>
-            </div>
-        </div>
-        <div class="flex items-center justify-between pt-2 border-t">
-            <span class="text-sm font-semibold text-gray-700">${m.toFixed(2)}$</span>
-            ${badge(p)}
-        </div>
-    </div>
-`;
+    // Stocker la référence du post
+    window.currentEditingPost = post;
 
-const media = (m) => {
-    if (!m.length) return '';
-    return `<div class="grid ${m.length > 1 ? 'grid-cols-2' : ''} gap-2 mb-3">${
-        m.map(x => x.type === 'image' 
-            ? `<img src="/storage/${x.path}" class="w-full rounded-lg cursor-pointer hover:opacity-95 transition" onclick="showMedia('${x.path}')" onerror="this.style.display='none'">`
-            : `<video src="/storage/${x.path}" controls class="w-full rounded-lg" onerror="this.style.display='none'"></video>`
-        ).join('')
-    }</div>`;
-};
+    // Ouvrir le modal
+    document.getElementById('editModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
 
-const poll = (pl, pid) => {
-    const voted = hasVoted(pl.id);
-    const tot = pl.options.reduce((a, o) => a + o.votes, 0);
-    
-    return `<div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 mb-3">
-        <p class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-            <span class="text-xl">📊</span>${pl.question}
-        </p>
-        <div class="space-y-2">${pl.options.map(o => {
-            const pct = tot ? ~~(o.votes / tot * 100) : 0;
-            return voted ? `
-                <div class="relative bg-white rounded-lg p-3 overflow-hidden shadow-sm">
-                    <div class="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-10 transition-all duration-700" style="width:${pct}%"></div>
-                    <div class="relative flex justify-between items-center">
-                        <span class="text-sm font-medium text-gray-900">${o.option}</span>
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs text-gray-500">${o.votes}</span>
-                            <span class="text-sm font-bold text-indigo-600">${pct}%</span>
+    // Focus sur le textarea
+    setTimeout(() => document.getElementById('editTextContent').focus(), 100);
+}
+
+// Modal d'édition pour post média
+function openEditMediaModal(post) {
+    const contentText = post.querySelector('.p-4 > p:not(.text-xs)');
+    const mediaGrid = post.querySelector('.media-grid');
+    const currentText = contentText.textContent.trim();
+
+    // Compter le nombre d'images actuel
+    const currentImages = mediaGrid.children.length;
+
+    // Générer les champs d'upload pour chaque image
+    let imagesUploadHtml = '';
+    for (let i = 0; i < currentImages; i++) {
+        imagesUploadHtml += `
+                    <div class="edit-option-item">
+                        <label class="edit-label">Image ${i + 1}</label>
+                        <div class="relative">
+                            <input type="file" id="imageUpload${i}" accept="image/*" class="hidden" onchange="previewImage(${i})">
+                            <button type="button" onclick="document.getElementById('imageUpload${i}').click()" class="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-indigo-400 transition-colors text-sm text-gray-600 hover:text-indigo-600 flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <span id="imageLabel${i}">Remplacer l'image</span>
+                            </button>
+                            <div id="imagePreview${i}" class="mt-2 hidden">
+                                <img class="w-full h-32 object-cover rounded-lg border border-gray-200">
+                            </div>
                         </div>
                     </div>
-                </div>
-            ` : `
-                <button onclick="vote(${pl.id}, ${o.id}, ${pid})" 
-                        class="vote-btn w-full text-left bg-white border-2 border-gray-200 rounded-lg p-3 hover:border-indigo-400 hover:shadow-md transition-all duration-200">
-                    <span class="text-sm font-medium text-gray-900">${o.option}</span>
-                </button>
-            `;
-        }).join('')}</div>
-        <p class="text-xs text-gray-500 mt-3">${tot} vote${tot > 1 ? 's' : ''}</p>
-    </div>`;
-};
+                `;
+    }
 
-const post = (p) => `
-    <div class="post-card bg-white rounded-xl shadow-sm hover:shadow-md p-4 mb-3 transition-all duration-200" data-id="${p.id}">
-        <div class="flex items-start gap-3 mb-3">
-            <div class="relative group flex-shrink-0">
-                <img src="${avatar(p.user)}" class="w-10 h-10 rounded-full ring-2 ring-gray-100" onerror="this.src='${C.DEFAULT_AVATAR}${encodeURIComponent(p.user.name)}'">
-                ${card(p.user, p.plaque, p.montant)}
-            </div>
-            <div class="flex-1 min-w-0">
-                <p class="font-semibold text-sm text-gray-900 truncate">${p.user.name}</p>
-                <p class="text-xs text-gray-500">${ago(p.created_at)}</p>
-            </div>
-            <div class="flex items-center gap-1">
-                <button onclick="share(${p.id})" class="p-2 hover:bg-gray-100 rounded-full transition" title="Partager">
-                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
-                    </svg>
-                </button>
-                ${canDel(p) ? `
-                    <button onclick="del(${p.id})" class="p-2 hover:bg-red-50 rounded-full transition" title="Supprimer">
-                        <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    const modalContent = document.getElementById('editModalContent');
+    modalContent.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-base">Modifier le post média</h3>
+                    <button onclick="closeEditModal()" class="p-1 text-gray-400 hover:text-gray-600 rounded-lg transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="edit-option-item">
+                    <label class="edit-label">Description</label>
+                    <textarea id="editMediaText" class="edit-textarea">${escapeHtml(currentText)}</textarea>
+                </div>
+                
+                <div class="edit-option-item">
+                    <label class="edit-label">Nombre d'images</label>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="changeImageCount(1)" class="image-count-btn flex-1 px-4 py-2 border-2 ${currentImages === 1 ? 'border-indigo-600 bg-indigo-50 text-indigo-600' : 'border-gray-300 text-gray-700'} rounded-lg hover:border-indigo-400 transition-colors font-medium text-sm">
+                            1
+                        </button>
+                        <button type="button" onclick="changeImageCount(2)" class="image-count-btn flex-1 px-4 py-2 border-2 ${currentImages === 2 ? 'border-indigo-600 bg-indigo-50 text-indigo-600' : 'border-gray-300 text-gray-700'} rounded-lg hover:border-indigo-400 transition-colors font-medium text-sm">
+                            2
+                        </button>
+                        <button type="button" onclick="changeImageCount(3)" class="image-count-btn flex-1 px-4 py-2 border-2 ${currentImages === 3 ? 'border-indigo-600 bg-indigo-50 text-indigo-600' : 'border-gray-300 text-gray-700'} rounded-lg hover:border-indigo-400 transition-colors font-medium text-sm">
+                            3
+                        </button>
+                        <button type="button" onclick="changeImageCount(4)" class="image-count-btn flex-1 px-4 py-2 border-2 ${currentImages === 4 ? 'border-indigo-600 bg-indigo-50 text-indigo-600' : 'border-gray-300 text-gray-700'} rounded-lg hover:border-indigo-400 transition-colors font-medium text-sm">
+                            4
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="imagesUploadContainer">
+                    ${imagesUploadHtml}
+                </div>
+                
+                <div class="flex gap-2 mt-4">
+                    <button onclick="closeEditModal()" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm">
+                        Annuler
+                    </button>
+                    <button onclick="saveMediaEdit()" class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium text-sm">
+                        Enregistrer
+                    </button>
+                </div>
+            `;
+
+    window.currentEditingPost = post;
+    window.selectedImageCount = currentImages;
+    window.uploadedImages = new Array(currentImages).fill(null);
+
+    document.getElementById('editModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+// Modal d'édition pour sondage
+function openEditPollModal(post) {
+    const pollTitle = post.querySelector('h2');
+    const pollDescription = post.querySelector('.p-4 > p:not(.text-xs)');
+    const pollOptions = Array.from(post.querySelectorAll('.poll-option'));
+
+    const optionsHtml = pollOptions.map((option, index) => {
+        const optionText = option.querySelector('span.text-sm').textContent.trim();
+        return `
+                    <div class="edit-option-item">
+                        <label class="edit-label">Option ${index + 1}</label>
+                        <input type="text" id="pollOption${index}" class="edit-input" value="${escapeHtml(optionText)}">
+                    </div>
+                `;
+    }).join('');
+
+    const modalContent = document.getElementById('editModalContent');
+    modalContent.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-semibold text-base">Modifier le sondage</h3>
+                    <button onclick="closeEditModal()" class="p-1 text-gray-400 hover:text-gray-600 rounded-lg transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="edit-option-item">
+                    <label class="edit-label">Question</label>
+                    <input type="text" id="pollTitle" class="edit-input" value="${escapeHtml(pollTitle.textContent.trim())}">
+                </div>
+                
+                <div class="edit-option-item">
+                    <label class="edit-label">Description</label>
+                    <textarea id="pollDescription" class="edit-textarea" style="min-height: 60px;">${escapeHtml(pollDescription.textContent.trim())}</textarea>
+                </div>
+                
+                ${optionsHtml}
+                
+                <div class="flex gap-2 mt-4">
+                    <button onclick="closeEditModal()" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm">
+                        Annuler
+                    </button>
+                    <button onclick="savePollEdit()" class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium text-sm">
+                        Enregistrer
+                    </button>
+                </div>
+            `;
+
+    window.currentEditingPost = post;
+    window.pollOptionsCount = pollOptions.length;
+
+    document.getElementById('editModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+// Sélectionner le nombre d'images
+function selectImageCount(count) {
+    window.selectedImageCount = count;
+
+    // Mettre à jour les boutons
+    document.querySelectorAll('.image-count-btn').forEach((btn, index) => {
+        if (index + 1 === count) {
+            btn.classList.remove('border-gray-300', 'text-gray-700');
+            btn.classList.add('border-indigo-600', 'bg-indigo-50', 'text-indigo-600');
+        } else {
+            btn.classList.remove('border-indigo-600', 'bg-indigo-50', 'text-indigo-600');
+            btn.classList.add('border-gray-300', 'text-gray-700');
+        }
+    });
+}
+
+// Sauvegarder l'édition du post texte
+function saveTextEdit(id) {
+    const newContent = document.getElementById('editTextContent').value.trim();
+    if (newContent) {
+        const contentText = window.currentEditingPost.querySelector('.p-4 > p:not(.text-xs)');
+        contentText.textContent = newContent;
+        closeEditModal();
+        showEditSuccess();
+    }
+}
+
+// Sauvegarder l'édition du post média
+function saveMediaEdit() {
+    const newText = document.getElementById('editMediaText').value.trim();
+    const numImages = window.selectedImageCount;
+
+    if (newText) {
+        const contentText = window.currentEditingPost.querySelector('.p-4 > p:not(.text-xs)');
+        contentText.textContent = newText;
+
+        const mediaGrid = window.currentEditingPost.querySelector('.media-grid');
+        updateMediaGridWithImages(mediaGrid, numImages, window.uploadedImages);
+
+        closeEditModal();
+        showEditSuccess();
+    }
+}
+
+// Sauvegarder l'édition du sondage
+function savePollEdit() {
+    const newTitle = document.getElementById('pollTitle').value.trim();
+    const newDesc = document.getElementById('pollDescription').value.trim();
+
+    if (newTitle && newDesc) {
+        const pollTitle = window.currentEditingPost.querySelector('h2');
+        const pollDescription = window.currentEditingPost.querySelector('.p-4 > p:not(.text-xs)');
+
+        pollTitle.textContent = newTitle;
+        pollDescription.textContent = newDesc;
+
+        // Mettre à jour les options
+        const pollOptions = window.currentEditingPost.querySelectorAll('.poll-option');
+        pollOptions.forEach((option, index) => {
+            const newOptionText = document.getElementById(`pollOption${index}`).value.trim();
+            if (newOptionText) {
+                option.querySelector('span.text-sm').textContent = newOptionText;
+            }
+        });
+
+        closeEditModal();
+        showEditSuccess();
+    }
+}
+
+// Fermer le modal d'édition
+function closeEditModal() {
+    document.getElementById('editModal').classList.remove('active');
+    document.body.style.overflow = '';
+    window.currentEditingPost = null;
+}
+
+// Prévisualiser une image uploadée
+function previewImage(index) {
+    const input = document.getElementById(`imageUpload${index}`);
+    const preview = document.getElementById(`imagePreview${index}`);
+    const label = document.getElementById(`imageLabel${index}`);
+
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            window.uploadedImages[index] = e.target.result;
+            preview.querySelector('img').src = e.target.result;
+            preview.classList.remove('hidden');
+            label.textContent = '✓ Image sélectionnée';
+            label.parentElement.classList.add('border-green-500', 'bg-green-50', 'text-green-600');
+            label.parentElement.classList.remove('border-gray-300', 'text-gray-600');
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// Changer le nombre d'images et mettre à jour les champs d'upload
+function changeImageCount(count) {
+    if (count === window.selectedImageCount) return;
+
+    window.selectedImageCount = count;
+
+    // Mettre à jour les boutons
+    document.querySelectorAll('.image-count-btn').forEach((btn, index) => {
+        if (index + 1 === count) {
+            btn.classList.remove('border-gray-300', 'text-gray-700');
+            btn.classList.add('border-indigo-600', 'bg-indigo-50', 'text-indigo-600');
+        } else {
+            btn.classList.remove('border-indigo-600', 'bg-indigo-50', 'text-indigo-600');
+            btn.classList.add('border-gray-300', 'text-gray-700');
+        }
+    });
+
+    // Régénérer les champs d'upload
+    let imagesUploadHtml = '';
+    for (let i = 0; i < count; i++) {
+        const hasImage = window.uploadedImages[i];
+        imagesUploadHtml += `
+                    <div class="edit-option-item">
+                        <label class="edit-label">Image ${i + 1}</label>
+                        <div class="relative">
+                            <input type="file" id="imageUpload${i}" accept="image/*" class="hidden" onchange="previewImage(${i})">
+                            <button type="button" onclick="document.getElementById('imageUpload${i}').click()" class="w-full px-4 py-3 border-2 border-dashed ${hasImage ? 'border-green-500 bg-green-50 text-green-600' : 'border-gray-300 text-gray-600'} rounded-lg hover:border-indigo-400 transition-colors text-sm hover:text-indigo-600 flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <span id="imageLabel${i}">${hasImage ? '✓ Image sélectionnée' : 'Remplacer l\'image'}</span>
+                            </button>
+                            <div id="imagePreview${i}" class="mt-2 ${hasImage ? '' : 'hidden'}">
+                                <img src="${hasImage || ''}" class="w-full h-32 object-cover rounded-lg border border-gray-200">
+                            </div>
+                        </div>
+                    </div>
+                `;
+    }
+
+    document.getElementById('imagesUploadContainer').innerHTML = imagesUploadHtml;
+
+    // Redimensionner le tableau uploadedImages
+    const oldImages = window.uploadedImages;
+    window.uploadedImages = new Array(count).fill(null);
+    for (let i = 0; i < Math.min(count, oldImages.length); i++) {
+        window.uploadedImages[i] = oldImages[i];
+    }
+}
+
+// Fermer au clic sur le fond
+document.getElementById('editModal').addEventListener('click', (e) => {
+    if (e.target.id === 'editModal') {
+        closeEditModal();
+    }
+});
+
+// Mettre à jour la grille de médias
+function updateMediaGrid(mediaGrid, numImages) {
+    mediaGrid.className = 'media-grid';
+    if (numImages === 1) mediaGrid.classList.add('single');
+    else if (numImages === 2) mediaGrid.classList.add('double');
+    else if (numImages === 3) mediaGrid.classList.add('triple');
+    else mediaGrid.classList.add('quad');
+
+    const colors = [
+        'from-blue-400 to-purple-500',
+        'from-pink-400 to-orange-500',
+        'from-green-400 to-teal-500',
+        'from-yellow-400 to-red-500'
+    ];
+
+    mediaGrid.innerHTML = '';
+    for (let i = 0; i < numImages; i++) {
+        const div = document.createElement('div');
+        div.className = `aspect-square bg-gradient-to-br ${colors[i]} rounded-lg overflow-hidden`;
+        div.innerHTML = `<div class="w-full h-full flex items-center justify-center text-white text-xs opacity-40">Photo ${i + 1}</div>`;
+        mediaGrid.appendChild(div);
+    }
+}
+
+// Mettre à jour la grille de médias avec les images uploadées
+function updateMediaGridWithImages(mediaGrid, numImages, uploadedImages) {
+    mediaGrid.className = 'media-grid';
+    if (numImages === 1) mediaGrid.classList.add('single');
+    else if (numImages === 2) mediaGrid.classList.add('double');
+    else if (numImages === 3) mediaGrid.classList.add('triple');
+    else mediaGrid.classList.add('quad');
+
+    const colors = [
+        'from-blue-400 to-purple-500',
+        'from-pink-400 to-orange-500',
+        'from-green-400 to-teal-500',
+        'from-yellow-400 to-red-500'
+    ];
+
+    mediaGrid.innerHTML = '';
+    for (let i = 0; i < numImages; i++) {
+        const div = document.createElement('div');
+        div.className = 'aspect-square rounded-lg overflow-hidden';
+
+        // Si une image a été uploadée, l'afficher, sinon utiliser le gradient par défaut
+        if (uploadedImages[i]) {
+            div.innerHTML = `<img src="${uploadedImages[i]}" class="w-full h-full object-cover">`;
+        } else {
+            div.className += ` bg-gradient-to-br ${colors[i]}`;
+            div.innerHTML = `<div class="w-full h-full flex items-center justify-center text-white text-xs opacity-40">Photo ${i + 1}</div>`;
+        }
+
+        mediaGrid.appendChild(div);
+    }
+}
+
+// Afficher un message de succès
+function showEditSuccess() {
+    const successMsg = document.createElement('div');
+    successMsg.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg text-sm font-medium z-50';
+    successMsg.style.animation = 'slideInRight 0.3s ease';
+    successMsg.innerHTML = '✓ Modifications enregistrées';
+
+    document.body.appendChild(successMsg);
+
+    setTimeout(() => {
+        successMsg.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => successMsg.remove(), 300);
+    }, 2000);
+}
+
+// Supprimer un post
+function deletePost(button) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce post ?')) {
+        const post = button.closest('.post-card');
+        post.style.opacity = '0';
+        post.style.transform = 'scale(0.95)';
+        setTimeout(() => post.remove(), 200);
+    }
+
+    // Fermer le menu
+    button.closest('.options-menu').classList.remove('active');
+}
+
+// Ouvrir le modal de partage
+function openShareModal(button, id) {
+    const modal = document.getElementById('shareModal');
+    const post = button.closest('.post-card');
+    const postId = id;
+    
+    // Générer un lien unique pour chaque post
+    document.getElementById('shareLink').value = `https://rmclass.com/vip/${id}`;
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    // Réinitialiser le message de succès
+    document.getElementById('copySuccess').style.opacity = '0';
+    
+    // Enregistrer le partage en base de données
+    saveShareToDatabases(id, '/posts/share');
+    
+    // Incrémenter le compteur de partages dans la vue
+    const shareCount = post.querySelector('.flex.items-center.gap-4 span:nth-child(3) span');
+    if (shareCount) {
+        const currentCount = parseInt(shareCount.textContent.replace(/[^0-9]/g, ''));
+        shareCount.textContent = formatNumber(currentCount + 1);
+    }
+}
+
+// Fermer le modal de partage
+function closeShareModal() {
+    const modal = document.getElementById('shareModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Copier le lien
+function copyShareLink() {
+    const linkInput = document.getElementById('shareLink');
+    linkInput.select();
+    linkInput.setSelectionRange(0, 99999); // Pour mobile
+
+    navigator.clipboard.writeText(linkInput.value).then(() => {
+        const successMsg = document.getElementById('copySuccess');
+        successMsg.style.opacity = '1';
+
+        setTimeout(() => {
+            successMsg.style.opacity = '0';
+        }, 2000);
+    });
+}
+
+// Fermer le modal au clic sur le fond
+document.getElementById('shareModal').addEventListener('click', (e) => {
+    if (e.target.id === 'shareModal') {
+        closeShareModal();
+    }
+});
+const $ = (s) => document.querySelector(s);
+const csrf = () => $('meta[name="csrf-token"]').content;
+// Like avec animation subtile
+function handleLike(button,id) {
+    const isLiked = button.classList.contains('liked');
+    const post = button.closest('.post-card');
+    const likeCount = post.querySelector('.flex.items-center.gap-4 span:first-child span');
+
+    if (!isLiked) {
+        button.classList.add('liked');
+        if (likeCount) {
+            const current = parseInt(likeCount.textContent.replace(/[^0-9]/g, ''));
+            likeCount.textContent = formatNumber(current + 1);
+        }
+    } else {
+        button.classList.remove('liked');
+        if (likeCount) {
+            const current = parseInt(likeCount.textContent.replace(/[^0-9]/g, ''));
+            likeCount.textContent = formatNumber(current - 1);
+        }
+    }
+}
+
+// Toggle commentaires
+function toggleComments(button) {
+    const post = button.closest('.post-card');
+    const commentSection = post.querySelector('.comment-section');
+    commentSection.classList.toggle('active');
+}
+
+// Ajouter un commentaire
+
+// Ajouter un commentaire
+async function addComment(input) {
+    const text = input.value.trim();
+    if (!text) return;
+
+    const post = input.closest('.post-card');
+    const postId = post.getAttribute('data-post-id'); 
+    const commentList = post.querySelector('.comment-section .space-y-2');
+    const commentSection = post.querySelector('.comment-section');
+
+    // Désactiver l'input pendant l'envoi
+    input.disabled = true;
+
+    // Envoyer en base de données
+    const result = await saveCommentToDatabase(postId, text);
+
+    // Réactiver l'input
+    input.disabled = false;
+
+    if (!result.success) {
+        alert('Erreur lors de l\'envoi du commentaire. Veuillez réessayer.');
+        return;
+    }
+
+    // Utiliser l'ID réel retourné par l'API
+    const commentId = result.comment.id;
+
+    if (!commentSection.classList.contains('active')) {
+        commentSection.classList.add('active');
+    }
+
+    const comment = document.createElement('div');
+    comment.className = 'comment-item flex gap-2 p-2.5 bg-gray-50 rounded-lg';
+    comment.setAttribute('data-comment-id', commentId);
+    comment.innerHTML = `
+        <div class="w-7 h-7 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex-shrink-0"></div>
+        <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-0.5">
+                <span class="font-medium text-xs">Vous</span>
+                <span class="text-xs text-gray-400">À l'instant</span>
+                <div class="ml-auto flex gap-1">
+                    <button onclick="editComment(${commentId})" class="text-gray-400 hover:text-indigo-600 transition-colors p-1" title="Modifier">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                    </button>
+                    <button onclick="deleteComment(${commentId})" class="text-gray-400 hover:text-red-600 transition-colors p-1" title="Supprimer">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                         </svg>
                     </button>
-                ` : ''}
+                </div>
             </div>
+            <p class="text-xs text-gray-700 comment-text">${escapeHtml(text)}</p>
         </div>
-        
-        ${p.content ? `<p class="text-gray-800 mb-3 whitespace-pre-wrap break-words">${p.content}</p>` : ''}
-        ${p.type === 'media' && p.media?.length ? media(p.media) : ''}
-        ${p.type === 'sondage' && p.poll ? poll(p.poll, p.id) : ''}
-        
-        <div class="flex items-center gap-4 pt-3 border-t border-gray-100 text-gray-500 text-sm">
-            <span class="flex items-center gap-1 hover:text-indigo-600 cursor-pointer transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                </svg>
-                ${p.comments_count}
-            </span>
-            <span class="flex items-center gap-1 hover:text-red-500 cursor-pointer transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                </svg>
-                ${p.likes_count}
-            </span>
-            <span class="flex items-center gap-1">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
-                </svg>
-                ${p.shares_count}
-            </span>
-        </div>
-    </div>
-`;
+    `;
 
-// ✅ LOAD OPTIMISÉ
-const load = async () => {
-    if (S.isLoading || !S.isActive) return;
-    
-    S.isLoading = true;
-    
-    try {
-        const d = await api(C.POSTS_URL, { limit: 10 });
-        
-        if (!d.success) {
-            console.error('Load failed:', d.error);
-            return;
+    // Insérer en premier
+    commentList.insertBefore(comment, commentList.firstChild);
+
+    // Gérer l'affichage des 10 derniers
+    const allComments = commentList.querySelectorAll('.comment-item');
+    allComments.forEach((c, index) => {
+        if (index >= 10) {
+            c.classList.add('hidden');
         }
-        
-        S.posts = d.posts;
-        S.user = d.current_user;
-        
-        const c = $('#posts');
-        if (!c) return;
-        
-        // Sauvegarder le scroll
-        const scroll = window.scrollY;
-        
-        // Render sans flash
-        c.innerHTML = d.posts.map(post).join('');
-        
-        // Restaurer le scroll
-        window.scrollTo(0, scroll);
-        
-    } catch (e) {
-        console.error('Load error:', e);
-    } finally {
-        S.isLoading = false;
+    });
+
+    updateShowMoreButton(post);
+
+    input.value = '';
+
+    const commentCount = post.querySelector('.flex.items-center.gap-4 span:nth-child(2) span');
+    if (commentCount) {
+        const current = parseInt(commentCount.textContent.replace(/[^0-9]/g, ''));
+        commentCount.textContent = current + 1;
     }
-};
+}
 
-// ✅ DÉTECTION ONGLET ACTIF
-document.addEventListener('visibilitychange', () => {
-    S.isActive = !document.hidden;
-    if (S.isActive) load();
-});
+// Afficher plus de commentaires
+function showMoreComments(button) {
+    const post = button.closest('.post-card');
+    const commentList = post.querySelector('.comment-section .space-y-2');
+    const hiddenComments = commentList.querySelectorAll('.comment-item.hidden');
 
-// ACTIONS
-const vote = async (pollId, optId, postId) => {
-    if (hasVoted(pollId)) return toast('Déjà voté', 'warning');
-    
-    const r = await api(C.VOTE_URL, { poll_id: pollId, option_id: optId });
-    
-    if (r.success) {
-        addVote(pollId);
-        
-        const p = S.posts.find(x => x.id === postId);
-        if (p && p.poll) {
-            const opt = p.poll.options.find(o => o.id === optId);
-            if (opt) opt.votes++;
-            $(`[data-id="${postId}"]`).outerHTML = post(p);
+    // Afficher les 10 prochains commentaires
+    let count = 0;
+    hiddenComments.forEach(comment => {
+        if (count < 10) {
+            comment.classList.remove('hidden');
+            count++;
         }
-        
-        toast('Vote enregistré 🎉', 'success');
-    }
-};
+    });
 
-const share = async (id) => {
-    const r = await api(C.SHARE_URL, { post_id: id });
-    if (r.success) {
-        const p = S.posts.find(x => x.id === id);
-        if (p) {
-            p.shares_count++;
-            $(`[data-id="${id}"]`).outerHTML = post(p);
+    // Mettre à jour le bouton
+    updateShowMoreButton(post);
+}
+
+// Mettre à jour le bouton "Voir plus"
+function updateShowMoreButton(post) {
+    const commentList = post.querySelector('.comment-section .space-y-2');
+    const hiddenComments = commentList.querySelectorAll('.comment-item.hidden');
+    const existingButton = post.querySelector('.show-more-comments');
+
+    if (hiddenComments.length > 0) {
+        if (existingButton) {
+            existingButton.querySelector('span').textContent = `Voir ${hiddenComments.length} commentaire${hiddenComments.length > 1 ? 's' : ''} de plus`;
+        } else {
+            const button = document.createElement('button');
+            button.className = 'show-more-comments w-full text-center py-2 text-xs text-gray-600 hover:text-indigo-600 font-medium rounded-lg mb-3';
+            button.innerHTML = `<span>Voir ${hiddenComments.length} commentaire${hiddenComments.length > 1 ? 's' : ''} de plus</span>`;
+            button.onclick = function () { showMoreComments(this); };
+
+            const commentSection = post.querySelector('.comment-section');
+            const inputContainer = commentSection.querySelector('.flex.gap-2');
+            commentSection.insertBefore(button, inputContainer);
         }
-        toast('Post partagé', 'success');
+    } else {
+        if (existingButton) {
+            existingButton.remove();
+        }
     }
-};
+}
 
-const del = async (id) => {
-    if (!confirm('Supprimer ?')) return;
-    
-    const el = $(`[data-id="${id}"]`);
-    el.style.transform = 'translateX(-100%)';
-    el.style.opacity = '0';
-    
-    const r = await api(C.DEL_URL, { post_id: id });
-    
+// Initialiser l'affichage des commentaires (à appeler au chargement de chaque post)
+function initializeCommentsDisplay(post) {
+    const commentList = post.querySelector('.comment-section .space-y-2');
+    const allComments = commentList.querySelectorAll('.comment-item');
+
+    // Cacher tous les commentaires après le 10ème
+    allComments.forEach((comment, index) => {
+        if (index >= 10) {
+            comment.classList.add('hidden');
+        }
+    });
+
+    // Ajouter le bouton "Voir plus" si nécessaire
+    updateShowMoreButton(post);
+}
+
+// Soumettre avec Enter
+function handleCommentSubmit(event, input) {
+    if (event.key === 'Enter') {
+        addComment(input);
+    }
+}
+
+// Modifier un commentaire
+function editComment(commentId) {
+    const comment = document.querySelector(`[data-comment-id="${commentId}"]`);
+    if (!comment) return;
+
+    const commentText = comment.querySelector('.comment-text');
+    const currentText = commentText.textContent.trim();
+
+    // Créer un champ d'édition inline
+    const editContainer = document.createElement('div');
+    editContainer.className = 'flex gap-2 mt-1';
+    editContainer.innerHTML = `
+                <input type="text" 
+                       class="flex-1 px-2 py-1 text-xs border border-indigo-400 rounded focus:outline-none focus:ring-1 focus:ring-indigo-400" 
+                       value="${escapeHtml(currentText)}"
+                       id="editInput${commentId}">
+                <button onclick="saveCommentEdit(${commentId})" class="px-2 py-1 bg-indigo-600 text-white text-xs rounded hover:bg-indigo-700 transition-colors">
+                    ✓
+                </button>
+                <button onclick="cancelCommentEdit(${commentId})" class="px-2 py-1 bg-gray-300 text-gray-700 text-xs rounded hover:bg-gray-400 transition-colors">
+                    ✕
+                </button>
+            `;
+
+    // Sauvegarder le texte original
+    comment.setAttribute('data-original-text', currentText);
+
+    // Cacher le texte et afficher l'éditeur
+    commentText.style.display = 'none';
+    commentText.parentElement.appendChild(editContainer);
+
+    // Focus sur l'input
     setTimeout(() => {
-        if (r.success) {
-            el.remove();
-            S.posts = S.posts.filter(p => p.id !== id);
-            toast('Post supprimé', 'success');
+        const input = document.getElementById(`editInput${commentId}`);
+        input.focus();
+        input.select();
+    }, 50);
+}
+
+// Sauvegarder l'édition du commentaire
+async function saveCommentEdit(commentId) {
+    const comment = document.querySelector(`[data-comment-id="${commentId}"]`);
+    if (!comment) return;
+
+    const input = document.getElementById(`editInput${commentId}`);
+    const newText = input.value.trim();
+    if (!newText) return;
+
+    const commentTextEl = comment.querySelector('.comment-text');
+    const timeSpan = comment.querySelector('.text-xs.text-gray-400');
+    const editor = input.closest('.flex.gap-2');
+
+    // Option UX : désactiver l’input pendant l’envoi
+    input.disabled = true;
+
+    try {
+        const response = await fetch('/comments/edit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrf(),
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                comment_id: commentId,
+                content: newText
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
         }
-    }, 300);
-};
 
-const showMedia = (path) => {
-    const d = document.createElement('div');
-    d.className = 'fixed inset-0 bg-black bg-opacity-95 flex items-center justify-center z-50 cursor-pointer';
-    d.onclick = () => d.remove();
-    d.innerHTML = `<img src="/storage/${path}" class="max-w-full max-h-full p-4 rounded-lg" onerror="this.parentElement.remove()">`;
-    document.body.appendChild(d);
-};
+        const data = await response.json();
 
-const toast = (msg, type = 'info') => {
-    const col = { success: 'bg-green-600', error: 'bg-red-600', warning: 'bg-yellow-600', info: 'bg-gray-900' };
-    const t = $('#toast');
-    if (!t) return;
-    t.className = `fixed bottom-4 right-4 ${col[type]} text-white px-4 py-3 rounded-lg shadow-lg z-50 transform transition-all`;
-    t.textContent = msg;
-    t.style.transform = 'translateY(0)';
-    setTimeout(() => t.style.transform = 'translateY(150px)', 3000);
-};
+        if (!data.success) {
+            throw new Error('Échec de la mise à jour');
+        }
 
-// ✅ INIT
-document.addEventListener('DOMContentLoaded', () => {
-    load();
-    setInterval(() => S.isActive && !S.isLoading && load(), C.REFRESH);
+        // ✅ UI mise à jour UNIQUEMENT après succès serveur
+        commentTextEl.textContent = data.comment.content;
+        commentTextEl.style.display = '';
+        editor.remove();
+
+        if (!timeSpan.textContent.includes('modifié')) {
+            timeSpan.textContent += ' · modifié';
+        }
+
+        showEditSuccess();
+
+        return { success: true, comment: data.comment };
+
+    } catch (error) {
+        console.error('Erreur lors de la modification du commentaire:', error);
+
+        // Réactiver l’input en cas d’erreur
+        input.disabled = false;
+
+        return { success: false, error: error.message };
+    }
+}
+
+
+// Annuler l'édition du commentaire
+function cancelCommentEdit(commentId) {
+    const comment = document.querySelector(`[data-comment-id="${commentId}"]`);
+    if (!comment) return;
+
+    const commentText = comment.querySelector('.comment-text');
+    commentText.style.display = '';
+
+    // Supprimer l'éditeur
+    const editContainer = comment.querySelector('.flex.gap-2.mt-1');
+    if (editContainer) {
+        editContainer.remove();
+    }
+}
+
+// Supprimer un commentaire
+function deleteComment(commentId) {
+    const comment = document.querySelector(`[data-comment-id="${commentId}"]`);
+    if (!comment) return;
+
+    // Animation de disparition
+    comment.style.opacity = '0';
+    comment.style.transform = 'translateX(-10px)';
+    comment.style.transition = 'all 0.2s ease';
+
+    setTimeout(() => {
+        const post = comment.closest('.post-card');
+        comment.remove();
+
+        // Mettre à jour le compteur
+        const commentCount = post.querySelector('.flex.items-center.gap-4 span:nth-child(2) span');
+        if (commentCount) {
+            const current = parseInt(commentCount.textContent.replace(/[^0-9]/g, ''));
+            commentCount.textContent = Math.max(0, current - 1);
+        }
+    }, 200);
+}
+
+// Sélection sondage
+function selectPollOption(option) {
+    const poll = option.closest('.space-y-2');
+    const allOptions = poll.querySelectorAll('.poll-option');
+
+    allOptions.forEach(opt => opt.classList.remove('selected'));
+    option.classList.add('selected');
+}
+
+// Utilitaires
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function formatNumber(num) {
+    if (num >= 1000) {
+        return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+    }
+    return num.toString();
+}
+
+// Envoyer le commentaire en base de données
+async function saveCommentToDatabase(postId, commentText) {
+    try {
+        const response = await fetch('/comments/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrf(),
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                post_id: postId,
+                content: commentText
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        return {
+            success: true,
+            comment: data.comment
+        };
+
+    } catch (error) {
+        console.error('Erreur lors de l\'enregistrement du commentaire:', error);
+        return {
+            success: false,
+            error: error.message
+        };
+    }
+}
+
+async function saveShareToDatabase(postId) {
+    try {
+        const response = await fetch('/posts/share', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrf(),
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                post_id: postId
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error('Erreur enregistrement partage:', error);
+    }
+}
+async function saveShareToDatabases(postId,url) {
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrf(),
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                post_id: postId
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error('Erreur enregistrement partage:', error);
+    }
+}
+function openImageFullscreen(imageSrc) {
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 z-50 bg-black bg-opacity-95 flex items-center justify-center p-4';
+    modal.onclick = function() { this.remove(); };
+    
+    modal.innerHTML = `
+        <button class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors" onclick="this.parentElement.remove()">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+        <img src="${imageSrc}" 
+             class="max-w-full max-h-full object-contain" 
+             onclick="event.stopPropagation()">
+    `;
+    
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+}
+
+// Ouvrir une vidéo en plein écran
+function openVideoFullscreen(container) {
+    const video = container.querySelector('video');
+    const videoSrc = video.querySelector('source').src;
+    
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 z-50 bg-black flex items-center justify-center';
+    
+    modal.innerHTML = `
+        <button class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10" 
+                onclick="closeVideoFullscreen(this)">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+        <video class="w-full h-full" controls autoplay>
+            <source src="${videoSrc}" type="video/mp4">
+        </video>
+    `;
+    
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+}
+
+function closeVideoFullscreen(button) {
+    const modal = button.closest('.fixed');
+    const video = modal.querySelector('video');
+    video.pause();
+    modal.remove();
+    document.body.style.overflow = '';
+}
+
+// Voter sur un sondage
+async function votePoll(pollId, optionId, optionElement) {
+    try {
+        const response = await fetch(`/api/polls/${pollId}/vote`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({ option_id: optionId })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Mettre à jour les pourcentages
+            const poll = optionElement.closest('.space-y-2');
+            const options = poll.querySelectorAll('.poll-option');
+            
+            data.poll.options.forEach((opt, index) => {
+                const progress = options[index].querySelector('.poll-progress');
+                const percentage = options[index].querySelector('.poll-percentage');
+                const percent = data.poll.total_votes > 0 
+                    ? Math.round((opt.votes_count / data.poll.total_votes) * 100) 
+                    : 0;
+                
+                progress.style.width = percent + '%';
+                percentage.textContent = percent + '%';
+            });
+
+            // Marquer comme sélectionné
+            options.forEach(opt => opt.classList.remove('selected'));
+            optionElement.classList.add('selected');
+
+            // Mettre à jour le total
+            const totalVotes = poll.nextElementSibling.querySelector('.font-semibold');
+            totalVotes.textContent = data.poll.total_votes.toLocaleString();
+        }
+    } catch (error) {
+        console.error('Erreur vote sondage:', error);
+        alert('Erreur lors du vote. Veuillez réessayer.');
+    }
+}
+
+
+// ============================================
+// INITIALISATION GLOBALE
+// ============================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
 });
 
-window.vote = vote;
-window.share = share;
-window.del = del;
-window.showMedia = showMedia;
+
+
+// ============================================
+// FONCTIONS D'INITIALISATION
+// ============================================
+
+// 1. Pagination des commentaires
+function initializeCommentsPagination() {
+    document.querySelectorAll('.post-card').forEach(post => {
+        const commentList = post.querySelector('.comment-section .space-y-2');
+        if (!commentList) return;
+        
+        const allComments = commentList.querySelectorAll('.comment-item');
+        allComments.forEach((comment, index) => {
+            if (index >= 10) {
+                comment.classList.add('hidden');
+            }
+        });
+        
+        updateShowMoreButton(post);
+    });
+}
+
+// 2. Clic extérieur pour fermer les menus
+function initializeClickOutside() {
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.post-options')) {
+            document.querySelectorAll('.options-menu.active').forEach(menu => {
+                menu.classList.remove('active');
+            });
+        }
+    });
+}
+
+// 3. Touche Escape pour fermer les modals
+function initializeEscapeKey() {
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            // Fermer modal de partage
+            const shareModal = document.getElementById('shareModal');
+            if (shareModal?.classList.contains('active')) {
+                closeShareModal();
+            }
+            
+            // Fermer modal d'édition
+            const editModal = document.getElementById('editModal');
+            if (editModal?.classList.contains('active')) {
+                closeEditModal();
+            }
+            
+            // Fermer fullscreen image/video
+            const fullscreen = document.querySelector('.fixed.inset-0.z-50');
+            if (fullscreen) {
+                fullscreen.remove();
+                document.body.style.overflow = '';
+            }
+        }
+    });
+}
+
+// 4. Lazy loading des vidéos (performance)
+function initializeVideoLazyLoading() {
+    const videos = document.querySelectorAll('video[data-video-src]');
+    
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const video = entry.target;
+                    if (!video.src && video.dataset.videoSrc) {
+                        video.src = video.dataset.videoSrc;
+                        observer.unobserve(video);
+                    }
+                }
+            });
+        });
+        
+        videos.forEach(video => observer.observe(video));
+    } else {
+        // Fallback pour anciens navigateurs
+        videos.forEach(video => {
+            if (video.dataset.videoSrc) {
+                video.src = video.dataset.videoSrc;
+            }
+        });
+    }
+}
+function initializeApp() {
+    console.log('🚀 Initialisation du feed...');
+    
+    // 1. Initialiser la pagination des commentaires
+    initializeCommentsPagination();
+    
+    // 2. Fermer les menus au clic extérieur
+    initializeClickOutside();
+    
+    // 3. Fermer les modals avec Escape
+    initializeEscapeKey();
+    
+    // 4. Lazy loading des vidéos
+    initializeVideoLazyLoading();
+    
+    console.log('✅ Initialisation terminée');
+}
+
+initializeApp();

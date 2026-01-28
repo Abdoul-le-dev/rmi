@@ -14,7 +14,8 @@ use App\Models\Translation\ForumTranslation;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\{DB,Log, Cache};
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class ForumController extends Controller
 {
@@ -311,11 +312,42 @@ class ForumController extends Controller
     }
 
     // teams abdoulledev
+    public function event_index()
+    {
+
+        $user = auth()->user();
+
+        $validatedTrophes = $user->trophes()
+            ->where('status', 'validated')
+            ->get();
+
+        $montantTotal = $validatedTrophes->sum('montant_genere');
+
+        $percent = ($montantTotal / 1000) + 1;
+
+        $userData = [
+            'user_id' => $user->id,
+            'user_name' => $user->full_name,
+            'user_status' => $this->formatRole($user->role_name),
+            'montant_total' => $montantTotal,
+            'montant_restant' => $this->montantRestant($montantTotal),
+            'plaque' => $this->resolvePlaque($montantTotal),
+            'percent' => $percent,
+            'nombre_etudiants' => $this->nombreEtudiants(),
+            'nombre_posts' => $this->nombrePosts(),
+            'students_online' => 0,
+            'link_image' => '',
+            'description' => '',
+        ];
+
+         return view('vip.event', compact('userData'));
+
+    }
 
     public function new_index(Request $request)
     {
-
-        DB::transaction(function () use ($request) {
+        $post = null;
+        DB::transaction(function () use ($request, &$post) {
 
             $scheduledAt = null;
             if ($request->scheduled_at_date && $request->scheduled_at_time) {
@@ -333,7 +365,7 @@ class ForumController extends Controller
             // post
 
             $post = Post::create([
-                'user_id' => 2233,
+                'user_id' => auth()->user()->id,
                 'forum_id' => $request->forum_id, // nullable
                 'content' => $request->contents,
                 'type' => $type ?? 'text',
@@ -365,6 +397,8 @@ class ForumController extends Controller
             }
 
         });
+
+        $post->load(['user', 'media', 'poll.options']);
 
         return response()->json(['message' => $request->all()], 201);
     }
@@ -484,7 +518,60 @@ class ForumController extends Controller
             'description' => '',
         ];
 
-        return view('vip.app', compact('userData'));
+        $posts = Post::with([
+            'user',
+            'media',
+            'poll.options',
+            'comments' => function ($query) {
+                $query->with('user')->whereNull('parent_id')->latest()->limit(3);
+            },
+        ])
+            ->where('status', 'published')
+            ->latest()
+            ->limit(10)
+            ->get();
+
+        // Enrichir chaque post avec toutes les données nécessaires
+        $posts->each(function ($post) {
+            // Compteurs
+            $post->likes_count = $post->likes_count ?? 0;
+            $post->comments_count = $post->comments_count ?? 0;
+            $post->shares_count = $post->shares_count ?? 0;
+
+            // Informations utilisateur enrichies
+            if ($post->user) {
+                $post->user->role = $post->user->role ?? 'membre';
+                $post->user->avatar = $post->user->avatar ?? null;
+            }
+
+            // Plaque et montant (système de trophées)
+            $latestTrophe = \App\Models\Trophe::where('user_id', $post->user_id)
+                ->where('status', 'validated')
+                ->latest()
+                ->first();
+
+            $post->plaque = $latestTrophe ? $this->determinePlaque($latestTrophe->montant_généré) : 'none';
+            $post->montant = $latestTrophe ? (float) $latestTrophe->montant_généré : 0;
+
+            // Type de média (image ou video)
+            if ($post->media) {
+                $post->media->each(function ($media) {
+                    $extension = pathinfo($media->path, PATHINFO_EXTENSION);
+                    $videoExtensions = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
+                    $media->type = in_array(strtolower($extension), $videoExtensions) ? 'video' : 'image';
+                });
+            }
+
+            if ($post->comments) {
+                $post->comments->each(function ($comment) {
+                    if ($comment->user) {
+                        $comment->user->avatar = $comment->user->avatar ?? null;
+                    }
+                });
+            }
+        });
+
+        return view('vip.app', compact('userData', 'posts'));
 
     }
 
@@ -659,9 +746,9 @@ class ForumController extends Controller
             $limit = $request->input('limit', 10);
 
             // Cache par utilisateur (5 secondes)
-            $cacheKey = "posts_user_" . Auth::id();
-            
-            $data = Cache::remember($cacheKey, 5, function() use ($limit) {
+            $cacheKey = 'posts_user_'.Auth::id();
+
+            $data = Cache::remember($cacheKey, 5, function () use ($limit) {
                 return $this->loadPosts($limit);
             });
 
@@ -670,7 +757,7 @@ class ForumController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -680,59 +767,59 @@ class ForumController extends Controller
         $posts = Post::with([
             'user:id,full_name,role_name,avatar',
             'media:id,post_id,path',
-            'poll.options:id,poll_id,option,votes'
+            'poll.options:id,poll_id,option,votes',
         ])
-        ->where('status', 'published')
-        ->latest()
-        ->take($limit)
-        ->get()
-        ->map(function($post) {
-            return [
-                'id' => $post->id,
-                'content' => $post->content,
-                'type' => $post->type,
-                'likes_count' => $post->likes_count ?? 0,
-                'comments_count' => $post->comments_count ?? 0,
-                'shares_count' => $post->shares_count ?? 0,
-                'created_at' => $post->created_at->toISOString(),
-                'user' => [
-                    'id' => $post->user->id,
-                    'name' => $post->user->full_name ?? 'Utilisateur',
-                    'role' => $post->user->role_name ?? 'user',
-                    'avatar' => $post->user->avatar
-                ],
-                'plaque' => $this->getUserPlaque($post->user_id),
-                'montant' => $this->getUserMontant($post->user_id),
-                'media' => $post->media->map(fn($m) => [
-                    'type' => str_ends_with(strtolower($m->path), '.mp4') ? 'video' : 'image',
-                    'path' => $m->path
-                ]),
-                'poll' => $post->poll ? [
-                    'id' => $post->poll->id,
-                    'question' => $post->poll->question,
-                    'options' => $post->poll->options->map(fn($o) => [
-                        'id' => $o->id,
-                        'option' => $o->option,
-                        'votes' => $o->votes ?? 0
-                    ])
-                ] : null
-            ];
-        });
+            ->where('status', 'published')
+            ->latest()
+            ->take($limit)
+            ->get()
+            ->map(function ($post) {
+                return [
+                    'id' => $post->id,
+                    'content' => $post->content,
+                    'type' => $post->type,
+                    'likes_count' => $post->likes_count ?? 0,
+                    'comments_count' => $post->comments_count ?? 0,
+                    'shares_count' => $post->shares_count ?? 0,
+                    'created_at' => $post->created_at->toISOString(),
+                    'user' => [
+                        'id' => $post->user->id,
+                        'name' => $post->user->full_name ?? 'Utilisateur',
+                        'role' => $post->user->role_name ?? 'user',
+                        'avatar' => $post->user->avatar,
+                    ],
+                    'plaque' => $this->getUserPlaque($post->user_id),
+                    'montant' => $this->getUserMontant($post->user_id),
+                    'media' => $post->media->map(fn ($m) => [
+                        'type' => str_ends_with(strtolower($m->path), '.mp4') ? 'video' : 'image',
+                        'path' => $m->path,
+                    ]),
+                    'poll' => $post->poll ? [
+                        'id' => $post->poll->id,
+                        'question' => $post->poll->question,
+                        'options' => $post->poll->options->map(fn ($o) => [
+                            'id' => $o->id,
+                            'option' => $o->option,
+                            'votes' => $o->votes ?? 0,
+                        ]),
+                    ] : null,
+                ];
+            });
 
         return [
             'success' => true,
             'posts' => $posts->values(),
             'current_user' => [
                 'id' => Auth::id(),
-                'role' => Auth::user()->role_name ?? 'user'
-            ]
+                'role' => Auth::user()->role_name ?? 'user',
+            ],
         ];
     }
 
     private function getUserMontant($userId)
     {
         // Cache montant utilisateur (60 secondes)
-        return Cache::remember("user_montant_{$userId}", 60, function() use ($userId) {
+        return Cache::remember("user_montant_{$userId}", 60, function () use ($userId) {
             return (float) DB::table('trophes')
                 ->where('user_id', $userId)
                 ->where('status', 'validated')
@@ -743,10 +830,10 @@ class ForumController extends Controller
     private function getUserPlaque($userId)
     {
         // Cache plaque utilisateur (60 secondes)
-        return Cache::remember("user_plaque_{$userId}", 60, function() use ($userId) {
+        return Cache::remember("user_plaque_{$userId}", 60, function () use ($userId) {
             $montant = $this->getUserMontant($userId);
-            
-            return match(true) {
+
+            return match (true) {
                 $montant >= 100000 => 'diamond',
                 $montant >= 20000 => 'gold',
                 $montant >= 10000 => 'silver',
@@ -761,7 +848,7 @@ class ForumController extends Controller
         try {
             $request->validate([
                 'poll_id' => 'required|exists:polls,id',
-                'option_id' => 'required|exists:poll_options,id'
+                'option_id' => 'required|exists:poll_options,id',
             ]);
 
             $option = PollOption::where('id', $request->option_id)
@@ -783,9 +870,9 @@ class ForumController extends Controller
     {
         try {
             $request->validate(['post_id' => 'required|exists:posts,id']);
-            
+
             Post::where('id', $request->post_id)->increment('shares_count');
-            
+
             // Invalider cache posts
             $this->clearPostsCache();
 
@@ -799,7 +886,7 @@ class ForumController extends Controller
     {
         try {
             $request->validate(['post_id' => 'required|exists:posts,id']);
-            
+
             $post = Post::findOrFail($request->post_id);
 
             if (Auth::user()->role_name !== 'admin' && $post->user_id !== Auth::id()) {
@@ -807,7 +894,7 @@ class ForumController extends Controller
             }
 
             $post->delete();
-            
+
             // Invalider cache posts
             $this->clearPostsCache();
 
@@ -821,7 +908,7 @@ class ForumController extends Controller
     {
         // Invalider le cache de tous les utilisateurs
         Cache::flush(); // Simple mais efficace
-        
+
         // OU plus ciblé si vous avez beaucoup d'utilisateurs :
         // Cache::forget("posts_user_" . Auth::id());
     }
