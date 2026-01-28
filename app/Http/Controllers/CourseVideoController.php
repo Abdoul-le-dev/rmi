@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\Mailer;
 use App\Models\CourseVideo;
 use App\Services\CloudFrontUrlSigner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Services\SmsService;
+use App\Facades\Sms;
+use App\Notifications\SmsNotification;
 
 class CourseVideoController extends Controller
 {
@@ -16,7 +20,38 @@ class CourseVideoController extends Controller
         $this->cloudFrontSigner = $urlSigner;
     }
 
+    public function test()
+    {
+         try {
+            $result = Sms::send(
+                '+22965613882',
+                'Message envoyé via la façade SMS'
+            );
 
+            return response()->json([
+                'success' => true,
+                'data' => $result
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function test_email()
+    {
+         $sent = Mailer::sendWelcomeEmail(
+            'stanislasbayord200@gmail.com',
+            'Stanislas'
+        );
+
+        return response()->json([
+            'success' => $sent,
+            'message' => 'Email de bienvenue envoyé'
+        ]);
+    }
 
     // Obtenir l'URL de streaming
     // public function show($path)

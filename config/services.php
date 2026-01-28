@@ -59,4 +59,18 @@ return [
         'cookie_domain' => env('CLOUDFRONT_COOKIE_DOMAIN', '.societedesbots.com'),
     ],
 
+     /*
+    |--------------------------------------------------------------------------
+    | SMS.to Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configuration pour le service SMS.to
+    |
+    */
+
+    'smsto' => [
+        'api_key' => env('SMSTO_API_KEY'),
+        'sender_id' => env('SMSTO_SENDER_ID', 'YourApp'),
+    ],
+
 ];

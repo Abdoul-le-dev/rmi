@@ -210,6 +210,9 @@ return [
         Jubaer\Zoom\ZoomServiceProvider::class,
         \Torann\GeoIP\GeoIPServiceProvider::class,
         niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
+
+        App\Providers\SmsServiceProvider::class,
+        App\Providers\MailServiceProvider::class,
     ],
 
     /*
@@ -232,7 +235,10 @@ return [
         'Redsys'    => Ssheduardo\Redsys\Facades\Redsys::class,
         'Zoom' => Jubaer\Zoom\Facades\Zoom::class,
         'GeoIP' => \Torann\GeoIP\Facades\GeoIP::class,
-        'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class
+        'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
+        'Sms' => App\Facades\Sms::class,
+        'Mailer' => App\Facades\Mailer::class,
+        
     ])->toArray(),
 
 ];

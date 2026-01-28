@@ -431,6 +431,8 @@ Route::get('/media/temp-url/{path}', [MediaController::class, 'preview'])
 
 Route::get('/videos/{video}', [CourseVideoController::class, 'show']);
 
+Route::get('/test-sms', [CourseVideoController::class, 'test']);
+Route::get('/test-email', [CourseVideoController::class, 'test_email']);
 
 Route::get('/test-cloudfront', function (CloudFrontUrlSigner $signer) {
     try {
