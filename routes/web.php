@@ -3,6 +3,8 @@
 use App\Http\Controllers\MediaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ForumController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentPostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -449,15 +451,28 @@ Route::get('vip/parametre', function(){
         return view('vip.parametre');
     });
 
-Route::get('vip/evenement', function(){
-        return view('vip.evenement');
-    });
+Route::get('vip/evenement', [ForumController::class, 'event_index']);
 
 Route::middleware(['auth'])->group(function () {
-    // Récupérer les posts
-    Route::post('/posts/fetch', [ForumController::class, 'fetchPosts'])->name('posts.fetch');
-    Route::post('/posts/delete', [ForumController::class, 'deletePost']);
+    // Récupérer les posts (load initial)
+    Route::get('/posts/fetch', [PostController::class, 'fetchs'])->name('posts.fetch');
+    Route::post('/posts/fetch', [PostController::class, 'fetch'])->name('posts.fetch');
+    
     // Voter sur un sondage
-     Route::post('/posts/share', [ForumController::class, 'share'])->name('posts.share');
-    Route::post('/polls/vote', [ForumController::class, 'vote'])->name('polls.vote');
+    Route::post('/polls/vote', [PostController::class, 'vote'])->name('polls.vote');
+    
+    // Supprimer un post
+    Route::post('/posts/delete', [PostController::class, 'delete'])->name('posts.delete');
+    
+    // Partager un post
+    Route::post('/posts/share', [CommentPostController::class, 'store_share'])->name('posts.share');
+
+     // Commentaires
+    Route::post('/comments/create', [CommentPostController::class, 'store'])->name('comments.create');
+    
+    Route::post('/comments/edit', [CommentPostController::class, 'update'])->name('comments.update');
+    Route::get('/posts/{postId}/comments', [CommentPostController::class, 'index'])->name('comments.index');
+    Route::post('/comments/delete', [CommentPostController::class, 'destroy'])->name('comments.delete');
+  
+
 });    

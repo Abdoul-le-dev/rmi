@@ -283,7 +283,7 @@
                                 <!-- Emoji Picker -->
                                 <div class="relative">
                                     <button type="button" onclick="toggleEmojiPicker()"
-                                        class="sm:hidden md:hiddden lg:block  p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                                        class="sm:hidden md:hidden lg:block  p-2 rounded-lg hover:bg-gray-100 transition-colors"
                                         title="Emoji">
                                         <i class="far fa-smile text-gray-600 text-lg"></i>
                                     </button>
@@ -479,22 +479,689 @@
 
 
 
-                <!-- Posts Feed --> 
+                <!-- Posts Feed -->
 
-                <style>
-                    .post-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-                    .post-card:hover { transform: translateY(-2px); }
-                    .vote-btn:active { transform: scale(0.95) !important; }
-                </style>
-               <div id="posts" class="max-w-2xl mx-auto transition-opacity duration-200"></div>
-               <div id="toast" class="transform translate-y-40"></div>
 
-                <!-- Bouton charger plus -->
-                <div class="mt-6 text-center">
-                    <button
-                        class="px-6 py-3 bg-white border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-all">
-                        Charger plus de posts
-                    </button>
+
+                <div class="max-w-2xl mx-auto space-y-4">
+
+                   @foreach ($posts as $post)
+
+                     <!-- POST TEXTE -->
+                    @if ($post->type =='text')
+
+                     <article class="post-card rounded-xl overflow-hidden" data-post-id="{{ $post->id  }}">
+                        <div class="p-4 border-b border-gray-100">
+                            <div class="flex items-start gap-3">
+                                <div class="profile-avatar">
+                                    <div
+                                        class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex-shrink-0">
+                                    </div>
+                                    <div class="profile-tooltip">
+                                        <div class="text-xs text-gray-500 mb-1">Performance</div>
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-xs text-gray-600">Généré</span>
+                                            <span class="text-sm font-semibold text-gray-900">${{ $post->montant }}</span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                        <span class="text-xs text-gray-600">Plaque</span>
+
+                                        @switch($post->plaque)
+                                            @case('bronze')
+                                                <span class="text-xs font-semibold bg-orange-100 text-orange-700 px-2 py-0.5 rounded">
+                                                    Bronze
+                                                </span>
+                                                @break
+
+                                            @case('silver')
+                                                <span class="text-xs font-semibold bg-gray-200 text-gray-700 px-2 py-0.5 rounded">
+                                                    Silver
+                                                </span>
+                                                @break
+
+                                            @case('gold')
+                                                <span class="text-xs font-semibold bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                                    Gold
+                                                </span>
+                                                @break
+
+                                            @case('diamond')
+                                                <span class="text-xs font-semibold bg-cyan-100 text-cyan-700 px-2 py-0.5 rounded">
+                                                    Diamond
+                                                </span>
+                                                @break
+
+                                            @default
+                                                <span class="text-xs font-semibold bg-gray-100 text-gray-600 px-2 py-0.5 rounded">
+                                                    Aucune
+                                                </span>
+                                        @endswitch
+                                    </div>
+
+                                    </div>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-0.5">
+                                        <h3 class="font-semibold text-sm">{{ $post->user->full_name }}</h3>
+                                        @if ($post->user->role_name != 'user')
+
+                                        <span class="badge bg-indigo-50 text-indigo-600 rounded-full">Vérifiée</span>
+                                            
+                                        @endif
+                                    </div>
+                                    <p class="text-xs text-gray-500">Il y a {{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</p>
+                                </div>
+
+                                @if ( $userData['user_id'] == $post->user->id)
+                                    <div class="post-options">
+                                        <button
+                                            class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                                            onclick="toggleOptions(this)">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                <path
+                                                    d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                                            </svg>
+                                        </button>
+                                    
+
+                                        <div class="options-menu">
+                                            <div class="option-item" onclick="editPost(this,{{ $post->id }})">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                </svg>
+                                                Modifier
+                                            </div>
+                                            <div class="option-item danger" onclick="deletePost(this,{{ $post->id }})">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                                Supprimer
+                                            </div>
+                                        </div>
+                                        
+                                    
+                                    </div>
+
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="p-4">
+                            <p class="text-sm leading-relaxed text-gray-700">
+                                {{  $post->content  }}
+                            </p>
+                        </div>
+
+                        <div class="px-4 pb-4">
+                            <div class="flex items-center gap-4 mb-3 text-xs text-gray-500 border-t pt-3">
+                                <span><span class="font-semibold text-gray-700">{{ $post->likes_count }}</span> likes</span>
+                                <span><span class="font-semibold text-gray-700">{{ $post->comments_count }}</span> commentaires</span>
+                                <span><span class="font-semibold text-gray-700">{{ $post->shares_count }}</span> partages</span>
+                            </div>
+
+                            <div class="flex items-center gap-1 border-t pt-3">
+                                <button
+                                    class="action-btn flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium"
+                                    onclick="handleLike(this,{{ $post->id }})">
+                                    <svg class="heart-icon w-5 h-5" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                    </svg>
+                                    <span>J'aime</span>
+                                </button>
+
+                                <button
+                                    class="action-btn flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium"
+                                    onclick="toggleComments(this)">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                    </svg>
+                                    <span>Commenter</span>
+                                </button>
+
+                                <button
+                                    class="action-btn flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium"
+                                    onclick="openShareModal(this,{{ $post->id }})">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                                    </svg>
+                                    <span>Partager</span>
+                                </button>
+                            </div>
+
+                            <div class="comment-section mt-3">
+                                <div class="space-y-2 mb-3">
+                                    <!-- Ajouter 15+ commentaires ici pour tester la pagination -->
+                                    @foreach ( $post->comments as $comments)
+                                    <div class="comment-item flex gap-2 p-2.5 bg-gray-50 rounded-lg" data-comment-id="{{ $comments->id }}">
+                                        <div class="w-7 h-7 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex-shrink-0"></div>
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center gap-2 mb-0.5">
+                                                <span class="font-medium text-xs">{{ $comments->user->full_name }}</span>
+                                                <span class="text-xs text-gray-400">Il y a  {{ \Carbon\Carbon::parse($comments->created_at)->diffForHumans() }}</span>
+                                            </div>
+                                            <p class="text-xs text-gray-700 comment-text">"{{ $comments->content }}"</p>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    
+                                
+                                </div>
+                                <div class="flex gap-2">
+                                    <input type="text"
+                                        class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+                                        placeholder="Ajouter un commentaire..."
+                                        onkeypress="handleCommentSubmit(event, this)">
+                                    <button
+                                        class="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+                                        onclick="addComment(this.previousElementSibling)">
+                                        Publier
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                     </article>
+                        
+                    @endif
+
+                    <!-- POST MÉDIA -->
+                    @if ($post->type =='media')
+
+                        <article class="post-card rounded-xl overflow-hidden" data-post-id="{{ $post->id  }}">
+                            <div class="p-4 border-b border-gray-100">
+                                <div class="flex items-start gap-3">
+                                    <div class="profile-avatar">
+                                        <div
+                                            class="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex-shrink-0">
+                                        </div>
+                                        <div class="profile-tooltip">
+                                            <div class="text-xs text-gray-500 mb-1">Performance</div>
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="text-xs text-gray-600">Généré</span>
+                                                <span class="text-sm font-semibold text-gray-900">${{ $post->montant }}</span>
+                                            </div>
+                                            <div class="flex items-center justify-between">
+                                            <span class="text-xs text-gray-600">Plaque</span>
+
+                                            @switch($post->plaque)
+                                                @case('bronze')
+                                                    <span class="text-xs font-semibold bg-orange-100 text-orange-700 px-2 py-0.5 rounded">
+                                                        Bronze
+                                                    </span>
+                                                    @break
+
+                                                @case('silver')
+                                                    <span class="text-xs font-semibold bg-gray-200 text-gray-700 px-2 py-0.5 rounded">
+                                                        Silver
+                                                    </span>
+                                                    @break
+
+                                                @case('gold')
+                                                    <span class="text-xs font-semibold bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                                        Gold
+                                                    </span>
+                                                    @break
+
+                                                @case('diamond')
+                                                    <span class="text-xs font-semibold bg-cyan-100 text-cyan-700 px-2 py-0.5 rounded">
+                                                        Diamond
+                                                    </span>
+                                                    @break
+
+                                                @default
+                                                    <span class="text-xs font-semibold bg-gray-100 text-gray-600 px-2 py-0.5 rounded">
+                                                        Aucune
+                                                    </span>
+                                            @endswitch
+                                        </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center gap-2 mb-0.5">
+                                            <h3 class="font-semibold text-sm">{{ $post->user->full_name }}</h3>
+                                            @if ($post->user->role_name != 'user')
+
+                                                <span class="badge bg-indigo-50 text-indigo-600 rounded-full">Vérifiée</span>
+                                                
+                                            @endif
+                                        </div>
+                                        <p class="text-xs text-gray-500">Il y a {{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</p>
+                                    </div>
+                                    @if ( $userData['user_id'] == $post->user->id)
+                                        <div class="post-options">
+                                            <button
+                                                class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                                                onclick="toggleOptions(this)">
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                                                </svg>
+                                            </button>
+                                        
+
+                                            <div class="options-menu">
+                                                <div class="option-item" onclick="editPost(this,{{ $post->id }})">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                    </svg>
+                                                    Modifier
+                                                </div>
+                                                <div class="option-item danger" onclick="deletePost(this,{{ $post->id }})">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                    Supprimer
+                                                </div>
+                                            </div>
+                                            
+                                        
+                                        </div>
+
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="p-4 pb-3">
+                                <p class="text-sm leading-relaxed text-gray-700 mb-3">
+                                    {{  $post->content  }}
+                                </p>
+                            </div>
+
+                            <div class="px-4 pb-4">
+                                                    
+                                @php
+                                    $mediaCount = $post->media->count();
+                                    $gridClass = match($mediaCount) {
+                                        1 => 'single',
+                                        2 => 'double',
+                                        3 => 'triple',
+                                        default => 'quad'
+                                    };
+                                @endphp
+                                
+                                <div class="media-grid {{ $gridClass }} mb-3">
+                                    @foreach($post->media as $index => $media)
+                                        @if($media->type === 'video')
+                                            <div class="aspect-square rounded-lg overflow-hidden bg-black relative group cursor-pointer"
+                                                onclick="openVideoFullscreen(this)">
+                                                <video class="w-full h-full object-cover" 
+                                                    data-video-src="{{ asset('storage/' . $media->path) }}"
+                                                    preload="metadata">
+                                                    <source src="{{ asset('storage/' . $media->path) }}" type="video/mp4">
+                                                </video>
+                                                <!-- Overlay play button -->
+                                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-40 transition-all">
+                                                    <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all" 
+                                                        fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M8 5v14l11-7z"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="aspect-square rounded-lg overflow-hidden cursor-pointer"
+                                                onclick="openImageFullscreen('{{ asset('storage/' . $media->path) }}')">
+                                                <img src="{{ asset('storage/' . $media->path) }}" 
+                                                    alt="Image {{ $index + 1 }}"
+                                                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+
+                                <div class="flex items-center gap-4 mb-3 text-xs text-gray-500 border-t pt-3">
+                                    <span><span class="font-semibold text-gray-700">{{ $post->likes_count }}</span> likes</span>
+                                    <span><span class="font-semibold text-gray-700">{{ $post->comments_count }}</span> commentaires</span>
+                                    <span><span class="font-semibold text-gray-700">{{ $post->shares_count }}</span> partages</span>
+                                </div>
+
+                                <div class="flex items-center gap-1 border-t pt-3">
+                                    <button class="action-btn flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium"
+                                            onclick="handleLike(this, {{ $post->id }})">
+                                        <svg class="heart-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                        </svg>
+                                        <span>J'aime</span>
+                                    </button>
+
+                                    <button class="action-btn flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium"
+                                            onclick="toggleComments(this)">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                        </svg>
+                                        <span>Commenter</span>
+                                    </button>
+
+                                    <button class="action-btn flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium"
+                                            onclick="openShareModal(this, {{ $post->id }})">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                                        </svg>
+                                        <span>Partager</span>
+                                    </button>
+                                </div>
+
+                                <div class="comment-section mt-3">
+                                    <div class="space-y-2 mb-3">
+                                        <!-- Ajouter 15+ commentaires ici pour tester la pagination -->
+                                        @foreach ( $post->comments as $comments)
+                                        <div class="comment-item flex gap-2 p-2.5 bg-gray-50 rounded-lg" data-comment-id="{{ $comments->id }}">
+                                            <div class="w-7 h-7 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex-shrink-0"></div>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="flex items-center gap-2 mb-0.5">
+                                                    <span class="font-medium text-xs">{{ $comments->user->full_name }}</span>
+                                                    <span class="text-xs text-gray-400">Il y a {{ \Carbon\Carbon::parse($comments->created_at)->diffForHumans() }}</span>
+                                                </div>
+                                                <p class="text-xs text-gray-700 comment-text">"{{ $comments->content }}"</p>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                        
+                                    
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <input type="text"
+                                            class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+                                            placeholder="Ajouter un commentaire..."
+                                            onkeypress="handleCommentSubmit(event, this)">
+                                        <button
+                                            class="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+                                            onclick="addComment(this.previousElementSibling)">
+                                            Publier
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                        
+                    @endif
+                    
+
+                    <!-- POST SONDAGE -->
+                    @if ($post->type =='sondage')
+
+                    <article class="post-card rounded-xl overflow-hidden" data-post-id="{{ $post->id}}">
+                        <div class="p-4 border-b border-gray-100">
+                                <div class="flex items-start gap-3">
+                                    <div class="profile-avatar">
+                                        <div
+                                            class="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex-shrink-0">
+                                        </div>
+                                        <div class="profile-tooltip">
+                                            <div class="text-xs text-gray-500 mb-1">Performance</div>
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="text-xs text-gray-600">Généré</span>
+                                                <span class="text-sm font-semibold text-gray-900">${{ $post->montant }}</span>
+                                            </div>
+                                            <div class="flex items-center justify-between">
+                                            <span class="text-xs text-gray-600">Plaque</span>
+
+                                            @switch($post->plaque)
+                                                @case('bronze')
+                                                    <span class="text-xs font-semibold bg-orange-100 text-orange-700 px-2 py-0.5 rounded">
+                                                        Bronze
+                                                    </span>
+                                                    @break
+
+                                                @case('silver')
+                                                    <span class="text-xs font-semibold bg-gray-200 text-gray-700 px-2 py-0.5 rounded">
+                                                        Silver
+                                                    </span>
+                                                    @break
+
+                                                @case('gold')
+                                                    <span class="text-xs font-semibold bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
+                                                        Gold
+                                                    </span>
+                                                    @break
+
+                                                @case('diamond')
+                                                    <span class="text-xs font-semibold bg-cyan-100 text-cyan-700 px-2 py-0.5 rounded">
+                                                        Diamond
+                                                    </span>
+                                                    @break
+
+                                                @default
+                                                    <span class="text-xs font-semibold bg-gray-100 text-gray-600 px-2 py-0.5 rounded">
+                                                        Aucune
+                                                    </span>
+                                            @endswitch
+                                        </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center gap-2 mb-0.5">
+                                            <h3 class="font-semibold text-sm">{{ $post->user->full_name }}</h3>
+                                            @if ($post->user->role_name != 'user')
+
+                                                <span class="badge bg-indigo-50 text-indigo-600 rounded-full">Vérifiée</span>
+                                                
+                                            @endif
+                                        </div>
+                                        <p class="text-xs text-gray-500">Il y a {{ \Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</p>
+                                    </div>
+                                    @if ( $userData['user_id'] == $post->user->id)
+                                        <div class="post-options">
+                                            <button
+                                                class="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                                                onclick="toggleOptions(this)">
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                                                </svg>
+                                            </button>
+                                        
+
+                                            <div class="options-menu">
+                                                <div class="option-item" onclick="editPost(this,{{ $post->id }})">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                    </svg>
+                                                    Modifier
+                                                </div>
+                                                <div class="option-item danger" onclick="deletePost(this,{{ $post->id }})">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                    Supprimer
+                                                </div>
+                                            </div>
+                                            
+                                        
+                                        </div>
+
+                                    @endif
+                                </div>
+                        </div>
+
+                        <div class="p-4">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <svg class="w-4 h-4 text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                                    </svg>
+                                    <span class="text-xs font-semibold text-indigo-600 uppercase tracking-wide">Sondage</span>
+                                </div>
+
+                                <h2 class="font-semibold text-base mb-2 text-gray-900">
+                                    {{ $post->poll->question }}
+                                </h2>
+                                <p class="text-sm leading-relaxed text-gray-600 mb-4">
+                                    {{ $post->content }}
+                                </p>
+
+                                {{-- Média optionnel pour le sondage --}}
+                                @if($post->media && $post->media->count() > 0)
+                                    <div class="mb-4 rounded-lg overflow-hidden">
+                                        @php $media = $post->media->first(); @endphp
+                                        
+                                        @if($media->type === 'video')
+                                            <div class="relative group cursor-pointer" onclick="openVideoFullscreen(this)">
+                                                <video class="w-full max-h-64 object-cover rounded-lg" preload="metadata">
+                                                    <source src="{{ asset('storage/' . $media->path) }}" type="video/mp4">
+                                                </video>
+                                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-40 transition-all rounded-lg">
+                                                    <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-all" 
+                                                        fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M8 5v14l11-7z"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <img src="{{ asset('storage/' . $media->path) }}" 
+                                                alt="Image du sondage"
+                                                class="w-full max-h-64 object-cover rounded-lg cursor-pointer hover:opacity-95 transition-opacity"
+                                                onclick="openImageFullscreen('{{ asset('storage/' . $media->path) }}')">
+                                        @endif
+                                    </div>
+                                @endif
+
+                                {{-- Options du sondage --}}
+                                <div class="space-y-2 mb-4">
+                                    @php
+                                        $totalVotes = $post->poll->options->sum('votes');
+                                    @endphp
+                                    
+                                    @foreach($post->poll->options as $option)
+                                        @php
+                                            $percentage = $totalVotes > 0 ? round(($option->votes / $totalVotes) * 100) : 0;
+                                        @endphp
+                                        
+                                        <div class="poll-option border border-gray-200 rounded-lg p-3 relative"
+                                            onclick="votePoll({{ $post->poll->id }}, {{ $option->id }}, this)">
+                                            <div class="poll-progress" style="width: {{ $percentage }}%"></div>
+                                            <div class="relative z-10 flex items-center justify-between">
+                                                <span class="text-sm font-medium">{{ $option->option }}</span>
+                                                <span class="text-xs text-gray-500 poll-percentage">{{ $percentage }}%</span>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <p class="text-xs text-gray-500">
+                                    <span class="font-semibold text-gray-700">{{ number_format($totalVotes) }}</span> votes
+                                    @if($post->poll->ends_at)
+                                        • Se termine {{ \Carbon\Carbon::parse($post->poll->ends_at)->diffForHumans() }}
+                                    @endif
+                                </p>
+                        </div>
+
+                        <div class="px-4 pb-4">
+                            <div class="flex items-center gap-4 mb-3 text-xs text-gray-500 border-t pt-3">
+                                <span><span class="font-semibold text-gray-700">{{ $post->likes_count }}</span> likes</span>
+                                <span><span class="font-semibold text-gray-700">{{ $post->comments_count }}</span> commentaires</span>
+                                <span><span class="font-semibold text-gray-700">{{ $post->shares_count }}</span> partages</span>
+                            </div>
+
+                            <div class="flex items-center gap-1 border-t pt-3">
+                                <button class="action-btn flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium"
+                                        onclick="handleLike(this, {{ $post->id }})">
+                                    <svg class="heart-icon w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                    </svg>
+                                    <span>J'aime</span>
+                                </button>
+
+                                <button class="action-btn flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium"
+                                        onclick="toggleComments(this)">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                    </svg>
+                                    <span>Commenter</span>
+                                </button>
+
+                                <button class="action-btn flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium"
+                                        onclick="openShareModal(this, {{ $post->id }})">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                                    </svg>
+                                    <span>Partager</span>
+                                </button>
+                            </div>
+
+                            <div class="comment-section mt-3">
+                                <div class="space-y-2 mb-3">
+                                    @foreach($post->comments as $comment)
+                                        <div class="comment-item flex gap-2 p-2.5 bg-gray-50 rounded-lg" data-comment-id="{{ $comment->id }}">
+                                            <div class="w-7 h-7 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex-shrink-0"></div>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="flex items-center gap-2 mb-0.5">
+                                                    <span class="font-medium text-xs">{{ $comment->user->full_name }}</span>
+                                                    <span class="text-xs text-gray-400">{{ \Carbon\Carbon::parse($comment->created_at)->diffForHumans() }}</span>
+                                                </div>
+                                                <p class="text-xs text-gray-700 comment-text">{{ $comment->content }}</p>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div class="flex gap-2">
+                                    <input type="text"
+                                        class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
+                                        placeholder="Ajouter un commentaire..."
+                                        onkeypress="handleCommentSubmit(event, this)">
+                                    <button class="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+                                        onclick="addComment(this.previousElementSibling)">
+                                        Publier
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                        
+                    @endif
+                       
+                   @endforeach
+                </div>
+
+                <!-- Modal de partage -->
+                <div class="share-modal" id="shareModal">
+                    <div class="share-modal-content">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-semibold text-base">Partager le post</h3>
+                            <button onclick="closeShareModal()"
+                                class="p-1 text-gray-400 hover:text-gray-600 rounded-lg transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-4">Copiez le lien ci-dessous pour partager ce post</p>
+                        <div class="flex gap-2">
+                            <input type="text" id="shareLink" readonly
+                                class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-indigo-400"
+                                value="https://rmclass.com/post/123456">
+                            <button onclick="copyShareLink()"
+                                class="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors font-medium">
+                                Copier
+                            </button>
+                        </div>
+                        <div id="copySuccess" class="mt-2 text-xs text-green-600 opacity-0 transition-opacity">
+                            ✓ Lien copié avec succès !
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal d'édition -->
+                <div class="edit-modal" id="editModal">
+                    <div class="edit-modal-content" id="editModalContent">
+                        <!-- Le contenu sera généré dynamiquement -->
+                    </div>
                 </div>
             </main>
 
@@ -507,121 +1174,12 @@
         </div>
 
     </div>
-    </div>
+    
 
     <!-- ========================================
          MENU MOBILE (Overlay)
     ======================================== -->
-    <div id="mobile-menu" class="fixed inset-0 z-50 hidden">
-        <!-- Overlay -->
-        <div class="mobile-menu-overlay absolute inset-0" id="mobile-menu-overlay"></div>
-
-        <!-- Menu sidebar -->
-        <div class="slide-in absolute left-0 top-0 bottom-0 w-80 bg-white shadow-2xl overflow-y-auto">
-            <!-- Header -->
-            <div class="gradient-bg p-6 text-white">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-bold">Menu</h3>
-                    <button id="close-mobile-menu" class="p-2 hover:bg-white/20 rounded-lg transition-colors">
-                        <i class="fas fa-times text-lg"></i>
-                    </button>
-                </div>
-                <div class="flex items-center space-x-3">
-                    <img src="https://i.pravatar.cc/150?img=12" alt="Profil"
-                        class="w-16 h-16 rounded-full border-3 border-white">
-                    <div>
-                        <p class="font-bold">CHOUTI Abdoulaye</p>
-                        <p class="text-xs text-indigo-100">Modérateur</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navigation -->
-            <nav class="p-4">
-
-                <a href="#"
-                    class="group relative flex items-center space-x-3 px-4 py-3 rounded-lg bg-indigo-50 text-indigo-600 mb-2 overflow-hidden transition-all duration-300 hover:bg-indigo-600 hover:text-white hover:shadow-xl hover:scale-105">
-                    <!-- Particules animées en arrière-plan -->
-                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div class="absolute w-2 h-2 bg-white rounded-full animate-particle-1"></div>
-                        <div class="absolute w-1.5 h-1.5 bg-yellow-300 rounded-full animate-particle-2"></div>
-                        <div class="absolute w-1 h-1 bg-pink-300 rounded-full animate-particle-3"></div>
-                        <div class="absolute w-2 h-2 bg-cyan-300 rounded-full animate-particle-4"></div>
-                        <div class="absolute w-1.5 h-1.5 bg-white rounded-full animate-particle-5"></div>
-                    </div>
-
-                    <!-- Vague énergétique -->
-                    <div
-                        class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-30 group-hover:animate-wave">
-                    </div>
-
-                    <!-- Icône avec animation -->
-                    <i
-                        class="fas fa-home text-base w-4 relative z-10 transition-all duration-300 group-hover:rotate-12 group-hover:scale-125"></i>
-
-                    <!-- Texte avec animation -->
-                    <p class="font-bold relative z-10 transition-all duration-300 group-hover:tracking-wider">
-                        Communautés</p>
-
-                    <!-- Lueur pulsante -->
-                    <div
-                        class="absolute inset-0 rounded-lg bg-indigo-400 opacity-0 group-hover:opacity-20 group-hover:animate-pulse-glow">
-                    </div>
-                </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-indigo-50 text-indigo-600 mb-2">
-                    <i class="fas fa-home text-base w-4"></i>
-                    <p class="font-bold">Communautés</p>
-                </a>
-                <a href="#"
-                    class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2">
-                    <i class="fas fa-book text-base w-6"></i>
-                    <span class="font-medium">Classrooms</span>
-                </a>
-                <a href="#"
-                    class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2">
-                    <i class="fas fa-calendar-alt text-base w-6"></i>
-                    <span class="font-medium">Événements</span>
-                </a>
-                <a href="#"
-                    class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2">
-                    <i class="fas fa-map-marker-alt text-base w-6"></i>
-                    <span class="font-medium">Localisations des Membres</span>
-                </a>
-                <a href="#"
-                    class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2">
-                    <i class="fas fa-users text-base w-6"></i>
-                    <span class="font-medium">Vos Sessions</span>
-                </a>
-                <a href="#"
-                    class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 mb-2">
-                    <i class="fas fa-cog text-base w-6"></i>
-                    <span class="font-medium">Paramètres</span>
-                </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50">
-                    <i class="fas fa-question-circle text-base w-6"></i>
-                    <span class="font-medium">Centre d'aide</span>
-                </a>
-            </nav>
-
-            <!-- Stats -->
-            <div class="mx-4 my-6 p-4 bg-gray-50 rounded-lg">
-                <div class="grid grid-cols-3 gap-4 text-center">
-                    <div>
-                        <p class="font-bold text-base">500k</p>
-                        <p class="text-xs text-gray-500">Posts</p>
-                    </div>
-                    <div class="border-x border-gray-300">
-                        <p class="font-bold text-base">23.5M</p>
-                        <p class="text-xs text-gray-500">Followers</p>
-                    </div>
-                    <div>
-                        <p class="font-bold text-base">50</p>
-                        <p class="text-xs text-gray-500">Following</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('vip/composants/mobile')
 
 
     @include('vip/composants/js')

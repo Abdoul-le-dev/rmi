@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\Models\Post_media;
 use App\Models\Poll;
+use App\Models\CommentPost;
 
 class Post extends Model
 {
@@ -22,6 +23,8 @@ class Post extends Model
         'comments_count' => 'integer',
         'shares_count' => 'integer'
     ];
+
+    protected $appends = ['plaque', 'montant'];
     public function user() {
         return $this->belongsTo(User::class);
     }
@@ -37,4 +40,43 @@ class Post extends Model
     public function poll() {
         return $this->hasOne(Poll::class);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(CommentPost::class);
+    }
+
+     public function getPlaqueAttribute()
+    {
+        $trophe = Trophe::where('user_id', $this->user_id)
+            ->where('status', 'validated')
+            ->latest()
+            ->first();
+
+        if (!$trophe) {
+            return 'none';
+        }
+
+        $montant = (float) $trophe->montant_généré;
+
+        if ($montant >= 10000) return 'diamond';
+        if ($montant >= 5000) return 'gold';
+        if ($montant >= 1000) return 'silver';
+        if ($montant >= 100) return 'bronze';
+
+        return 'Aucune';
+    }
+
+    // 🔥 Accessor pour le montant
+    public function getMontantAttribute()
+    {
+        $trophe = Trophe::where('user_id', $this->user_id)
+            ->where('status', 'validated')
+            ->latest()
+            ->first();
+
+        return $trophe ? (float) $trophe->montant_généré : 0;
+    }
+
+    
 }

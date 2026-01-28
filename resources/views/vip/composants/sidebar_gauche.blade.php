@@ -12,10 +12,15 @@
             <h3 class="font-bold text-white text-base ">{{ $userData['user_name'] }}</h3>
             <p class="text-indigo-100 text-xs change">{{ $userData['user_status'] }}</p>
             <!-- Moderator
-            <div class="flex items-center justify-center space-x-1 mt-1">
-                <i class="fas fa-check-circle text-white text-xs"></i>
-                <span class="text-white text-xs change">Vérifié</span>
-            </div>-->
+            -->
+            @if ($userData['user_status'] != 'Etudiant')
+
+                <div class="flex items-center justify-center space-x-1 mt-1">
+                    <i class="fas fa-check-circle text-white text-xs"></i>
+                    <span class="text-white text-xs change">Vérifié</span>
+                </div>
+
+            @endif
         </div>
 
         <!-- Tier Progress -->
@@ -41,7 +46,7 @@
 
 
 
-       
+
         <!-- Tier Badges Grid -->
         <div class="grid grid-cols-4 gap-x-2 mb-6">
 
@@ -519,7 +524,7 @@
                     </div>
                 </a>
 
-                <a href="/vip/parametre" onclick="moveToTop(this); playRandomClickSound(); return false;"
+                <a href="/vip/messages" onclick="moveToTop(this); playRandomClickSound(); return false;"
                     class="group relative flex items-center space-x-3 px-4 py-4 rounded-xl bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 text-gray-800 overflow-hidden transition-all duration-500 hover:from-blue-50 hover:via-indigo-50 hover:to-purple-50 hover:text-indigo-700 hover:shadow-xl hover:shadow-indigo-100/50 hover:scale-[1.02] hover:-translate-y-0.5 border border-gray-200/50 hover:border-indigo-200/50">
 
                     <div
@@ -565,7 +570,7 @@
 
                     <span
                         class="relative z-10 font-semibold text-sm tracking-normal transition-all duration-500 group-hover:tracking-wide group-hover:drop-shadow-[0_2px_8px_rgba(99,102,241,0.2)]">
-                        Paramètres
+                        Groupes
                         <span
                             class="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-300 via-blue-200 to-transparent group-hover:w-full transition-all duration-500"></span>
                     </span>
@@ -578,7 +583,7 @@
                     </div>
                 </a>
 
-                <a href="/vip/help" onclick="moveToTop(this); playRandomClickSound(); return false;"
+                <a href="/vip/messages" onclick="moveToTop(this); playRandomClickSound(); return false;"
                     class="group relative flex items-center space-x-3 px-4 py-4 rounded-xl bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 text-gray-800 overflow-hidden transition-all duration-500 hover:from-blue-50 hover:via-indigo-50 hover:to-purple-50 hover:text-indigo-700 hover:shadow-xl hover:shadow-indigo-100/50 hover:scale-[1.02] hover:-translate-y-0.5 border border-gray-200/50 hover:border-indigo-200/50">
 
                     <div
@@ -616,15 +621,15 @@
                     <div
                         class="relative z-10 flex items-center justify-center w-5 h-5 transition-all duration-500 group-hover:scale-110">
                         <div
-                            class="absolute inset-0 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 opacity-0 group-hover:opacity-30 blur-md transition-all duration-500">
+                            class="absolute inset-0 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 opacity-0 group-hover:opacity-30 blur-md transition-all duration-500">
                         </div>
                         <i
-                            class="fas fa-question-circle text-sm transition-all duration-500 group-hover:drop-shadow-[0_0_8px_rgba(99,102,241,0.4)]"></i>
+                            class="fas fa-cog text-sm transition-all duration-500 group-hover:drop-shadow-[0_0_8px_rgba(99,102,241,0.4)]"></i>
                     </div>
 
                     <span
                         class="relative z-10 font-semibold text-sm tracking-normal transition-all duration-500 group-hover:tracking-wide group-hover:drop-shadow-[0_2px_8px_rgba(99,102,241,0.2)]">
-                        Centre d'aide
+                        Votre Assistant IA
                         <span
                             class="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-300 via-blue-200 to-transparent group-hover:w-full transition-all duration-500"></span>
                     </span>
@@ -636,6 +641,8 @@
                         </div>
                     </div>
                 </a>
+
+
             </div>
         </nav>
     </div>
