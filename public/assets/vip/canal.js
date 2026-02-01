@@ -1,11 +1,119 @@
+// Gestion du menu mobile avec bouton retour
+const backButton = document.getElementById('backButton');
+const sidebar = document.getElementById('sidebar');
+const channelItems = document.querySelectorAll('.channel-item');
 
+
+
+
+// Initialement, afficher la sidebar sur mobile
+if (window.innerWidth < 768) {
+    sidebar.classList.remove('-translate-x-full');
+}
+
+backButton.addEventListener('click', () => {
+    if (window.innerWidth < 768) {
+        sidebar.classList.remove('-translate-x-full');
+    }
+});
+
+channelItems.forEach(item => {
+    item.addEventListener('click', () => {
+        if (window.innerWidth < 768) {
+            sidebar.classList.add('-translate-x-full');
+        }
+    });
+});
+
+function toggleSidebarSearch() {
+    const searchBox = document.getElementById('sidebarSearchBox');
+    searchBox.classList.toggle('hidden');
+    searchBox.classList.toggle('md:block');
+    if (!searchBox.classList.contains('hidden')) {
+        searchBox.querySelector('input').focus();
+    }
+}
+
+function toggleSearchBox() {
+    const searchBox = document.getElementById('searchBox');
+    searchBox.classList.toggle('hidden');
+    if (!searchBox.classList.contains('hidden')) {
+        document.getElementById('channelSearch').focus();
+    }
+}
+
+function toggleChannelInfo() {
+    const modal = document.getElementById('channelInfoModal');
+
+    // Remplir les informations du canal actuel
+    document.getElementById('channelInfoImage').src = currentChannelData.image;
+    document.getElementById('channelInfoName').textContent = currentChannelData.name;
+    document.getElementById('channelInfoDescription').textContent = currentChannelData.description;
+    
+
+    modal.classList.add('active');
+}
+function closeChannelInfo() {
+    document.getElementById('channelInfoModal').classList.remove('active');
+}
+
+document.addEventListener('click', (e) => {
+    const attachMenu = document.getElementById('attachMenu');
+    const attachBtn = e.target.closest('button[onclick="openAttachMenu()"]');
+
+    if (!attachMenu.contains(e.target) && !attachBtn) {
+        attachMenu.classList.add('hidden');
+    }
+});
+// ==================== VARIABLES GLOBALES ====================
+let currentUserId = null;
+let currentUser = null;
+let currentChannelData = null;
 
 // ==================== FONCTION CSRF ====================
 function csrf() {
     return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 }
 
+// ==================== RÉCUPÉRATION DES POSTS ====================
+async function getPosts(channelId) {
+    try {
+        const response = await fetch('/posts/fetch', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrf(),
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                channel_id: channelId
+            })
+        });
 
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('POSTS FETCHED:', data);
+
+        return {
+            success: true,
+            posts: data.posts || [],
+            forum: data.forum || [],
+            current_user: data.current_user || null
+        };
+
+    } catch (error) {
+        console.error('getPosts FAILED:', error);
+        return {
+            success: false,
+            error: error.message,
+            posts: [],
+            forum: []
+        };
+    }
+}
 
 // ==================== SWITCH CHANNEL ====================
 async function switchChannel(element, channelId, channelName, channelImage) {
@@ -202,7 +310,7 @@ function generateMediaPost(post) {
         const media = post.media[0];
         mediaHTML = `
             <div class="rounded-lg overflow-hidden mb-2 cursor-pointer">
-                <img src="${media.path}" class="w-full" alt="Image">
+                <img src="/store/${media.path}" class="w-full" alt="Image">
             </div>
         `;
     } else if (mediaCount > 1) {
@@ -210,7 +318,7 @@ function generateMediaPost(post) {
         post.media.forEach(media => {
             mediaHTML += `
                 <div class="aspect-square cursor-pointer">
-                    <img src="${media.path}" class="w-full h-full object-cover" alt="Image">
+                    <img src="/store/${media.path}" class="w-full h-full object-cover" alt="Image">
                 </div>
             `;
         });
@@ -347,7 +455,85 @@ function generateCommentsSection(post) {
     `;
 }
 
-/
+// ==================== UTILITAIRES ====================
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function getInitials(name) {
+    if (!name) return 'U';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+}
+
+function formatDate(date) {
+    if (!date) return 'À l\'instant';
+    // Format simple, vous pouvez améliorer
+    return 'Il y a quelques instants';
+}
+
+// ==================== INTERACTIONS ====================
+function toggleMenu(button) {
+    const menu = button.nextElementSibling;
+    const isVisible = menu.style.display === 'block';
+    
+    document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
+    menu.style.display = isVisible ? 'none' : 'block';
+    
+    if (!isVisible) {
+        setTimeout(() => {
+            document.addEventListener('click', function closeMenu(e) {
+                if (!button.contains(e.target) && !menu.contains(e.target)) {
+                    menu.style.display = 'none';
+                    document.removeEventListener('click', closeMenu);
+                }
+            });
+        }, 10);
+    }
+}
+
+function toggleLike(postId, source, button) {
+    const span = button.querySelector('span');
+    const svg = button.querySelector('svg');
+    const count = parseInt(span.textContent);
+    
+    if (button.classList.contains('text-red-500')) {
+        button.classList.remove('text-red-500');
+        svg.setAttribute('fill', 'none');
+        span.textContent = count - 1;
+    } else {
+        button.classList.add('text-red-500');
+        svg.setAttribute('fill', 'currentColor');
+        span.textContent = count + 1;
+    }
+    
+    console.log('Like:', { postId, source });
+}
+
+function toggleComments(postId, button) {
+    const container = button.closest('.flex-1');
+    const commentsSection = container.querySelector(`.comments[data-post-id="${postId}"]`);
+    
+    if (commentsSection) {
+        commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+function sharePost(postId) {
+    console.log('Partager:', postId);
+}
+
+function editPost(postId, source) {
+    console.log('Modifier:', { postId, source });
+}
+
+function deletePost(postId, source) {
+    if (confirm('Supprimer ce post ?')) {
+        console.log('Supprimer:', { postId, source });
+    }
+}
 
 // ==================== CHARGEMENT INITIAL ====================
 document.addEventListener('DOMContentLoaded', function() {

@@ -9,6 +9,8 @@ use App\Events\PostShared;
 use App\Models\PollOption;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Models\ForumTopic;
+use App\Models\Forum;
 
 class PostController extends Controller
 {
@@ -61,7 +63,6 @@ class PostController extends Controller
                 });
             }
 
-            
             if ($post->comments) {
                 $post->comments->each(function ($comment) {
                     if ($comment->user) {
@@ -78,29 +79,82 @@ class PostController extends Controller
         ]);
     }
 
-    public function fetch(Request $request)
-{
-    try {
-        $posts = Post::with(['user', 'media', 'poll.options'])
-            ->where('status', 'published')
-            ->latest()
-            ->limit(10)
-            ->get();
+    public function fetchss()
+    {
+        $id=11;
+        try {
 
-        return response()->json([
-            'success' => true,
-            'posts' => $posts,
-            'current_user' => auth()->user(),
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'error' => $e->getMessage(),
-            'line' => $e->getLine(),
-            'file' => $e->getFile(),
-        ], 500);
+            $forum = ForumTopic::where('forum_id', $id)->latest()
+                ->limit(10)
+                ->get();  
+            $posts = Post::with(['user', 'media', 'poll.options'])
+                ->where('status', 'published')->where('forum_id',$id)
+                ->latest()
+                ->limit(10)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'posts' => $posts,
+                'forum' =>  $forum,
+                'current_user' => auth()->user(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+            ], 500);
+        }
     }
-}
+
+    public function fetch(Request $request)
+    {
+        
+        $validated = $request->validate([
+            'channel_id' => 'required' 
+        ]);
+        try {
+
+            $forum = ForumTopic::where('forum_id', $validated['channel_id'])->latest()
+                ->limit(10)
+                ->get();  
+            $posts = Post::with(['user', 'media', 'poll.options'])
+                ->where('status', 'published')//->where('forum_id',$validated['channel_id'] )
+                //->latest()
+                ->limit(50)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'posts' => $posts,
+                'forum' =>  '',
+                'current_user' => auth()->user(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+            ], 500);
+        }
+    }
+
+    public function canal_index()
+    {
+        $forums = Forum::with(['topics'])->where('status', 'active')->get();
+
+        $posts = Post::with(['user', 'media', 'poll.options', 'comments.user'])
+        ->where('status', 'published')
+        ->latest()
+        ->paginate(20);
+
+      
+
+        return view('vip.canal', compact("forums","posts"));
+    }
 
     /**
      * Déterminer la plaque selon le montant généré
