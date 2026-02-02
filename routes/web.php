@@ -501,19 +501,15 @@ Route::get('vip/message', function () {
     return view('vip.message');
 });
 
-Route::get('vip/session', function () {
-    return view('vip.session');
-});
-
-Route::get('vip/parametre', function () {
-    return view('vip.parametre');
-});
 
 Route::get('vip/evenement', [ForumController::class, 'event_index']);
 
+Route::get('vip/canal', [PostController::class, 'canal_index']);
+
 Route::middleware(['auth'])->group(function () {
+    
     // Récupérer les posts (load initial)
-    Route::get('/posts/fetch', [PostController::class, 'fetchs'])->name('posts.fetch');
+    Route::get('/posts/fetchs', [PostController::class, 'fetchss'])->name('posts.fetch');
     Route::post('/posts/fetch', [PostController::class, 'fetch'])->name('posts.fetch');
 
     // Voter sur un sondage
@@ -525,6 +521,7 @@ Route::middleware(['auth'])->group(function () {
     // Partager un post
     Route::post('/posts/share', [CommentPostController::class, 'store_share'])->name('posts.share');
 
+    // Commentaires
     // Commentaires
     Route::post('/comments/create', [CommentPostController::class, 'store'])->name('comments.create');
 
