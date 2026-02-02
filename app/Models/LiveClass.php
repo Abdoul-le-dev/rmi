@@ -39,6 +39,10 @@ class LiveClass extends Model
         'is_public' => 'boolean',
         'settings' => 'array',
     ];
+    protected $appends = [
+    'can_start',
+ 
+];
 
     protected static function boot()
     {

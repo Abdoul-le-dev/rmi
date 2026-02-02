@@ -58,6 +58,16 @@
             )
                 <li class="menu-header">{{ trans('site.education') }}</li>
             @endif
+            @can('admin_webinars')
+                 <li class="{{ (request()->is(getAdminPanelUrl('/quizzes*', false))) ? 'active' : '' }}">
+                    <a class="nav-link " href="{{ route('sessions.index') }}">
+                        <i class="fas fa-video"></i>
+                        <span>Live class</span>
+                    </a>
+                </li>
+            @endcan
+
+            
 
             @can('admin_webinars')
                 <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/webinars*', false)) and !request()->is(getAdminPanelUrl('/webinars/comments*', false))) ? 'active' : '' }}">

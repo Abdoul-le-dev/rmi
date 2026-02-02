@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LiveClassController;
 
 $prefix = getAdminPanelUrlPrefix();
 
@@ -1256,6 +1257,21 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             });
         });
 
+
+         Route::group(['prefix' => 'lives-classes'], function () {
+            Route::get('', [LiveClassController::class, 'index_admin'])->name('sessions.index');
+            Route::get('/edit/{liveClass}', [LiveClassController::class, 'edit_admin'])->name('sessions.edit');
+            Route::put('/edit/{liveClass}', [LiveClassController::class, 'update_admin'])->name('sessions.update');
+            Route::post('/destroy/{liveClass}', [LiveClassController::class, 'destroy_admin'])->name('sessions.destroy');
+            
+            // Route::post('/getNetProfitChart', 'DashboardController@getNetProfitChartAjax');
+            // Route::get('/active_subscribed_users/export', 'DashboardController@exportActiveSubscribedUsers')->name('active_subscribed_users.export');
+            // Route::get('/expired_subscriptions/export', 'DashboardController@exportExpiredSubscriptions')->name('expired_subscriptions.export');
+            // Route::get('/admin/users-without-sales/export', 'DashboardController@exportUsersWithoutSales')->name('users_without_sales.export');
+            // Route::get('/admin/users-with-webinar-only/export', 'DashboardController@exportUsersWithWebinarOnly')->name('users_with_webinar_only.export');
+        });
+
         /* End Admin Middleware */
+
     });
 });

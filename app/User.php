@@ -149,7 +149,7 @@ class User extends Authenticatable
     public function getAvatar($size = 40)
     {
 
-        return;
+
         if (!empty($this->avatar)) {
             // $avatarUrl = $this->avatar;
             // $avatarUrl = Storage::disk('s3')->url($this->avatar);

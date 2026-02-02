@@ -124,7 +124,7 @@ class ForumController extends Controller
 
         removeContentLocale();
 
-        return redirect(getAdminPanelUrl().'/forums');
+        return redirect(getAdminPanelUrl() . '/forums');
     }
 
     public function edit(Request $request, $id)
@@ -193,7 +193,7 @@ class ForumController extends Controller
 
         removeContentLocale();
 
-        return redirect(getAdminPanelUrl().'/forums');
+        return redirect(getAdminPanelUrl() . '/forums');
     }
 
     public function destroy(Request $request, $id)
@@ -209,7 +209,7 @@ class ForumController extends Controller
             $forum->delete();
         }
 
-        return redirect(getAdminPanelUrl().'/forums');
+        return redirect(getAdminPanelUrl() . '/forums');
     }
 
     public function search(Request $request)
@@ -340,8 +340,7 @@ class ForumController extends Controller
             'description' => '',
         ];
 
-         return view('vip.event', compact('userData'));
-
+        return view('vip.event', compact('userData'));
     }
 
     public function new_index(Request $request)
@@ -351,7 +350,7 @@ class ForumController extends Controller
 
             $scheduledAt = null;
             if ($request->scheduled_at_date && $request->scheduled_at_time) {
-                $scheduledAt = $request->scheduled_at_date.' '.$request->scheduled_at_time.':00';
+                $scheduledAt = $request->scheduled_at_date . ' ' . $request->scheduled_at_time . ':00';
             }
 
             $status = $scheduledAt ? 'sheduled' : 'published';
@@ -395,7 +394,6 @@ class ForumController extends Controller
                     ]);
                 }
             }
-
         });
 
         $post->load(['user', 'media', 'poll.options']);
@@ -437,7 +435,6 @@ class ForumController extends Controller
                 $plaque = 'gold';
             } elseif ($montant_total >= 10000) {
                 $plaque = 'silver';
-
             } elseif ($montant_total >= 5000) {
                 $plaque = 'bronze';
             } else {
@@ -487,7 +484,6 @@ class ForumController extends Controller
             // Utilisateur non connecté
             return redirect()->route('login')->with('error', 'Vous devez être connecté');
         }
-
     }
 
     public function home_index()
@@ -572,7 +568,6 @@ class ForumController extends Controller
         });
 
         return view('vip.app', compact('userData', 'posts'));
-
     }
 
     public function fetchPosts__(Request $request)
@@ -746,14 +741,13 @@ class ForumController extends Controller
             $limit = $request->input('limit', 10);
 
             // Cache par utilisateur (5 secondes)
-            $cacheKey = 'posts_user_'.Auth::id();
+            $cacheKey = 'posts_user_' . Auth::id();
 
             $data = Cache::remember($cacheKey, 5, function () use ($limit) {
                 return $this->loadPosts($limit);
             });
 
             return response()->json($data);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -790,14 +784,14 @@ class ForumController extends Controller
                     ],
                     'plaque' => $this->getUserPlaque($post->user_id),
                     'montant' => $this->getUserMontant($post->user_id),
-                    'media' => $post->media->map(fn ($m) => [
+                    'media' => $post->media->map(fn($m) => [
                         'type' => str_ends_with(strtolower($m->path), '.mp4') ? 'video' : 'image',
                         'path' => $m->path,
                     ]),
                     'poll' => $post->poll ? [
                         'id' => $post->poll->id,
                         'question' => $post->poll->question,
-                        'options' => $post->poll->options->map(fn ($o) => [
+                        'options' => $post->poll->options->map(fn($o) => [
                             'id' => $o->id,
                             'option' => $o->option,
                             'votes' => $o->votes ?? 0,
@@ -911,5 +905,73 @@ class ForumController extends Controller
 
         // OU plus ciblé si vous avez beaucoup d'utilisateurs :
         // Cache::forget("posts_user_" . Auth::id());
+    }
+
+
+
+    public function records()
+    {
+        $user = auth()->user();
+
+        $validatedTrophes = $user->trophes()
+            ->where('status', 'validated')
+            ->get();
+
+        $montantTotal = $validatedTrophes->sum('montant_genere');
+
+        $percent = ($montantTotal / 1000) + 1;
+
+        $userData = [
+            'user_id' => $user->id,
+            'user_name' => $user->full_name,
+            'user_status' => $this->formatRole($user->role_name),
+            'montant_total' => $montantTotal,
+            'montant_restant' => $this->montantRestant($montantTotal),
+            'plaque' => $this->resolvePlaque($montantTotal),
+            'percent' => $percent,
+            'nombre_etudiants' => $this->nombreEtudiants(),
+            'nombre_posts' => $this->nombrePosts(),
+            'students_online' => 0,
+            'link_image' => '',
+            'description' => '',
+        ];
+
+        return view('vip.lives.records', compact('userData'));
+    }
+
+    public function liveclass()
+    {
+        $user = auth()->user();
+
+        $validatedTrophes = $user->trophes()
+            ->where('status', 'validated')
+            ->get();
+
+        $montantTotal = $validatedTrophes->sum('montant_genere');
+
+        $percent = ($montantTotal / 1000) + 1;
+
+        $userData = [
+            'user_id' => $user->id,
+            'user_name' => $user->full_name,
+            'user_status' => $this->formatRole($user->role_name),
+            'montant_total' => $montantTotal,
+            'montant_restant' => $this->montantRestant($montantTotal),
+            'plaque' => $this->resolvePlaque($montantTotal),
+            'percent' => $percent,
+            'nombre_etudiants' => $this->nombreEtudiants(),
+            'nombre_posts' => $this->nombrePosts(),
+            'students_online' => 0,
+            'link_image' => '',
+            'description' => '',
+        ];
+        $instructors = User::whereHas('role', function ($query) {
+            $query->where('name', 'teacher');
+        })
+            ->select('id', 'full_name')
+            ->orderBy('full_name')
+            ->get();
+
+        return view('vip.lives.live-class', compact('userData','user','instructors'));
     }
 }

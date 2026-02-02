@@ -325,7 +325,7 @@
             </a>
 
             <div id="sidebar-buttons" class="space-y-3">
-                <a href="/vip/session" onclick="moveToTop(this); playRandomClickSound(); return false;"
+                <a href="/vip/live-records" onclick="moveToTop(this); playRandomClickSound(); return false;"
                     class="sidebar-button group relative flex items-center space-x-3 px-4 py-4 rounded-xl bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 text-gray-800 overflow-hidden transition-all duration-500 hover:from-indigo-600 hover:via-indigo-500 hover:to-indigo-700 hover:text-white hover:shadow-2xl hover:shadow-indigo-500/40 hover:scale-[1.02] hover:-translate-y-0.5 border border-gray-200/50 hover:border-indigo-300/50">
 
                     <div
@@ -394,7 +394,7 @@
                     </div>
                 </a>
 
-                <a href="/vip/live" onclick="moveToTop(this); playRandomClickSound(); return false;"
+                <a href="/vip/live-class" onclick="moveToTop(this); playRandomClickSound(); return false;"
                     class="group relative flex items-center space-x-3 px-4 py-4 rounded-xl bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 text-gray-800 overflow-hidden transition-all duration-500 hover:from-indigo-600 hover:via-indigo-500 hover:to-indigo-700 hover:text-white hover:shadow-2xl hover:shadow-indigo-500/40 hover:scale-[1.02] hover:-translate-y-0.5 border border-gray-200/50 hover:border-indigo-300/50">
 
                     <div

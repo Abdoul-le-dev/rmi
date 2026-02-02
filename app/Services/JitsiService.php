@@ -53,11 +53,12 @@ class JitsiService
             'exp' => $expiresAt->timestamp,
             'nbf' => $now->timestamp,
             'iat' => $now->timestamp,
+            'moderator' => $isModerator,
             'context' => array_merge([
                 'user' => [
                     'name' => $userName,
                     'email' => $userEmail,
-                    // 'moderator' => $isModerator ? 'true' : 'false'
+                    'moderator' => $isModerator ? 'true' : 'false',
                     'affiliation' => $isModerator ? 'owner' : 'member'
                 ]
             ], $additionalContext)
@@ -75,7 +76,7 @@ class JitsiService
         $signatureEncoded = $this->base64UrlEncode($signature);
 
         $token = "$headerEncoded.$payloadEncoded.$signatureEncoded";
-        $url = "https://{$this->domain}/{$roomName}?jwt={$token}#config.autoRecord=true";
+        $url = "https://{$this->domain}/{$roomName}?jwt={$token}";
 
         return [
             'token' => $token,

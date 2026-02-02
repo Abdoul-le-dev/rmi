@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ForumController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentPostController;
+use App\Models\LiveClass;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,7 @@ use App\Http\Controllers\CommentPostController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::group(['prefix' => 'my_api', 'namespace' => 'Api\Panel', 'middleware' => 'signed', 'as' => 'my_api.web.'], function () {
     Route::get('checkout/{user}', 'CartController@webCheckoutRender')->name('checkout');
     Route::get('/charge/{user}', 'PaymentsController@webChargeRender')->name('charge');
@@ -30,7 +32,6 @@ Route::group(['prefix' => 'my_api', 'namespace' => 'Api\Panel', 'middleware' => 
 Route::group(['prefix' => 'api_sessions'], function () {
     Route::get('/big_blue_button', ['uses' => 'Api\Panel\SessionsController@BigBlueButton'])->name('big_blue_button');
     Route::get('/agora', ['uses' => 'Api\Panel\SessionsController@agora'])->name('agora');
-
 });
 
 Route::get('/mobile-app', 'Web\MobileAppController@index')->middleware(['share'])->name('mobileAppRoute');
@@ -105,7 +106,7 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     Route::get('/', 'update_landing_page@index');
     Route::get('/a-propos', 'update_landing_page@a_propos');
     Route::get('/communaute-acces', 'update_landing_page@communaute-acces');
-     Route::get('/communaute', 'update_landing_page@communaute');
+    Route::get('/communaute', 'update_landing_page@communaute');
     Route::get('/faq', 'update_landing_page@faq_dev');
     Route::get('/instructeurs', 'update_landing_page@instructeurs');
     Route::get('/privacy', 'update_landing_page@privacy');
@@ -113,7 +114,7 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     #Route::get('/', 'update_landing_page@index');
 
     //Route::get('/', function () {
-      //  return redirect()->away('https://rmiclass.net/');
+    //  return redirect()->away('https://rmiclass.net/');
     //});
 
     Route::get('/getDefaultAvatar', 'DefaultAvatarController@make');
@@ -181,7 +182,7 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
 
     Route::group(['middleware' => 'web.auth'], function () {
 
-        Route::group(['prefix' => 'laravel-filemanager','middleware' => 'lfm.s3'], function () {
+        Route::group(['prefix' => 'laravel-filemanager', 'middleware' => 'lfm.s3'], function () {
             \UniSharp\LaravelFilemanager\Lfm::routes();
         });
 
@@ -225,7 +226,6 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
             Route::post('/', 'BecomeInstructorController@store');
             Route::post('/form-fields', 'BecomeInstructorController@getFormFieldsByUserType');
         });
-
     });
 
     Route::group(['prefix' => 'meetings'], function () {
@@ -362,7 +362,7 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     });
 
     Route::group(['prefix' => 'forums', 'middleware' => 'check.subscription'], function () {
-    // Route::group(['prefix' => 'forums'], function () {
+        // Route::group(['prefix' => 'forums'], function () {
         Route::get('/', 'ForumController@index');
         Route::get('/create-topic', 'ForumController@createTopic');
         Route::post('/create-topic', 'ForumController@storeTopic');
@@ -422,7 +422,6 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     /* Forms */
     Route::get('/forms/{url}', 'FormsController@index');
     Route::post('/forms/{url}/store', 'FormsController@store');
-
 });
 
 
@@ -439,7 +438,7 @@ Route::get('/test-email', [CourseVideoController::class, 'test_email']);
 Route::get('/test-cloudfront', function (CloudFrontUrlSigner $signer) {
     try {
         $signedUrl = $signer->getSignedUrl('image.png');
-        
+
         return response()->json([
             'success' => true,
             'signed_url' => $signedUrl,
@@ -457,42 +456,40 @@ Route::get('/test-cloudfront', function (CloudFrontUrlSigner $signer) {
 Route::get('/player/test-cloudfront-view', [CourseVideoController::class, 'testCloudFrontCookies']);
 
 
-Route::get('/live-class/public/{token}', [LiveClassController::class, 'joinPublic'])
-    ->name('live-class.join-public');
-Route::post('/live-class/public/{token}', [LiveClassController::class, 'joinPublic']);
+
 
 // Routes authentifiées
-Route::middleware(['web.auth'])->group(function () {
-    
-    // Dashboard étudiant
-    Route::get('/my-live-classes', [LiveClassController::class, 'studentDashboard'])
-        ->name('live-classes.student-dashboard');
+// Route::middleware(['web.auth'])->group(function () {
 
-    // Gestion des live classes (instructeur)
-    Route::prefix('live-classes')->name('live-classes.')->group(function () {
-        Route::get('/', [LiveClassController::class, 'index'])->name('index');
-        Route::get('/create', [LiveClassController::class, 'create'])->name('create');
-        Route::post('/', [LiveClassController::class, 'store'])->name('store');
-        Route::get('/{liveClass}', [LiveClassController::class, 'show'])->name('show');
-        Route::put('/{liveClass}', [LiveClassController::class, 'update'])->name('update');
-        Route::delete('/{liveClass}', [LiveClassController::class, 'destroy'])->name('destroy');
-        
-        // Actions sur les live classes
-        Route::get('/{liveClass}/enroll', [LiveClassController::class, 'enroll'])->name('enroll');
-        Route::post('/{liveClass}/unenroll', [LiveClassController::class, 'unenroll'])->name('unenroll');
-        Route::post('/{liveClass}/start', [LiveClassController::class, 'start'])->name('start');
-        Route::post('/{liveClass}/join', [LiveClassController::class, 'join'])->name('join');
-        Route::post('/{liveClass}/end', [LiveClassController::class, 'end'])->name('end');
+//     // Dashboard étudiant
+//     Route::get('/my-live-classes', [LiveClassController::class, 'studentDashboard'])
+//         ->name('live-classes.student-dashboard');
 
-           // Enregistrements
-        Route::prefix('{liveClass}/recordings')->name('recordings.')->group(function () {
-            Route::get('/', [LiveClassRecordingController::class, 'index'])->name('index');
-            Route::get('/{recording}/download', [LiveClassRecordingController::class, 'download'])->name('download');
-            Route::get('/{recording}/stream', [LiveClassRecordingController::class, 'stream'])->name('stream');
-            Route::delete('/{recording}', [LiveClassRecordingController::class, 'destroy'])->name('destroy');
-        });
-    });
-});
+//     // Gestion des live classes (instructeur)
+//     Route::prefix('live-classes')->name('live-classes.')->group(function () {
+//         Route::get('/', [LiveClassController::class, 'index'])->name('index');
+//         Route::get('/create', [LiveClassController::class, 'create'])->name('create');
+//         Route::post('/', [LiveClassController::class, 'store'])->name('store');
+//         Route::get('/{liveClass}', [LiveClassController::class, 'show'])->name('show');
+//         Route::put('/{liveClass}', [LiveClassController::class, 'update'])->name('update');
+//         Route::delete('/{liveClass}', [LiveClassController::class, 'destroy'])->name('destroy');
+
+//         // Actions sur les live classes
+//         Route::get('/{liveClass}/enroll', [LiveClassController::class, 'enroll'])->name('enroll');
+//         Route::post('/{liveClass}/unenroll', [LiveClassController::class, 'unenroll'])->name('unenroll');
+//         Route::post('/{liveClass}/start', [LiveClassController::class, 'start'])->name('start');
+//         Route::post('/{liveClass}/join', [LiveClassController::class, 'join'])->name('join');
+//         Route::post('/{liveClass}/end', [LiveClassController::class, 'end'])->name('end');
+
+//            // Enregistrements
+//         Route::prefix('{liveClass}/recordings')->name('recordings.')->group(function () {
+//             Route::get('/', [LiveClassRecordingController::class, 'index'])->name('index');
+//             Route::get('/{recording}/download', [LiveClassRecordingController::class, 'download'])->name('download');
+//             Route::get('/{recording}/stream', [LiveClassRecordingController::class, 'stream'])->name('stream');
+//             Route::delete('/{recording}', [LiveClassRecordingController::class, 'destroy'])->name('destroy');
+//         });
+//     });
+// });
 
 Route::view('/offline', 'offline');
 
@@ -500,17 +497,17 @@ Route::get('vip', [ForumController::class, 'home_index']);
 
 Route::post('vip', [ForumController::class, 'new_index']);
 
-Route::get('vip/message', function(){
-        return view('vip.message');
-    });
+Route::get('vip/message', function () {
+    return view('vip.message');
+});
 
-Route::get('vip/session', function(){
-        return view('vip.session');
-    });
+Route::get('vip/session', function () {
+    return view('vip.session');
+});
 
-Route::get('vip/parametre', function(){
-        return view('vip.parametre');
-    });
+Route::get('vip/parametre', function () {
+    return view('vip.parametre');
+});
 
 Route::get('vip/evenement', [ForumController::class, 'event_index']);
 
@@ -518,22 +515,61 @@ Route::middleware(['auth'])->group(function () {
     // Récupérer les posts (load initial)
     Route::get('/posts/fetch', [PostController::class, 'fetchs'])->name('posts.fetch');
     Route::post('/posts/fetch', [PostController::class, 'fetch'])->name('posts.fetch');
-    
+
     // Voter sur un sondage
     Route::post('/polls/vote', [PostController::class, 'vote'])->name('polls.vote');
-    
+
     // Supprimer un post
     Route::post('/posts/delete', [PostController::class, 'delete'])->name('posts.delete');
-    
+
     // Partager un post
     Route::post('/posts/share', [CommentPostController::class, 'store_share'])->name('posts.share');
 
-     // Commentaires
+    // Commentaires
     Route::post('/comments/create', [CommentPostController::class, 'store'])->name('comments.create');
-    
+
     Route::post('/comments/edit', [CommentPostController::class, 'update'])->name('comments.update');
     Route::get('/posts/{postId}/comments', [CommentPostController::class, 'index'])->name('comments.index');
     Route::post('/comments/delete', [CommentPostController::class, 'destroy'])->name('comments.delete');
-  
+});
 
-});    
+Route::get('vip/live-records', [ForumController::class, 'records']);
+Route::get('/recordings/list', [LiveClassRecordingController::class, 'list'])->name('recordings.list');
+Route::get('vip/live-class', [ForumController::class, 'liveclass']);
+Route::prefix('vip')->group(function () {
+    // CRUD de base
+    Route::get('/live-classes', [LiveClassController::class, 'apiIndex']);
+    Route::post('/live-classes', [LiveClassController::class, 'store']);
+    Route::get('/live-classes/{liveClass}', [LiveClassController::class, 'apiShow']);
+    Route::put('/live-classes/{liveClass}', [LiveClassController::class, 'update']);
+    Route::post('/live-classes/{liveClass}', [LiveClassController::class, 'destroy']);
+
+
+    // // Actions spécifiques
+    Route::post('/live-classes/{liveClass}/start', [LiveClassController::class, 'start']);
+    Route::post('/live-classes/{liveClass}/join', [LiveClassController::class, 'join'])->name('join');
+    Route::post('/live-classes/{liveClass}/end', [LiveClassController::class, 'end']);
+    Route::post('/live-classes/{liveClass}/enroll', [LiveClassController::class, 'enroll'])->name('enroll');
+    Route::post('/live-classes/{liveClass}/unenroll', [LiveClassController::class, 'unenroll'])->name('unenroll');
+
+    // // Gestion des participants
+    // Route::post('/live-classes/{liveClass}/join-request', [LiveClassController::class, 'joinRequest']);
+    // Route::post('/live-classes/{liveClass}/leave', [LiveClassController::class, 'leave']);
+    // Route::get('/live-classes/{liveClass}/participants', [LiveClassController::class, 'participants']);
+});
+
+Route::get('/live-class/public/{token}', [LiveClassController::class, 'joinPublic'])
+    ->name('live-class.join-public');
+Route::post('/live-class/public/{token}', [LiveClassController::class, 'joinPublic']);
+
+Route::get('/live-classes/public/{token}/status', function($token) {
+    $liveClass = LiveClass::where('public_token', $token)
+        ->where('is_public', true)
+        ->firstOrFail();
+    
+    return response()->json([
+        'status' => $liveClass->status,
+        'scheduled_at' => $liveClass->scheduled_at,
+        'is_live' => $liveClass->status === 'live'
+    ]);
+});

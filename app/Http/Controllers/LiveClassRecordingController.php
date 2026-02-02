@@ -74,9 +74,9 @@ class LiveClassRecordingController extends Controller
         $recordings = $liveClass->recordings()
             ->orderBy('created_at', 'desc')
             ->get();
-            $authUser=Auth::user();
+        $authUser = Auth::user();
 
-        return view('liveclass.records', compact('liveClass', 'recordings','authUser'));
+        return view('liveclass.records', compact('liveClass', 'recordings', 'authUser'));
     }
 
     /**
@@ -206,5 +206,36 @@ class LiveClassRecordingController extends Controller
         $duration = shell_exec($command);
 
         return $duration ? (int) round((float) $duration) : null;
+    }
+
+
+   public function list(Request $request)
+    {
+        try {
+            $recordings = LiveClassRecording::where('status', 'completed')
+                ->with('liveClass') // Charger la relation si elle existe
+                ->orderBy('completed_at', 'desc')
+                ->get()
+                ->map(function ($recording) {
+                    return [
+                        'id' => $recording->id,
+                        'room_name' => $recording->room_name,
+                        'file_name' => $recording->file_name,
+                        'file_path' => $recording->file_path,
+                        'file_size' => $recording->file_size,
+                        'duration_seconds' => $recording->duration_seconds,
+                        'status' => $recording->status,
+                        'created_at' => $recording->created_at->toISOString(),
+                        'completed_at' => $recording->completed_at ? $recording->completed_at->toISOString() : null,
+                        // Ajouter des métadonnées si disponibles
+                        'metadata' => $recording->metadata ? json_decode($recording->metadata) : null,
+                    ];
+                });
+
+            return response()->json($recordings);
+        } catch (\Exception $e) {
+            \Log::error('Error fetching recordings: ' . $e->getMessage());
+            return response()->json(['error' => 'Une erreur est survenue'], 500);
+        }
     }
 }
