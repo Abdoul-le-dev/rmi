@@ -533,7 +533,7 @@ Route::middleware(['auth'])->group(function () {
 Route::get('vip/live-records', [ForumController::class, 'records']);
 Route::get('/recordings/list', [LiveClassRecordingController::class, 'list'])->name('recordings.list');
 Route::get('vip/live-class', [ForumController::class, 'liveclass']);
-Route::prefix('vip')->group(function () {
+Route::middleware(['web.auth'])->prefix('vip')->group(function () {
     // CRUD de base
     Route::get('/live-classes', [LiveClassController::class, 'apiIndex']);
     Route::post('/live-classes', [LiveClassController::class, 'store']);
