@@ -58,7 +58,7 @@ class JitsiService
                 'user' => [
                     'name' => $userName,
                     'email' => $userEmail,
-                    'moderator' => $isModerator ? 'true' : 'false',
+                    'moderator' => $isModerator ? true : false,
                     'affiliation' => $isModerator ? 'owner' : 'member'
                 ]
             ], $additionalContext)

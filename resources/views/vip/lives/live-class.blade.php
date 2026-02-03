@@ -455,7 +455,7 @@
             <!-- Image de couverture -->
             <div class="relative h-48 bg-gradient-to-br from-[#7256B2] to-[#5E44A6] overflow-hidden">
                 ${live.live_cover ? `
-                                                    <img src="/store/${live.live_cover}" alt="${live.title}" class="w-full h-full object-cover">
+                                                    <img src="${live.url_path}" alt="${live.title}" class="w-full h-full object-cover">
                                                 ` : `
                                                     <div class="w-full h-full flex items-center justify-center">
                                                         <i class="fas fa-video text-6xl text-white/30"></i>
@@ -809,7 +809,7 @@
             <!-- Image de couverture -->
             <div class="relative h-80 bg-gradient-to-br from-[#7256B2] to-[#5E44A6]">
                 ${live.live_cover ? `
-                                            <img src="/store/${live.live_cover}" alt="${live.title}" class="w-full h-full object-cover">
+                                            <img src="${live.url_path}" alt="${live.title}" class="w-full h-full object-cover">
                                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                                         ` : `
                                             <div class="w-full h-full flex items-center justify-center">
@@ -1243,7 +1243,7 @@
 
             if (live.live_cover) {
                 const preview = document.getElementById('cover-preview');
-                preview.querySelector('img').src = `/store/${live.live_cover}`;;
+                preview.querySelector('img').src = `${live.url_path}`;;
                 preview.classList.remove('hidden');
                 document.getElementById('cover-filename').textContent = 'Image actuelle';
             }

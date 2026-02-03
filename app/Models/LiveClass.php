@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\S3Helper;
 use App\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +42,7 @@ class LiveClass extends Model
     ];
     protected $appends = [
     'can_start',
+    'url_path',
  
 ];
 
@@ -222,4 +224,16 @@ class LiveClass extends Model
 
         return true;
     }
+
+    public function getUrlPathAttribute()
+{
+    if (empty($this->live_cover)) {
+        return null;
+    }
+
+    return S3Helper::getTemporaryUrl(
+        $this->live_cover,
+        60 
+    );
+}
 }

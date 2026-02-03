@@ -24,7 +24,7 @@
             <!-- Image de couverture -->
             <div class="relative h-80 bg-gradient-to-br from-blue-500 to-indigo-600">
                 @if($liveClass->live_cover)
-                    <img src="/store/{{ $liveClass->live_cover }}" alt="{{ $liveClass->title }}" class="w-full h-full object-cover">
+                    <img src="{{  \App\Helpers\S3Helper::getTemporaryUrl($liveClass->live_cover, 60) }}" alt="{{ $liveClass->title }}" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 @else
                     <div class="w-full h-full flex items-center justify-center">

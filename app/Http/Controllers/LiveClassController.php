@@ -65,7 +65,7 @@ class LiveClassController extends Controller
         if ($request->hasFile('live_cover')) {
             $coverPath = $request->file('live_cover')->store(
                 'live-covers',
-                'public' //  s3 en prod
+                's3' //  s3 en prod
             );
         }
 
@@ -77,6 +77,7 @@ class LiveClassController extends Controller
             'duration_minutes' => $validated['duration_minutes'],
             'is_public' => $validated['is_public'],
             'auto_record' => false,
+            // 'status' => 'scheduled',
             'max_participants' => $validated['max_participants']
                 ?? config('jitsi.live_class.default_max_participants'),
             'live_cover' => $coverPath,
@@ -145,10 +146,10 @@ class LiveClassController extends Controller
         if ($request->hasFile('live_cover')) {
             
             if ($liveClass->live_cover) {
-                Storage::disk('public')->delete($liveClass->live_cover); //s3 en prod
+                Storage::disk('s3')->delete($liveClass->live_cover); //s3 en prod
             }
 
-            $path = $request->file('live_cover')->store('live-covers', 'public'); //s3
+            $path = $request->file('live_cover')->store('live-covers', 's3'); //s3
             $validated['live_cover'] = $path;
         }
 
@@ -182,7 +183,7 @@ class LiveClassController extends Controller
 
         // Supprimer l'image de couverture
         if ($liveClass->live_cover) {
-            Storage::disk('public')->delete( $liveClass->live_cover); //s3
+            Storage::disk('s3')->delete( $liveClass->live_cover); //s3
         }
 
         $liveClass->delete();

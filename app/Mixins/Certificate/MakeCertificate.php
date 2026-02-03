@@ -72,24 +72,24 @@ class MakeCertificate
 
 
 
-        // Storage::disk('s3')->put(
-        //     $filePath,
-        //     $pdf->output(),
-        //     ['ContentType' => 'application/pdf']
-        // );
+        Storage::disk('s3')->put(
+            $filePath,
+            $pdf->output(),
+            ['ContentType' => 'application/pdf']
+        );
 
-        // return redirect(
-        //     Storage::disk('s3')->temporaryUrl(
-        //         $filePath,
-        //         now()->addMinutes(5)
-        //     )
-        // );
+        return redirect(
+            Storage::disk('s3')->temporaryUrl(
+                $filePath,
+                now()->addMinutes(5)
+            )
+        );
 
         // Sauvegarde du PDF
-        Storage::disk('public')->put($filePath, $pdf->output());
+        // Storage::disk('public')->put($filePath, $pdf->output());
 
-        // Téléchargement automatique
-        return Storage::disk('public')->download($filePath, $fileName);
+        // // Téléchargement automatique
+        // return Storage::disk('public')->download($filePath, $fileName);
     }
 
     public function saveQuizCertificate($user, $quiz, $quizResult)
