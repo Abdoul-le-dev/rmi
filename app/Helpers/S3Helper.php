@@ -28,15 +28,20 @@ class S3Helper
             return null;
         }
 
+
         // Vérifier l'existence et générer l'URL temporaire
         try {
-            
+          
             if (Storage::disk('s3')->exists($relativePath)) {
+                
                 return Storage::disk('s3')->temporaryUrl(
                     $relativePath,
                     now()->addMinutes($expiration)
                 );
+             
             }
+           
+
         } catch (\Exception $e) {
             \Log::error('S3Helper::getTemporaryUrl error', [
                 'path' => $path,

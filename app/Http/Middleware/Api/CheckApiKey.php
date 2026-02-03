@@ -15,8 +15,17 @@ class CheckApiKey
      */
     public function handle($request, Closure $next)
     {
+        $excludedRoutes = [
+            'api/recording-completed',
+            
+        ];
 
-        if ( !env('API_KEY') || $request->header('x-api-key') !== env('API_KEY')) {
+        
+        if (in_array($request->path(), $excludedRoutes)) {
+            return $next($request);
+        }
+
+        if (!env('API_KEY') || $request->header('x-api-key') !== env('API_KEY')) {
 
             return apiResponse2(0, 'client_identity_error', 'client identification failed.check the api key');
         }

@@ -55,6 +55,8 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\Api\CheckApiKey::class,
             \App\Http\Middleware\Api\SetLocale::class,
+           
+            
         ],
 
     ];
@@ -96,5 +98,6 @@ class Kernel extends HttpKernel
         'api.level-access' => \App\Http\Middleware\Api\LevelAccess::class,
         'check.subscription' => \App\Http\Middleware\CheckSubscription::class,
         'capture.intended' => \App\Http\Middleware\CaptureIntendedUrl::class,
+        'api.jibri-check' => \App\Http\Middleware\VerifyJibriToken::class,
     ];
 }

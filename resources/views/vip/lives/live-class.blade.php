@@ -42,21 +42,21 @@
                         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
                             <div>
                                 <h1 class="text-2xl font-bold text-gray-900">Lives Classes</h1>
-                                @if($user->role->name=='teacher')
-                                 <p class="text-gray-600 mt-1">Gérez vos sessions de cours en direct</p>
+                                @if ($user->role->name == 'teacher')
+                                    <p class="text-gray-600 mt-1">Gérez vos sessions de cours en direct</p>
                                 @else
-                                 <p class="text-gray-600 mt-1">Les sessions de cours en direct</p>
+                                    <p class="text-gray-600 mt-1">Les sessions de cours en direct</p>
                                 @endif
-                               
+
                             </div>
-                        @if($user->role->name=='teacher')
-                             <button onclick="showCreateLiveModal()"
-                                class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                                <i class="fas fa-plus-circle mr-2"></i>
-                                Créer un Live
-                            </button>
-                        @endif
-                           
+                            @if (true)
+                                <button onclick="showCreateLiveModal()"
+                                    class="inline-flex items-center px-6 py-3 bg-gradient-to-br from-[#7256B2] to-[#5E44A6] text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                    <i class="fas fa-plus-circle mr-2"></i>
+                                    Créer un Live
+                                </button>
+                            @endif
+
                         </div>
 
                         <!-- Filtres -->
@@ -93,8 +93,8 @@
                                 <select id="filter-ownership"
                                     class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none cursor-pointer">
                                     <option value="">Tous les lives</option>
-                    
-                                     @foreach($instructors as $instructor)
+
+                                    @foreach ($instructors as $instructor)
                                         <option value="{{ $instructor->id }}">
                                             {{ $instructor->full_name }}
                                         </option>
@@ -104,12 +104,12 @@
                                     class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
                             </div>
 
-                            
+
                         </div>
                     </div>
 
-                   <div id="user-avatar" data-avatar="{{ $user->getAvatar(48) }}" style='display:none;'></div>
-                    
+                    <div id="user-avatar" data-avatar="{{ $user->getAvatar(48) }}" style='display:none;'></div>
+
 
                     <!-- Loading State -->
                     <div id="loading-state" class="hidden">
@@ -271,9 +271,9 @@
                                     </div>
                                 </label>
 
-                               
+
                             </div>
-                            
+
                             <!-- Boutons -->
                             <div class="flex gap-3 pt-4">
                                 <button type="button" onclick="closeModal()"
@@ -359,7 +359,7 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s;
         }
-      
+
 
         .card-shine:hover::before {
             left: 100%;
@@ -376,7 +376,7 @@
         const itemsPerPage = 6;
         const currentUserId = {{ auth()->id() ?? 'null' }};
         const USER_AVATAR = getUserAvatar();
-     
+
 
         // ========================================
         // INITIALISATION
@@ -455,12 +455,12 @@
             <!-- Image de couverture -->
             <div class="relative h-48 bg-gradient-to-br from-[#7256B2] to-[#5E44A6] overflow-hidden">
                 ${live.live_cover ? `
-                                                <img src="/store/${live.live_cover}" alt="${live.title}" class="w-full h-full object-cover">
-                                            ` : `
-                                                <div class="w-full h-full flex items-center justify-center">
-                                                    <i class="fas fa-video text-6xl text-white/30"></i>
-                                                </div>
-                                            `}
+                                                    <img src="/store/${live.live_cover}" alt="${live.title}" class="w-full h-full object-cover">
+                                                ` : `
+                                                    <div class="w-full h-full flex items-center justify-center">
+                                                        <i class="fas fa-video text-6xl text-white/30"></i>
+                                                    </div>
+                                                `}
                 
                 <!-- Badge de statut -->
                 <div class="absolute top-4 left-4">
@@ -490,19 +490,19 @@
                         <div>
                             <p class="text-sm font-semibold text-gray-900">${live.instructor?.full_name || 'Formateur'}</p>
                             ${isOwner ? `
-                                                            <span class="text-xs text-blue-600">Mon live</span>
-                                                        ` : ''}
+                                                                <span class="text-xs text-blue-600">Mon live</span>
+                                                            ` : ''}
                         </div>
                     </div>
                     
                     <!-- Bouton notification -->
                     ${true ? `
-                                                    <button onclick="event.stopPropagation(); remindMe(${live.id})" 
-                                                            class="p-2 rounded-lg bg-gray-100 hover:bg-blue-100 hover:text-blue-600 transition-colors"
-                                                            title="Recevoir une notification">
-                                                        <i class="fas fa-bell"></i>
-                                                    </button>
-                                                ` : ''}
+                                                        <button onclick="event.stopPropagation(); remindMe(${live.id})" 
+                                                                class="p-2 rounded-lg bg-gray-100 hover:bg-blue-100 hover:text-blue-600 transition-colors"
+                                                                title="Recevoir une notification">
+                                                            <i class="fas fa-bell"></i>
+                                                        </button>
+                                                    ` : ''}
                 </div>
                 
                 <!-- Titre -->
@@ -537,12 +537,12 @@
                     </button>
                     
                     ${isOwner && (live.status == 'pending' || live.status == 'scheduled') ? `
-                                                    <button onclick="event.stopPropagation(); editLive(${live.id})" 
-                                                            class="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-                                                            title="Modifier">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                ` : ''}
+                                                        <button onclick="event.stopPropagation(); editLive(${live.id})" 
+                                                                class="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                                                                title="Modifier">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                    ` : ''}
                 </div>
             </div>
         </div>
@@ -609,14 +609,14 @@
             const statusFilter = document.getElementById('filter-status').value;
             const visibilityFilter = document.getElementById('filter-visibility').value;
             const ownershipFilter = document.getElementById('filter-ownership').value;
-      
+
 
             filteredLiveClasses = allLiveClasses.filter(live => {
                 if (statusFilter && live.status !== statusFilter) return false;
                 if (visibilityFilter === 'public' && !live.is_public) return false;
                 if (visibilityFilter === 'private' && live.is_public) return false;
                 if (ownershipFilter && live.instructor_id != ownershipFilter) return false;
-               
+
 
                 return true;
             });
@@ -675,6 +675,7 @@
 
             let html = '<div class="flex gap-2 items-center">';
 
+            // Previous button
             html += `
         <button onclick="changePage(${currentPage - 1})" 
                 ${currentPage === 1 ? 'disabled' : ''}
@@ -683,19 +684,74 @@
         </button>
     `;
 
-            for (let i = 1; i <= totalPages; i++) {
-                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
-                    html += `
-                <button onclick="changePage(${i})" 
-                        class="px-4 py-2 rounded-lg border ${i === currentPage ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-300 hover:bg-gray-50'} transition-colors">
-                    ${i}
-                </button>
-            `;
-                } else if (i === currentPage - 2 || i === currentPage + 2) {
-                    html += '<span class="px-2">...</span>';
+            // Logique de pagination améliorée
+            const maxVisiblePages = 3; // Nombre de pages visibles au centre
+            let pagesToShow = [];
+
+            if (totalPages <= 5) {
+                // Si 5 pages ou moins, afficher toutes les pages
+                for (let i = 1; i <= totalPages; i++) {
+                    pagesToShow.push(i);
+                }
+            } else {
+                // Toujours afficher la première page
+                pagesToShow.push(1);
+
+                // Déterminer les pages du milieu à afficher
+                let startMiddle, endMiddle;
+
+                if (currentPage <= 3) {
+                    // Si on est au début (pages 1, 2, 3)
+                    startMiddle = 2;
+                    endMiddle = 3;
+                } else if (currentPage >= totalPages - 2) {
+                    // Si on est à la fin
+                    startMiddle = totalPages - 2;
+                    endMiddle = totalPages - 1;
+                } else {
+                    // Si on est au milieu
+                    startMiddle = currentPage - 1;
+                    endMiddle = currentPage + 1;
+                }
+
+                // Ajouter les points de suspension si nécessaire (début)
+                if (startMiddle > 2) {
+                    pagesToShow.push('...');
+                }
+
+                // Ajouter les pages du milieu
+                for (let i = startMiddle; i <= endMiddle; i++) {
+                    if (i > 1 && i < totalPages) {
+                        pagesToShow.push(i);
+                    }
+                }
+
+                // Ajouter les points de suspension si nécessaire (fin)
+                if (endMiddle < totalPages - 1) {
+                    pagesToShow.push('...');
+                }
+
+                // Toujours afficher la dernière page
+                if (totalPages > 1) {
+                    pagesToShow.push(totalPages);
                 }
             }
 
+            // Générer les boutons
+            pagesToShow.forEach(page => {
+                if (page === '...') {
+                    html += '<span class="px-2 text-gray-500">...</span>';
+                } else {
+                    html += `
+                <button onclick="changePage(${page})" 
+                        class="px-4 py-2 rounded-lg border ${page === currentPage ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-300 hover:bg-gray-50'} transition-colors">
+                    ${page}
+                </button>
+            `;
+                }
+            });
+
+            // Next button
             html += `
         <button onclick="changePage(${currentPage + 1})" 
                 ${currentPage === totalPages ? 'disabled' : ''}
@@ -753,13 +809,13 @@
             <!-- Image de couverture -->
             <div class="relative h-80 bg-gradient-to-br from-[#7256B2] to-[#5E44A6]">
                 ${live.live_cover ? `
-                                        <img src="/store/${live.live_cover}" alt="${live.title}" class="w-full h-full object-cover">
-                                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                                    ` : `
-                                        <div class="w-full h-full flex items-center justify-center">
-                                            <i class="fas fa-video text-9xl text-white/20"></i>
-                                        </div>
-                                    `}
+                                            <img src="/store/${live.live_cover}" alt="${live.title}" class="w-full h-full object-cover">
+                                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                        ` : `
+                                            <div class="w-full h-full flex items-center justify-center">
+                                                <i class="fas fa-video text-9xl text-white/20"></i>
+                                            </div>
+                                        `}
                 
                 <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
                     <div class="flex items-center gap-3 mb-4 flex-wrap">
@@ -772,11 +828,11 @@
                             ${live.is_public ? 'Public' : 'Privé'}
                         </span>
                         ${isEnrolled && !isOwner ? `
-                                                <span class="px-4 py-2 rounded-full text-sm font-semibold bg-blue-500">
-                                                    <i class="fas fa-check-circle mr-1"></i>
-                                                    Inscrit
-                                                </span>
-                                            ` : ''}
+                                                    <span class="px-4 py-2 rounded-full text-sm font-semibold bg-blue-500">
+                                                        <i class="fas fa-check-circle mr-1"></i>
+                                                        Inscrit
+                                                    </span>
+                                                ` : ''}
                     </div>
                     <h1 class="text-4xl font-bold mb-2">${live.title}</h1>
                     <p class="text-lg text-gray-200">${live.description || 'Aucune description'}</p>
@@ -887,19 +943,19 @@
                             <h3 class="font-bold text-gray-900 mb-4">Actions</h3>
                             <div class="space-y-3">
                                 ${isOwner ? `
-                                                        <!-- ACTIONS POUR LE PROPRIÉTAIRE -->
-                                                        ${live.status === 'scheduled' ? `
+                                                            <!-- ACTIONS POUR LE PROPRIÉTAIRE -->
+                                                            ${live.status === 'scheduled' ? `
                                         ${canStart ? `
-                                                                <button onclick="startLive(${live.id})" class="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 shadow-lg">
-                                                                    <i class="fas fa-broadcast-tower mr-2"></i>
-                                                                    Lancer le live
-                                                                </button>
-                                                            ` : `
-                                                                <div class="w-full px-6 py-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
-                                                                    <i class="fas fa-clock text-yellow-600 text-2xl mb-2"></i>
-                                                                    <p class="text-sm text-yellow-800 font-medium">Vous pourrez démarrer le live 15 minutes avant l'heure prévue</p>
-                                                                </div>
-                                                            `}
+                                                                    <button onclick="startLive(${live.id})" class="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 shadow-lg">
+                                                                        <i class="fas fa-broadcast-tower mr-2"></i>
+                                                                        Lancer le live
+                                                                    </button>
+                                                                ` : `
+                                                                    <div class="w-full px-6 py-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
+                                                                        <i class="fas fa-clock text-yellow-600 text-2xl mb-2"></i>
+                                                                        <p class="text-sm text-yellow-800 font-medium">Vous pourrez démarrer le live 15 minutes avant l'heure prévue</p>
+                                                                    </div>
+                                                                `}
                                     ` : live.status === 'live' ? `
                                         <button onclick="joinLive(${live.id})" class="w-full px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-lg hover:from-red-600 hover:to-red-700 transition-all transform hover:scale-105 shadow-lg">
                                             <i class="fas fa-play-circle mr-2"></i>
@@ -911,31 +967,31 @@
                                             Terminer
                                         </button>
                                     ` : ''}
-                                                        
-                                                        ${isOwner && (live.status == 'pending' || live.status == 'scheduled') ? `
+                                                            
+                                                            ${isOwner && (live.status == 'pending' || live.status == 'scheduled') ? `
                                         <button onclick="editLive(${live.id})" class="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
                                             <i class="fas fa-edit mr-2"></i>
                                             Modifier
                                         </button>
                                     ` : ''}
-                                                        
-                                                        <button onclick="deleteLive(${live.id})" class="w-full px-6 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors">
-                                                            <i class="fas fa-trash mr-2"></i>
-                                                            Supprimer
-                                                        </button>
-                                                    ` : `
-                                                        <!-- ACTIONS POUR LES PARTICIPANTS -->
-                                                        ${live.status === 'live' ? `
+                                                            
+                                                            <button onclick="deleteLive(${live.id})" class="w-full px-6 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors">
+                                                                <i class="fas fa-trash mr-2"></i>
+                                                                Supprimer
+                                                            </button>
+                                                        ` : `
+                                                            <!-- ACTIONS POUR LES PARTICIPANTS -->
+                                                            ${live.status === 'live' ? `
                                         ${isEnrolled || live.is_public ? `
-                                                                <button onclick="joinLive(${live.id})" class="w-full px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-lg hover:from-red-600 hover:to-red-700 transition-all transform hover:scale-105 shadow-lg">
-                                                                    <i class="fas fa-play-circle mr-2"></i>
-                                                                    Rejoindre le live
-                                                                </button>
-                                                            ` : `
-                                                                <div class="w-full px-6 py-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center mb-3">
-                                                                    <p class="text-sm text-yellow-800 font-medium">Vous devez être inscrit pour rejoindre ce live</p>
-                                                                </div>
-                                                                ${!isFull ? `
+                                                                    <button onclick="joinLive(${live.id})" class="w-full px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-lg hover:from-red-600 hover:to-red-700 transition-all transform hover:scale-105 shadow-lg">
+                                                                        <i class="fas fa-play-circle mr-2"></i>
+                                                                        Rejoindre le live
+                                                                    </button>
+                                                                ` : `
+                                                                    <div class="w-full px-6 py-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center mb-3">
+                                                                        <p class="text-sm text-yellow-800 font-medium">Vous devez être inscrit pour rejoindre ce live</p>
+                                                                    </div>
+                                                                    ${!isFull ? `
                                                 <button onclick="enrollLive(${live.id})" class="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
                                                     <i class="fas fa-user-plus mr-2"></i>
                                                     S'inscrire maintenant
@@ -946,20 +1002,20 @@
                                                     <p class="text-sm text-red-800 font-medium">Ce live est complet</p>
                                                 </div>
                                             `}
-                                                            `}
+                                                                `}
                                     ` : live.status === 'scheduled' ? `
                                         ${isEnrolled ? `
-                                                                <div class="w-full px-6 py-4 bg-green-50 border border-green-200 rounded-lg text-center mb-3">
-                                                                    <i class="fas fa-check-circle text-green-600 text-2xl mb-2"></i>
-                                                                    <p class="text-sm text-green-800 font-medium">Vous êtes déjà inscrit à ce live</p>
-                                                                </div>
-                                                                
-                                                                <button onclick="unenrollLive(${live.id})" class="w-full px-3 py-3 bg-red-100 text-red-700 font-semibold rounded-lg hover:bg-red-200 transition-colors">
-                                                                    <i class="fas fa-user-minus mr-2"></i>
-                                                                    Se désinscrire
-                                                                </button>
-                                                            ` : `
-                                                                ${!isFull ? `
+                                                                    <div class="w-full px-6 py-4 bg-green-50 border border-green-200 rounded-lg text-center mb-3">
+                                                                        <i class="fas fa-check-circle text-green-600 text-2xl mb-2"></i>
+                                                                        <p class="text-sm text-green-800 font-medium">Vous êtes déjà inscrit à ce live</p>
+                                                                    </div>
+                                                                    
+                                                                    <button onclick="unenrollLive(${live.id})" class="w-full px-3 py-3 bg-red-100 text-red-700 font-semibold rounded-lg hover:bg-red-200 transition-colors">
+                                                                        <i class="fas fa-user-minus mr-2"></i>
+                                                                        Se désinscrire
+                                                                    </button>
+                                                                ` : `
+                                                                    ${!isFull ? `
                                                 <button onclick="enrollLive(${live.id})" class="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
                                                     <i class="fas fa-user-plus mr-2"></i>
                                                     S'inscrire
@@ -970,31 +1026,31 @@
                                                     <p class="text-sm text-red-800 font-medium">Ce live est complet</p>
                                                 </div>
                                             `}
-                                                            `}
+                                                                `}
                                     ` : live.status === 'ended' ? `
                                         <div class="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-lg text-center">
                                             <i class="fas fa-flag-checkered text-gray-600 text-2xl mb-2"></i>
                                             <p class="text-sm text-gray-800 font-medium">Ce live est terminé</p>
                                         </div>
                                     ` : ''}
-                                                    `}
+                                                        `}
                             </div>
                         </div>
                         
                         <!-- Lien public -->
                         ${live.is_public && live.public_token ? `
-                                                <div class="bg-green-50 rounded-xl p-6 border border-green-100">
-                                                    <h3 class="font-bold text-gray-900 mb-3">Lien public</h3>
-                                                    <div class="flex items-center gap-2">
-                                                        <input type="text" value="${displayUrl}" readonly
-                                                            class="flex-1 min-w-0 px-3 py-2 bg-white border border-green-200 rounded-lg text-sm truncate">
-                                                        <button onclick="copyPublicLink('${fullUrl}')"
-                                                            class="shrink-0 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                                                            <i class="fas fa-copy"></i>
-                                                        </button>
+                                                    <div class="bg-green-50 rounded-xl p-6 border border-green-100">
+                                                        <h3 class="font-bold text-gray-900 mb-3">Lien public</h3>
+                                                        <div class="flex items-center gap-2">
+                                                            <input type="text" value="${displayUrl}" readonly
+                                                                class="flex-1 min-w-0 px-3 py-2 bg-white border border-green-200 rounded-lg text-sm truncate">
+                                                            <button onclick="copyPublicLink('${fullUrl}')"
+                                                                class="shrink-0 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                                                                <i class="fas fa-copy"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ` : ''}
+                                                ` : ''}
                     </div>
                 </div>
             </div>
@@ -1250,7 +1306,7 @@
                 iconColor: 'text-green-600'
             });
             if (!confirmed) return;
-            
+
             setButtonLoading(button, true);
             try {
                 const response = await fetch(`/vip/live-classes/${liveId}/start`, {
@@ -1300,7 +1356,7 @@
             });
 
             if (!confirmed) return;
-            
+
             setButtonLoading(button, true);
 
             try {
@@ -1433,7 +1489,7 @@
             });
 
             if (!confirmed) return;
-        
+
             setButtonLoading(button, true);
             try {
                 const response = await fetch(`/vip/live-classes/${liveId}/unenroll`, {
@@ -1663,11 +1719,11 @@ END:VCALENDAR`;
         // UTILITAIRES
         // ========================================
 
-          function getUserAvatar() {
-        const avatarEl = document.getElementById('user-avatar');
-        return avatarEl ? avatarEl.dataset.avatar : null;
-    }
-     
+        function getUserAvatar() {
+            const avatarEl = document.getElementById('user-avatar');
+            return avatarEl ? avatarEl.dataset.avatar : null;
+        }
+
         function showConfirmModal(options = {}) {
             return new Promise((resolve) => {
                 const {

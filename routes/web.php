@@ -570,3 +570,5 @@ Route::get('/live-classes/public/{token}/status', function($token) {
         'is_live' => $liveClass->status === 'live'
     ]);
 });
+
+ 

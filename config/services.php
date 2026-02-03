@@ -59,7 +59,7 @@ return [
         'cookie_domain' => env('CLOUDFRONT_COOKIE_DOMAIN', '.societedesbots.com'),
     ],
 
-     /*
+    /*
     |--------------------------------------------------------------------------
     | SMS.to Configuration
     |--------------------------------------------------------------------------
@@ -71,6 +71,10 @@ return [
     'smsto' => [
         'api_key' => env('SMSTO_API_KEY'),
         'sender_id' => env('SMSTO_SENDER_ID', 'YourApp'),
+    ],
+
+    'jibri' => [
+        'webhook_token' => env('JIBRI_WEBHOOK_TOKEN'),
     ],
 
 ];

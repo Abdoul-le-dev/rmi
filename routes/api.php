@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ForumController;
+use App\Http\Controllers\LiveClassRecordingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,3 +41,6 @@ Route::group(['prefix' => '/development'], function () {
 
 
  Route::post('vip', [ForumController::class, 'new_index']);
+
+Route::post('/recording-completed', [LiveClassRecordingController::class, 'recordingCompleted'])->middleware('api.jibri-check')
+    ->name('api.recording.completed');
