@@ -3,6 +3,7 @@
 @push('styles_top')
     <link rel="stylesheet" href="/assets/default/css/css-stars.css">
     <link rel="stylesheet" href="/assets/default/vendors/video/video-js.min.css">
+    <link href="https://unpkg.com/videojs-http-source-selector/dist/videojs-http-source-selector.css" rel="stylesheet">
 @endpush
 
 <style>
@@ -708,6 +709,7 @@
     <script src="/assets/default/vendors/video/video.min.js"></script>
     <script src="/assets/default/vendors/video/youtube.min.js"></script>
     <script src="/assets/default/vendors/video/vimeo.js"></script>
+    <script src="https://unpkg.com/videojs-http-source-selector/dist/videojs-http-source-selector.js"></script>
 
     <script>
         var webinarDemoLang = '{{ trans('webinars.webinar_demo') }}';
