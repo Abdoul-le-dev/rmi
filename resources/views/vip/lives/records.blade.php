@@ -438,7 +438,7 @@
                  COLONNE CENTRALE - FEED
             ======================================== -->
 
-            <main class="lg:col-span-6 main" id="menu_menu">
+            <main class="lg:col-span-9 main" id="menu_menu">
 
                 <div class="container my-5">
                     <!-- Videos List Container -->
@@ -494,7 +494,7 @@
                  SIDEBAR DROITE - SUGGESTIONS
             ======================================== -->
 
-            @include('vip/composants/sidebar_droite')
+            {{-- @include('vip/composants/sidebar_droite') --}}
 
         </div>
 

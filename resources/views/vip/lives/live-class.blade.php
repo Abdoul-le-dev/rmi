@@ -33,67 +33,64 @@
             <!-- ========================================
                  COLONNE CENTRALE - FEED
             ======================================== -->
-            <main class="lg:col-span-8 main" id="menu_menu">
+            <main class="lg:col-span-9 main" id="menu_menu">
 
                 <!-- Vue Liste des Lives -->
                 <div id="live-classes-list-view">
                     <!-- Header avec filtres et bouton créer -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-                        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
+                        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-4">
                             <div>
-                                <h1 class="text-2xl font-bold text-gray-900">Lives Classes</h1>
+                                <h1 class="text-xl font-bold text-gray-900">Lives Classes</h1>
                                 @if ($user->role->name == 'teacher')
-                                    <p class="text-gray-600 mt-1">Gérez vos sessions de cours en direct</p>
+                                    <p class="text-sm text-gray-600 mt-0.5">Gérez vos sessions de cours en direct</p>
                                 @else
-                                    <p class="text-gray-600 mt-1">Les sessions de cours en direct</p>
+                                    <p class="text-sm text-gray-600 mt-0.5">Les sessions de cours en direct</p>
                                 @endif
-
                             </div>
-                            @if (true)
+                            @if ($user->role->name == 'teacher')
                                 <button onclick="showCreateLiveModal()"
-                                    class="inline-flex items-center px-6 py-3 bg-gradient-to-br from-[#7256B2] to-[#5E44A6] text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                    class="inline-flex items-center px-4 py-2 bg-gradient-to-br from-[#7256B2] to-[#5E44A6] text-white text-sm font-semibold rounded-lg hover:from-[#5E44A6] hover:to-[#4D3795] transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                                     <i class="fas fa-plus-circle mr-2"></i>
                                     Créer un Live
                                 </button>
                             @endif
-
                         </div>
 
                         <!-- Filtres -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
                             <!-- Filtre Status -->
                             <div class="relative">
                                 <select id="filter-status"
-                                    class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none cursor-pointer">
+                                    class="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7256B2] focus:border-transparent transition-all appearance-none cursor-pointer">
                                     <option value="">Tous les statuts</option>
                                     <option value="pending">En attente</option>
-                                    <option value="scheduled">À venir</option>
+                                    <option value="scheduled" selected>À venir</option>
                                     <option value="live">En direct</option>
                                     <option value="ended">Terminé</option>
                                     <option value="cancelled">Annulé</option>
                                 </select>
                                 <i
-                                    class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                                    class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
                             </div>
 
                             <!-- Filtre Visibilité -->
                             <div class="relative">
                                 <select id="filter-visibility"
-                                    class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none cursor-pointer">
+                                    class="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7256B2] focus:border-transparent transition-all appearance-none cursor-pointer">
                                     <option value="">Toutes visibilités</option>
                                     <option value="public">Public</option>
                                     <option value="private">Privé</option>
                                 </select>
                                 <i
-                                    class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                                    class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
                             </div>
 
-                            <!-- Filtre Mes Lives -->
+                            <!-- Filtre Formateurs -->
                             <div class="relative">
                                 <select id="filter-ownership"
-                                    class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none cursor-pointer">
-                                    <option value="">Tous les lives</option>
-
+                                    class="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7256B2] focus:border-transparent transition-all appearance-none cursor-pointer">
+                                    <option value="">Tous les instructeurs</option>
                                     @foreach ($instructors as $instructor)
                                         <option value="{{ $instructor->id }}">
                                             {{ $instructor->full_name }}
@@ -101,10 +98,8 @@
                                     @endforeach
                                 </select>
                                 <i
-                                    class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                                    class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
                             </div>
-
-
                         </div>
                     </div>
 
@@ -132,23 +127,27 @@
                                 <i class="fas fa-video text-3xl text-gray-400"></i>
                             </div>
                             <h3 class="text-xl font-semibold text-gray-900 mb-2">Aucun live trouvé</h3>
-                            <p class="text-gray-600 mb-6">Commencez par créer votre premier cours en direct</p>
-                            <button onclick="showCreateLiveModal()"
-                                class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+                            <p class="text-gray-600 mb-6">Les Lives s'afficheront ici</p>
+                            @if ($user->role->name == 'teacher')
+                                 <button onclick="showCreateLiveModal()"
+                                class="inline-flex items-center px-6 py-3 bg-gradient-to-br from-[#7256B2] to-[#5E44A6] text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
                                 <i class="fas fa-plus-circle mr-2"></i>
                                 Créer mon premier Live
                             </button>
+                            @endif
+                           
                         </div>
                     </div>
 
                     <!-- Grid des Live Classes -->
-                    <div id="live-classes-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Les cards seront insérées ici via JavaScript -->
+                  
+                    <div id="live-classes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                     
                     </div>
 
                     <!-- Pagination -->
                     <div id="pagination-container" class="mt-8 flex justify-center">
-                        <!-- Pagination sera insérée ici -->
+                        
                     </div>
                 </div>
 
@@ -161,9 +160,9 @@
                         <span class="font-medium">Retour aux lives</span>
                     </button>
 
-                    <!-- Contenu du détail sera inséré ici -->
+                   
                     <div id="live-detail-content">
-                        <!-- Chargement -->
+                       
                     </div>
                 </div>
 
@@ -281,7 +280,7 @@
                                     Annuler
                                 </button>
                                 <button type="submit"
-                                    class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all">
+                                    class="flex-1 px-6 py-3 bg-gradient-to-br from-[#7256B2] to-[#5E44A6] text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all">
                                     <i class="fas fa-save mr-2"></i>
                                     <span id="submit-text">Créer le live</span>
                                 </button>
@@ -451,98 +450,97 @@
             const instructorPhoto = live.instructor?.avatar || '/default-avatar.png';
 
             return `
-        <div class="live-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 card-shine cursor-pointer" onclick="showLiveDetail(${live.id})">
+        <div class="live-card bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 card-shine cursor-pointer" onclick="showLiveDetail(${live.id})">
             <!-- Image de couverture -->
-            <div class="relative h-48 bg-gradient-to-br from-[#7256B2] to-[#5E44A6] overflow-hidden">
+            <div class="relative h-40 bg-gradient-to-br from-[#7256B2] to-[#5E44A6] overflow-hidden">
                 ${live.live_cover ? `
-                                                    <img src="${live.url_path}" alt="${live.title}" class="w-full h-full object-cover">
-                                                ` : `
-                                                    <div class="w-full h-full flex items-center justify-center">
-                                                        <i class="fas fa-video text-6xl text-white/30"></i>
-                                                    </div>
-                                                `}
+                        <img src="${live.url_path}" alt="${live.title}" class="w-full h-full object-cover">
+                    ` : `
+                        <div class="w-full h-full flex items-center justify-center">
+                            <i class="fas fa-video text-5xl text-white/30"></i>
+                        </div>
+                    `}
                 
                 <!-- Badge de statut -->
-                <div class="absolute top-4 left-4">
-                    <span class="px-3 py-1.5 rounded-full text-xs font-semibold ${statusConfig.class} ${live.status === 'live' ? 'status-live-badge' : ''} shadow-lg">
+                <div class="absolute top-2 left-2">
+                    <span class="px-2 py-1 rounded-full text-xs font-semibold ${statusConfig.class} ${live.status === 'live' ? 'status-live-badge' : ''} shadow-lg">
                         <i class="${statusConfig.icon} mr-1"></i>
                         ${statusConfig.label}
                     </span>
                 </div>
                 
                 <!-- Badge de visibilité -->
-                <div class="absolute top-4 right-4">
-                    <span class="px-3 py-1.5 rounded-full text-xs font-semibold ${live.is_public ? 'bg-green-500 text-white' : 'bg-gray-700 text-white'} shadow-lg">
-                        <i class="fas ${live.is_public ? 'fa-globe' : 'fa-lock'} mr-1"></i>
-                        ${live.is_public ? 'Public' : 'Privé'}
+                <div class="absolute top-2 right-2">
+                    <span class="px-2 py-1 rounded-full text-xs font-semibold ${live.is_public ? 'bg-green-500 text-white' : 'bg-gray-700 text-white'} shadow-lg">
+                        <i class="fas ${live.is_public ? 'fa-globe' : 'fa-lock'}"></i>
                     </span>
                 </div>
             </div>
             
             <!-- Contenu de la card -->
-            <div class="p-6">
+            <div class="p-3">
                 <!-- Photo et nom du formateur + bouton notification -->
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
-                            <img src="${USER_AVATAR}" alt="${live.instructor?.full_name || 'Formateur'}" class="w-full h-full object-cover">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-2 min-w-0 flex-1">
+                        <div class="w-7 h-7 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
+                            <img src="${USER_AVATAR}" alt="${live.instructor?.full_name || 'Instructeur'}" class="w-full h-full object-cover">
                         </div>
-                        <div>
-                            <p class="text-sm font-semibold text-gray-900">${live.instructor?.full_name || 'Formateur'}</p>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-xs font-semibold text-gray-900 truncate">${live.instructor?.full_name || 'Instructeur'}</p>
                             ${isOwner ? `
-                                                                <span class="text-xs text-blue-600">Mon live</span>
-                                                            ` : ''}
+                                    <span class="text-[10px] text-blue-600">Mon live</span>
+                                ` : ''}
                         </div>
                     </div>
                     
                     <!-- Bouton notification -->
                     ${true ? `
-                                                        <button onclick="event.stopPropagation(); remindMe(${live.id})" 
-                                                                class="p-2 rounded-lg bg-gray-100 hover:bg-blue-100 hover:text-blue-600 transition-colors"
-                                                                title="Recevoir une notification">
-                                                            <i class="fas fa-bell"></i>
-                                                        </button>
-                                                    ` : ''}
+                            <button onclick="event.stopPropagation(); remindMe(${live.id})" 
+                                    class="p-1.5 rounded-lg bg-gray-100 hover:bg-blue-100 hover:text-blue-600 transition-colors flex-shrink-0"
+                                    title="Recevoir une notification">
+                                <i class="fas fa-bell text-xs"></i>
+                            </button>
+                        ` : ''}
                 </div>
                 
                 <!-- Titre -->
-                <h3 class="text-xl font-bold text-gray-900 mb-4 line-clamp-2 hover:text-blue-600 transition-colors">
+                <h3 class="text-sm font-bold text-gray-900 mb-2 line-clamp-2 hover:text-blue-600 transition-colors leading-tight">
                     ${live.title}
                 </h3>
                 
                 <!-- Informations -->
-                <div class="space-y-2 mb-4">
-                    <div class="flex items-center text-sm text-gray-700">
-                        <i class="fas fa-calendar-alt w-5 text-gray-400"></i>
-                        <span class="font-medium">${formatDate(live.scheduled_at)}</span>
+                <div class="space-y-1 mb-2">
+                    <div class="flex items-center text-[11px] text-gray-700">
+                        <i class="fas fa-calendar-alt w-3.5 text-gray-400 mr-1.5"></i>
+                        <span class="font-medium truncate">${formatDate(live.scheduled_at)}</span>
                     </div>
                     
-                    <div class="flex items-center text-sm text-gray-700">
-                        <i class="fas fa-clock w-5 text-gray-400"></i>
-                        <span>${live.duration_minutes} minutes</span>
+                    <div class="flex items-center text-[11px] text-gray-700">
+                        <i class="fas fa-clock w-3.5 text-gray-400 mr-1.5"></i>
+                        <span>${live.duration_minutes} min</span>
                     </div>
                     
-                    <div class="flex items-center text-sm text-gray-700">
-                        <i class="fas fa-users w-5 text-gray-400"></i>
-                        <span>${live.enrollments_count || 0}${live.max_participants ? ` / ${live.max_participants}` : ''} inscrit${(live.enrollments_count || 0) > 1 ? 's' : ''}</span>
+                    <div class="flex items-center text-[11px] text-gray-700">
+                        <i class="fas fa-users w-3.5 text-gray-400 mr-1.5"></i>
+                        <span>${live.enrollments_count || 0}${live.max_participants ? `/${live.max_participants}` : ''} inscrit${(live.enrollments_count || 0) > 1 ? 's' : ''}</span>
                     </div>
                 </div>
                 
                 <!-- Boutons d'action -->
-                <div class="flex gap-2 pt-4 border-t border-gray-100">
+                <div class="flex gap-1.5 pt-2 border-t border-gray-100">
                     <button onclick="event.stopPropagation(); showLiveDetail(${live.id})" 
-                            class="flex-1 px-4 py-2.5 bg-[#7256B2] text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-                        <i class="fas fa-info-circle mr-2"></i>
+                            class="flex-1 px-2.5 py-1.5 bg-[#7256B2] text-white text-xs font-semibold rounded-md hover:bg-[#5E44A6] transition-colors">
+                        <i class="fas fa-info-circle mr-1"></i>
                         Détails
                     </button>
                     
                     ${isOwner && (live.status == 'pending' || live.status == 'scheduled') ? `
-                                                        <button onclick="event.stopPropagation(); editLive(${live.id})" 
-                                                                class="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-                                                                title="Modifier">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                    ` : ''}
+                            <button onclick="event.stopPropagation(); editLive(${live.id})" 
+                                    class="px-2.5 py-1.5 bg-gray-100 text-gray-700 text-xs rounded-md hover:bg-gray-200 transition-colors"
+                                    title="Modifier">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        ` : ''}
                 </div>
             </div>
         </div>
@@ -809,13 +807,13 @@
             <!-- Image de couverture -->
             <div class="relative h-80 bg-gradient-to-br from-[#7256B2] to-[#5E44A6]">
                 ${live.live_cover ? `
-                                            <img src="${live.url_path}" alt="${live.title}" class="w-full h-full object-cover">
-                                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                                        ` : `
-                                            <div class="w-full h-full flex items-center justify-center">
-                                                <i class="fas fa-video text-9xl text-white/20"></i>
-                                            </div>
-                                        `}
+                                                    <img src="${live.url_path}" alt="${live.title}" class="w-full h-full object-cover">
+                                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                                ` : `
+                                                    <div class="w-full h-full flex items-center justify-center">
+                                                        <i class="fas fa-video text-9xl text-white/20"></i>
+                                                    </div>
+                                                `}
                 
                 <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
                     <div class="flex items-center gap-3 mb-4 flex-wrap">
@@ -828,11 +826,11 @@
                             ${live.is_public ? 'Public' : 'Privé'}
                         </span>
                         ${isEnrolled && !isOwner ? `
-                                                    <span class="px-4 py-2 rounded-full text-sm font-semibold bg-blue-500">
-                                                        <i class="fas fa-check-circle mr-1"></i>
-                                                        Inscrit
-                                                    </span>
-                                                ` : ''}
+                                                            <span class="px-4 py-2 rounded-full text-sm font-semibold bg-blue-500">
+                                                                <i class="fas fa-check-circle mr-1"></i>
+                                                                Inscrit
+                                                            </span>
+                                                        ` : ''}
                     </div>
                     <h1 class="text-4xl font-bold mb-2">${live.title}</h1>
                     <p class="text-lg text-gray-200">${live.description || 'Aucune description'}</p>
@@ -898,7 +896,7 @@
                                         <i class="fas fa-user text-green-600 text-xl"></i>
                                     </div>
                                     <div>
-                                        <p class="text-sm text-gray-600 mb-1">Formateur</p>
+                                        <p class="text-sm text-gray-600 mb-1">Instructeur</p>
                                         <p class="font-semibold text-gray-900">${live.instructor?.full_name || 'Non défini'}</p>
                                     </div>
                                 </div>
@@ -943,19 +941,19 @@
                             <h3 class="font-bold text-gray-900 mb-4">Actions</h3>
                             <div class="space-y-3">
                                 ${isOwner ? `
-                                                            <!-- ACTIONS POUR LE PROPRIÉTAIRE -->
-                                                            ${live.status === 'scheduled' ? `
+                                                                    <!-- ACTIONS POUR LE PROPRIÉTAIRE -->
+                                                                    ${live.status === 'scheduled' ? `
                                         ${canStart ? `
-                                                                    <button onclick="startLive(${live.id})" class="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 shadow-lg">
-                                                                        <i class="fas fa-broadcast-tower mr-2"></i>
-                                                                        Lancer le live
-                                                                    </button>
-                                                                ` : `
-                                                                    <div class="w-full px-6 py-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
-                                                                        <i class="fas fa-clock text-yellow-600 text-2xl mb-2"></i>
-                                                                        <p class="text-sm text-yellow-800 font-medium">Vous pourrez démarrer le live 15 minutes avant l'heure prévue</p>
-                                                                    </div>
-                                                                `}
+                                                                            <button onclick="startLive(${live.id})" class="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 shadow-lg">
+                                                                                <i class="fas fa-broadcast-tower mr-2"></i>
+                                                                                Lancer le live
+                                                                            </button>
+                                                                        ` : `
+                                                                            <div class="w-full px-6 py-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
+                                                                                <i class="fas fa-clock text-yellow-600 text-2xl mb-2"></i>
+                                                                                <p class="text-sm text-yellow-800 font-medium">Vous pourrez démarrer le live 15 minutes avant l'heure prévue</p>
+                                                                            </div>
+                                                                        `}
                                     ` : live.status === 'live' ? `
                                         <button onclick="joinLive(${live.id})" class="w-full px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-lg hover:from-red-600 hover:to-red-700 transition-all transform hover:scale-105 shadow-lg">
                                             <i class="fas fa-play-circle mr-2"></i>
@@ -967,31 +965,31 @@
                                             Terminer
                                         </button>
                                     ` : ''}
-                                                            
-                                                            ${isOwner && (live.status == 'pending' || live.status == 'scheduled') ? `
+                                                                    
+                                                                    ${isOwner && (live.status == 'pending' || live.status == 'scheduled') ? `
                                         <button onclick="editLive(${live.id})" class="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
                                             <i class="fas fa-edit mr-2"></i>
                                             Modifier
                                         </button>
                                     ` : ''}
-                                                            
-                                                            <button onclick="deleteLive(${live.id})" class="w-full px-6 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors">
-                                                                <i class="fas fa-trash mr-2"></i>
-                                                                Supprimer
-                                                            </button>
-                                                        ` : `
-                                                            <!-- ACTIONS POUR LES PARTICIPANTS -->
-                                                            ${live.status === 'live' ? `
-                                        ${isEnrolled || live.is_public ? `
-                                                                    <button onclick="joinLive(${live.id})" class="w-full px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-lg hover:from-red-600 hover:to-red-700 transition-all transform hover:scale-105 shadow-lg">
-                                                                        <i class="fas fa-play-circle mr-2"></i>
-                                                                        Rejoindre le live
+                                                                    
+                                                                    <button onclick="deleteLive(${live.id})" class="w-full px-6 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors">
+                                                                        <i class="fas fa-trash mr-2"></i>
+                                                                        Supprimer
                                                                     </button>
                                                                 ` : `
-                                                                    <div class="w-full px-6 py-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center mb-3">
-                                                                        <p class="text-sm text-yellow-800 font-medium">Vous devez être inscrit pour rejoindre ce live</p>
-                                                                    </div>
-                                                                    ${!isFull ? `
+                                                                    <!-- ACTIONS POUR LES PARTICIPANTS -->
+                                                                    ${live.status === 'live' ? `
+                                        ${isEnrolled || live.is_public ? `
+                                                                            <button onclick="joinLive(${live.id})" class="w-full px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-lg hover:from-red-600 hover:to-red-700 transition-all transform hover:scale-105 shadow-lg">
+                                                                                <i class="fas fa-play-circle mr-2"></i>
+                                                                                Rejoindre le live
+                                                                            </button>
+                                                                        ` : `
+                                                                            <div class="w-full px-6 py-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center mb-3">
+                                                                                <p class="text-sm text-yellow-800 font-medium">Vous devez être inscrit pour rejoindre ce live</p>
+                                                                            </div>
+                                                                            ${!isFull ? `
                                                 <button onclick="enrollLive(${live.id})" class="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
                                                     <i class="fas fa-user-plus mr-2"></i>
                                                     S'inscrire maintenant
@@ -1002,20 +1000,20 @@
                                                     <p class="text-sm text-red-800 font-medium">Ce live est complet</p>
                                                 </div>
                                             `}
-                                                                `}
+                                                                        `}
                                     ` : live.status === 'scheduled' ? `
                                         ${isEnrolled ? `
-                                                                    <div class="w-full px-6 py-4 bg-green-50 border border-green-200 rounded-lg text-center mb-3">
-                                                                        <i class="fas fa-check-circle text-green-600 text-2xl mb-2"></i>
-                                                                        <p class="text-sm text-green-800 font-medium">Vous êtes déjà inscrit à ce live</p>
-                                                                    </div>
-                                                                    
-                                                                    <button onclick="unenrollLive(${live.id})" class="w-full px-3 py-3 bg-red-100 text-red-700 font-semibold rounded-lg hover:bg-red-200 transition-colors">
-                                                                        <i class="fas fa-user-minus mr-2"></i>
-                                                                        Se désinscrire
-                                                                    </button>
-                                                                ` : `
-                                                                    ${!isFull ? `
+                                                                            <div class="w-full px-6 py-4 bg-green-50 border border-green-200 rounded-lg text-center mb-3">
+                                                                                <i class="fas fa-check-circle text-green-600 text-2xl mb-2"></i>
+                                                                                <p class="text-sm text-green-800 font-medium">Vous êtes déjà inscrit à ce live</p>
+                                                                            </div>
+                                                                            
+                                                                            <button onclick="unenrollLive(${live.id})" class="w-full px-3 py-3 bg-red-100 text-red-700 font-semibold rounded-lg hover:bg-red-200 transition-colors">
+                                                                                <i class="fas fa-user-minus mr-2"></i>
+                                                                                Se désinscrire
+                                                                            </button>
+                                                                        ` : `
+                                                                            ${!isFull ? `
                                                 <button onclick="enrollLive(${live.id})" class="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
                                                     <i class="fas fa-user-plus mr-2"></i>
                                                     S'inscrire
@@ -1026,31 +1024,31 @@
                                                     <p class="text-sm text-red-800 font-medium">Ce live est complet</p>
                                                 </div>
                                             `}
-                                                                `}
+                                                                        `}
                                     ` : live.status === 'ended' ? `
                                         <div class="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-lg text-center">
                                             <i class="fas fa-flag-checkered text-gray-600 text-2xl mb-2"></i>
                                             <p class="text-sm text-gray-800 font-medium">Ce live est terminé</p>
                                         </div>
                                     ` : ''}
-                                                        `}
+                                                                `}
                             </div>
                         </div>
                         
                         <!-- Lien public -->
                         ${live.is_public && live.public_token ? `
-                                                    <div class="bg-green-50 rounded-xl p-6 border border-green-100">
-                                                        <h3 class="font-bold text-gray-900 mb-3">Lien public</h3>
-                                                        <div class="flex items-center gap-2">
-                                                            <input type="text" value="${displayUrl}" readonly
-                                                                class="flex-1 min-w-0 px-3 py-2 bg-white border border-green-200 rounded-lg text-sm truncate">
-                                                            <button onclick="copyPublicLink('${fullUrl}')"
-                                                                class="shrink-0 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                                                                <i class="fas fa-copy"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                ` : ''}
+                                                            <div class="bg-green-50 rounded-xl p-6 border border-green-100">
+                                                                <h3 class="font-bold text-gray-900 mb-3">Lien public</h3>
+                                                                <div class="flex items-center gap-2">
+                                                                    <input type="text" value="${displayUrl}" readonly
+                                                                        class="flex-1 min-w-0 px-3 py-2 bg-white border border-green-200 rounded-lg text-sm truncate">
+                                                                    <button onclick="copyPublicLink('${fullUrl}')"
+                                                                        class="shrink-0 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                                                                        <i class="fas fa-copy"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        ` : ''}
                     </div>
                 </div>
             </div>
@@ -1547,9 +1545,7 @@
 
             // Créer la description
             const description = live.description || 'Live class';
-            const location = live.is_public && live.public_token ?
-                `${window.location.origin}/live-class/public/${live.public_token}` :
-                'Plateforme  RMI CLASS';
+            const location = 'Plateforme  RMI CLASS';
 
             // Détecter le système
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
