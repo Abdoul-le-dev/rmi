@@ -571,4 +571,31 @@ Route::get('/live-classes/public/{token}/status', function($token) {
     ]);
 });
 
+// Liste des routes que React doit gérer
+$reactRoutes = [
+    '/',
+    '/light-home-page',
+    '/about',
+    '/devenir-trader-pro',
+    '/initiation-au-trading',
+    '/instructeurs',
+    '/produits',
+    '/communaute',
+    '/faq',
+    '/logins',
+    '/register',
+    '/mentions-legales',
+    '/politique-confidentialite',
+    '/conditions-generales',
+];
+
+// Toutes ces routes pointent vers React
+foreach ($reactRoutes as $route) {
+    Route::get($route, function () {
+        return view('front.app');
+    });
+}
+
+
+
  
