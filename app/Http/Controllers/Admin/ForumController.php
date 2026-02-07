@@ -124,7 +124,7 @@ class ForumController extends Controller
 
         removeContentLocale();
 
-        return redirect(getAdminPanelUrl() . '/forums');
+        return redirect(getAdminPanelUrl().'/forums');
     }
 
     public function edit(Request $request, $id)
@@ -193,7 +193,7 @@ class ForumController extends Controller
 
         removeContentLocale();
 
-        return redirect(getAdminPanelUrl() . '/forums');
+        return redirect(getAdminPanelUrl().'/forums');
     }
 
     public function destroy(Request $request, $id)
@@ -209,7 +209,7 @@ class ForumController extends Controller
             $forum->delete();
         }
 
-        return redirect(getAdminPanelUrl() . '/forums');
+        return redirect(getAdminPanelUrl().'/forums');
     }
 
     public function search(Request $request)
@@ -343,93 +343,118 @@ class ForumController extends Controller
         return view('vip.event', compact('userData'));
     }
 
-public function new_index(Request $request)
-{
-    $post = null;
-    
-    try {
-        DB::transaction(function () use ($request, &$post) {
+    public function new_index(Request $request)
+    {
+        $post = null;
 
-            $scheduledAt = null;
-            if ($request->scheduled_at_date && $request->scheduled_at_time) {
-                $scheduledAt = $request->scheduled_at_date . ' ' . $request->scheduled_at_time . ':00';
-            }
+        try {
+            DB::transaction(function () use ($request, &$post) {
 
-            $status = $scheduledAt ? 'scheduled' : 'published';
-
-            // Détection du type
-            $type = 'text';
-            $pollDataToCreate = null;
-            
-            if ($request->hasFile('media')) {
-                $type = 'media';
-            }
-            
-            // Traiter le poll
-            if ($request->has('poll') && !empty($request->poll)) {
-                $pollData = is_string($request->poll) ? json_decode($request->poll, true) : $request->poll;
-                
-                $question = $pollData['question'] ?? null;
-                $options = $pollData['options'] ?? [];
-                
-                if ($question && !empty(trim($question)) && is_array($options) && count($options) >= 2) {
-                    $type = 'sondage';
-                    $pollDataToCreate = [
-                        'question' => trim($question),
-                        'options' => array_filter(array_map('trim', $options))
-                    ];
-                }
-            }
-
-            // Création du post
-            $post = Post::create([
-                'user_id' => auth()->user()->id,
-                'forum_id' => $request->forum_id,
-                'content' => $request->contents,
-                'type' => $type,
-                'status' => $status,
-                'scheduled_at' => $scheduledAt,
-            ]);
-
-            // Gestion des médias
-            if ($request->hasFile('media')) {
-                foreach ($request->file('media') as $file) {
-                    $path = $file->store('posts', 'public');
-                    $post->media()->create(['path' => $path]);
-                }
-            }
-
-            // Création du poll
-            if ($pollDataToCreate) {
-                $poll = $post->poll()->create([
-                    'question' => $pollDataToCreate['question'],
+                /** ---------------- VALIDATION ---------------- */
+                $request->validate([
+                    'contents' => 'nullable|string|max:5000',
+                    'media.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,webm|max:204800',
+                    'scheduled_at_date' => 'nullable|date',
+                    'scheduled_at_time' => 'nullable|date_format:H:i',
                 ]);
 
-                foreach ($pollDataToCreate['options'] as $option) {
-                    if (!empty($option)) {
+                /** ---------------- PLANIFICATION ---------------- */
+                $scheduledAt = null;
+                if ($request->filled('scheduled_at_date') && $request->filled('scheduled_at_time')) {
+                    $scheduledAt = $request->scheduled_at_date.' '.$request->scheduled_at_time.':00';
+                }
+
+                $status = $scheduledAt ? 'scheduled' : 'published';
+
+                /** ---------------- TYPE DU POST ---------------- */
+                $type = 'text';
+                $pollData = null;
+
+                if ($request->hasFile('media')) {
+                    $type = 'media';
+                }
+
+                if ($request->filled('poll')) {
+                    $poll = is_string($request->poll)
+                        ? json_decode($request->poll, true)
+                        : $request->poll;
+
+                    if (
+                        isset($poll['question'], $poll['options']) &&
+                        trim($poll['question']) !== '' &&
+                        is_array($poll['options']) &&
+                        count(array_filter($poll['options'])) >= 2
+                    ) {
+                        $type = 'sondage';
+                        $pollData = [
+                            'question' => trim($poll['question']),
+                            'options' => array_filter(array_map('trim', $poll['options'])),
+                        ];
+                    }
+                }
+
+                /** ---------------- CRÉATION DU POST ---------------- */
+                $post = Post::create([
+                    'user_id' => auth()->id(),
+                    'forum_id' => $request->forum_id,
+                    'content' => $request->contents,
+                    'type' => $type,
+                    'status' => $status,
+                    'scheduled_at' => $scheduledAt,
+                ]);
+
+                /** ---------------- MÉDIAS ---------------- */
+                if ($request->hasFile('media')) {
+                    $files = $request->file('media');
+                    $files = is_array($files) ? $files : [$files];
+
+                    foreach ($files as $file) {
+                        if (! $file || ! $file->isValid()) {
+                            continue;
+                        }
+
+                        $path = $file->store('posts', 'public');
+
+                        $post->media()->create([
+                            'path' => $path,
+                        ]);
+                    }
+                }
+
+                /** ---------------- SONDAGE ---------------- */
+                if ($pollData) {
+                    $poll = $post->poll()->create([
+                        'question' => $pollData['question'],
+                    ]);
+
+                    foreach ($pollData['options'] as $option) {
                         $poll->options()->create([
                             'option' => $option,
                         ]);
                     }
                 }
-            }
-        });
+            });
 
-        $post->load(['user', 'media', 'poll.options']);
+            /** ---------------- RESPONSE ---------------- */
+            $post->load(['user', 'media', 'poll.options']);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Post créé avec succès',
-            'post' => $post
-        ], 201);
-        
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => $e->getMessage()
-        ], 500);
+            return response()->json([
+                'success' => true,
+                'message' => 'Post créé avec succès',
+                'post' => $post,
+            ], 201);
+
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la création du post',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
     }
-}
+
     public function new_indexs(Request $request)
     {
         $post = null;
@@ -437,7 +462,7 @@ public function new_index(Request $request)
 
             $scheduledAt = null;
             if ($request->scheduled_at_date && $request->scheduled_at_time) {
-                $scheduledAt = $request->scheduled_at_date . ' ' . $request->scheduled_at_time . ':00';
+                $scheduledAt = $request->scheduled_at_date.' '.$request->scheduled_at_time.':00';
             }
 
             $status = $scheduledAt ? 'sheduled' : 'published';
@@ -828,7 +853,7 @@ public function new_index(Request $request)
             $limit = $request->input('limit', 10);
 
             // Cache par utilisateur (5 secondes)
-            $cacheKey = 'posts_user_' . Auth::id();
+            $cacheKey = 'posts_user_'.Auth::id();
 
             $data = Cache::remember($cacheKey, 5, function () use ($limit) {
                 return $this->loadPosts($limit);
@@ -871,14 +896,14 @@ public function new_index(Request $request)
                     ],
                     'plaque' => $this->getUserPlaque($post->user_id),
                     'montant' => $this->getUserMontant($post->user_id),
-                    'media' => $post->media->map(fn($m) => [
+                    'media' => $post->media->map(fn ($m) => [
                         'type' => str_ends_with(strtolower($m->path), '.mp4') ? 'video' : 'image',
                         'path' => $m->path,
                     ]),
                     'poll' => $post->poll ? [
                         'id' => $post->poll->id,
                         'question' => $post->poll->question,
-                        'options' => $post->poll->options->map(fn($o) => [
+                        'options' => $post->poll->options->map(fn ($o) => [
                             'id' => $o->id,
                             'option' => $o->option,
                             'votes' => $o->votes ?? 0,
@@ -994,8 +1019,6 @@ public function new_index(Request $request)
         // Cache::forget("posts_user_" . Auth::id());
     }
 
-
-
     public function records()
     {
         $user = auth()->user();
@@ -1059,6 +1082,6 @@ public function new_index(Request $request)
             ->orderBy('full_name')
             ->get();
 
-        return view('vip.lives.live-class', compact('userData','user','instructors'));
+        return view('vip.lives.live-class', compact('userData', 'user', 'instructors'));
     }
 }
