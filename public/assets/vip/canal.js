@@ -365,7 +365,7 @@ function generateMediaPost(post) {
         const media = post.media[0];
         mediaHTML = `
             <div class="rounded-lg overflow-hidden mb-3 cursor-pointer hover:opacity-95 transition">
-                <img src="/store/${store}" class="w-full max-h-96 object-cover" alt="Image">
+                <img src="/store/${media.path}" class="w-full max-h-96 object-cover" alt="Image">
             </div>
         `;
     } else if (mediaCount === 2) {

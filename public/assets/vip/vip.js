@@ -170,7 +170,7 @@ function preloadImages() {
 //message vue
 
 function message_view() {
-    window.location.href = "vip/message"
+    window.location.href = "vip/canal"
 }
 
 

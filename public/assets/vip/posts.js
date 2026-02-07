@@ -979,24 +979,62 @@ async function saveShareToDatabases(postId,url) {
     }
 }
 function openImageFullscreen(imageSrc) {
+    // Évite d’ouvrir plusieurs modals
+    if (document.getElementById('image-fullscreen-modal')) return;
+
     const modal = document.createElement('div');
-    modal.className = 'fixed inset-0 z-50 bg-black bg-opacity-95 flex items-center justify-center p-4';
-    modal.onclick = function() { this.remove(); };
-    
+    modal.id = 'image-fullscreen-modal';
+    modal.className =
+        'fixed inset-0 z-50 bg-black bg-opacity-95 flex items-center justify-center p-4';
+
+    // Sauvegarde l’état du scroll
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    function closeModal() {
+        if (!modal) return;
+
+        document.body.style.overflow = previousOverflow;
+        document.removeEventListener('keydown', onKeyDown);
+        modal.remove();
+    }
+
+    function onKeyDown(e) {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    }
+
+    modal.addEventListener('click', closeModal);
+    document.addEventListener('keydown', onKeyDown);
+
     modal.innerHTML = `
-        <button class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors" onclick="this.parentElement.remove()">
+        <button 
+            class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors"
+            aria-label="Fermer"
+        >
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"/>
             </svg>
         </button>
-        <img src="${imageSrc}" 
-             class="max-w-full max-h-full object-contain" 
-             onclick="event.stopPropagation()">
+
+        <img 
+            src="${imageSrc}"
+            class="max-w-full max-h-full object-contain"
+        />
     `;
-    
+
+    // Empêche la fermeture quand on clique sur l’image ou le bouton
+    modal.querySelector('img').addEventListener('click', e => e.stopPropagation());
+    modal.querySelector('button').addEventListener('click', e => {
+        e.stopPropagation();
+        closeModal();
+    });
+
     document.body.appendChild(modal);
-    document.body.style.overflow = 'hidden';
 }
+
 
 // Ouvrir une vidéo en plein écran
 function openVideoFullscreen(container) {
