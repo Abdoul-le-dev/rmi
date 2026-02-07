@@ -1189,7 +1189,7 @@ function setupKeyboardShortcuts() {
  * Envoie le message avec toutes les animations
  */
 
-async function sendMessagess(event) {
+async function sendMessage(event) {
     if (event) event.preventDefault();
 
     const button = document.getElementById('send-button');
@@ -1379,7 +1379,7 @@ async function sendMessagess(event) {
         button.disabled = false;
     }
 }
-async function sendMessage(event) {
+async function sendMessages(event) {
     if (event) event.preventDefault();
 
     const button = document.getElementById('send-button');

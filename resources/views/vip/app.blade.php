@@ -148,7 +148,7 @@
                     </div>
 
                     <!-- Formulaire -->
-                    <form id="post-form" onsubmit="sendMessagess(event); return false;" class="space-y-4" method="POST"
+                    <form id="post-form" onsubmit="sendMessage(event); return false;" class="space-y-4" method="POST"
                         enctype="multipart/form-data">
                         @csrf
                         <div>
