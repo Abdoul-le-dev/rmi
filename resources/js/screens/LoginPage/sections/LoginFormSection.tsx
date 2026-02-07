@@ -106,14 +106,14 @@ export const LoginFormSection = (): JSX.Element => {
               </div>
             </div>
 
-            {/* reCAPTCHA */}
+            {/* reCAPTCHA 
             <div className="my-4 w-full flex lg:justify-center lg:items-center justify-start items-start">
               <ReCAPTCHA
               className="w-full flex lg:justify-center lg:items-center justify-start items-start"
               sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
                 onChange={(value: any) => setCaptchaValue(value)}
               />
-            </div>
+            </div>*/}
 
             {/* Submit Button */}
             <Button

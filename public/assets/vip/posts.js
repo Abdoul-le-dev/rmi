@@ -455,12 +455,41 @@ function showEditSuccess() {
 }
 
 // Supprimer un post
-function deletePost(button) {
+async function deletePost(button) {
+
+    const post = button.closest('.post-card');
+    post.style.opacity = '0';
+     post.style.transform = 'scale(0.95)';
     if (confirm('Êtes-vous sûr de vouloir supprimer ce post ?')) {
-        const post = button.closest('.post-card');
-        post.style.opacity = '0';
-        post.style.transform = 'scale(0.95)';
+        
+        
         setTimeout(() => post.remove(), 200);
+    }
+
+    const postId = post.dataset.postId;
+
+    
+
+    try {
+        const response = await fetch('/posts/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrf(),
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ post_id: postId }),
+        });
+
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        console.error('Erreur enregistrement partage:', error);
     }
 
     // Fermer le menu
@@ -1004,7 +1033,7 @@ function closeVideoFullscreen(button) {
 // Voter sur un sondage
 async function votePoll(pollId, optionId, optionElement) {
     try {
-        const response = await fetch(`/api/polls/${pollId}/vote`, {
+        const response = await fetch(`/polls/vote/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

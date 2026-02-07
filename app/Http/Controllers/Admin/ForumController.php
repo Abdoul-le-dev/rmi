@@ -343,7 +343,94 @@ class ForumController extends Controller
         return view('vip.event', compact('userData'));
     }
 
-    public function new_index(Request $request)
+public function new_index(Request $request)
+{
+    $post = null;
+    
+    try {
+        DB::transaction(function () use ($request, &$post) {
+
+            $scheduledAt = null;
+            if ($request->scheduled_at_date && $request->scheduled_at_time) {
+                $scheduledAt = $request->scheduled_at_date . ' ' . $request->scheduled_at_time . ':00';
+            }
+
+            $status = $scheduledAt ? 'scheduled' : 'published';
+
+            // Détection du type
+            $type = 'text';
+            $pollDataToCreate = null;
+            
+            if ($request->hasFile('media')) {
+                $type = 'media';
+            }
+            
+            // Traiter le poll
+            if ($request->has('poll') && !empty($request->poll)) {
+                $pollData = is_string($request->poll) ? json_decode($request->poll, true) : $request->poll;
+                
+                $question = $pollData['question'] ?? null;
+                $options = $pollData['options'] ?? [];
+                
+                if ($question && !empty(trim($question)) && is_array($options) && count($options) >= 2) {
+                    $type = 'sondage';
+                    $pollDataToCreate = [
+                        'question' => trim($question),
+                        'options' => array_filter(array_map('trim', $options))
+                    ];
+                }
+            }
+
+            // Création du post
+            $post = Post::create([
+                'user_id' => auth()->user()->id,
+                'forum_id' => $request->forum_id,
+                'content' => $request->contents,
+                'type' => $type,
+                'status' => $status,
+                'scheduled_at' => $scheduledAt,
+            ]);
+
+            // Gestion des médias
+            if ($request->hasFile('media')) {
+                foreach ($request->file('media') as $file) {
+                    $path = $file->store('posts', 'public');
+                    $post->media()->create(['path' => $path]);
+                }
+            }
+
+            // Création du poll
+            if ($pollDataToCreate) {
+                $poll = $post->poll()->create([
+                    'question' => $pollDataToCreate['question'],
+                ]);
+
+                foreach ($pollDataToCreate['options'] as $option) {
+                    if (!empty($option)) {
+                        $poll->options()->create([
+                            'option' => $option,
+                        ]);
+                    }
+                }
+            }
+        });
+
+        $post->load(['user', 'media', 'poll.options']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Post créé avec succès',
+            'post' => $post
+        ], 201);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage()
+        ], 500);
+    }
+}
+    public function new_indexs(Request $request)
     {
         $post = null;
         DB::transaction(function () use ($request, &$post) {

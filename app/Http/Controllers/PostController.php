@@ -202,33 +202,44 @@ class PostController extends Controller
      * Supprimer un post
      */
     public function delete(Request $request)
-    {
-        $validated = $request->validate([
-            'post_id' => 'required|exists:posts,id',
-        ]);
-
-        $post = Post::findOrFail($validated['post_id']);
-
-        // Vérifier les permissions (seulement le propriétaire peut supprimer)
-        if ($post->user_id !== auth()->id()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Non autorisé',
-            ], 403);
-        }
-
-        $postId = $post->id;
-
-        // Les médias et polls seront supprimés automatiquement (cascadeOnDelete)
-        $post->delete();
-
-        // 🔥 Déclencher l'événement WebSocket
-        event(new PostDeleted($postId));
-
+{
+    if (!auth()->check()) {
         return response()->json([
-            'success' => true,
+            'success' => false,
+            'message' => 'Non authentifié'
+        ], 401);
+    }
+
+    $validated = $request->validate([
+        'post_id' => 'required|integer|exists:posts,id',
+    ]);
+
+    $post = Post::findOrFail($validated['post_id']);
+
+    if ($post->user_id !== auth()->id()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Non autorisé',
+        ], 403);
+    }
+
+    $postId = $post->id;
+
+    $post->delete();
+
+    // Event sécurisé
+    try {
+        event(new PostDeleted($postId));
+    } catch (\Throwable $e) {
+        logger()->error('Broadcast PostDeleted failed', [
+            'error' => $e->getMessage()
         ]);
     }
+
+    return response()->json([
+        'success' => true,
+    ]);
+}
 
     /**
      * Partager un post
