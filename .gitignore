@@ -25,7 +25,7 @@ terminat
 .env
 !.gitignore
 #git 
-
+/public/*
 /storage/*
 /team/*
 
