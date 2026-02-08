@@ -503,7 +503,7 @@ function openShareModal(button, id) {
     const postId = id;
     
     // Générer un lien unique pour chaque post
-    document.getElementById('shareLink').value = `https://rmclass.com/vip/${id}`;
+    document.getElementById('shareLink').value = `https://rmiclass.com/vip/${id}`;
 
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';

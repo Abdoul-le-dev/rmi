@@ -9,7 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    @include('vip/composants/css')
+    @include('vip.composants.css')
 
 
 </head>
@@ -20,7 +20,7 @@
          HEADER PRINCIPAL
     ======================================== -->
 
-    @include('vip/composants/header')
+    @include('vip.composants.header')
 
     <!-- ========================================
          LAYOUT PRINCIPAL (3 COLONNES)
@@ -31,7 +31,7 @@
             <!-- ========================================
                  SIDEBAR GAUCHE - NAVIGATION
             ======================================== -->
-            @include('vip/composants/sidebar_gauche')
+            @include('vip.composants.sidebar_gauche')
 
             <!-- ========================================
                  COLONNE CENTRALE - FEED
@@ -40,7 +40,7 @@
             <main class="lg:col-span-6 main" id="menu_menu">
 
                 <!-- Zone de création de post -->
-                <div class="bg-white shadow-sm border border-gray-200 p-6 mb-6">
+                <div class="bg-white shadow-sm border border-gray-200 p-6 mb-6 max-w-2xl  mx-auto space-y-4">
                     <!-- Header -->
 
                     <div class="mb-4">
@@ -1169,7 +1169,7 @@
                  SIDEBAR DROITE - SUGGESTIONS
             ======================================== -->
 
-            @include('vip/composants/sidebar_droite')
+            @include('vip.composants.sidebar_droite')
 
         </div>
 
@@ -1179,10 +1179,10 @@
     <!-- ========================================
          MENU MOBILE (Overlay)
     ======================================== -->
-    @include('vip/composants/mobile')
+    @include('vip.composants.mobile')
 
 
-    @include('vip/composants/js')
+    @include('vip.composants.js')
 </body>
 
 </html>

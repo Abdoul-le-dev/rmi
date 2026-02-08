@@ -1185,103 +1185,205 @@ function setupKeyboardShortcuts() {
  * ============================================
  */
 
-/**
- * Envoie le message avec toutes les animations
- */
-
 async function sendMessage(event) {
-    event.preventDefault();
+    if (event) event.preventDefault();
 
+    const button = document.getElementById('send-button');
+    const icon = document.getElementById('send-icon');
+    const text = document.getElementById('send-text');
+    const textarea = document.getElementById('post-textarea');
+    const particles = document.getElementById('send-particles');
+    const preview = document.getElementById('media-preview');
+    const typingIndicator = document.getElementById('typing-indicator');
     const form = document.getElementById('post-form');
-    const formData = new FormData(form);
 
-    // Supprime d’éventuels media déjà présents
-    formData.delete('media[]');
-
-    // Ajoute les fichiers depuis appState
-    appState.uploadedFiles.forEach(file => {
-        if (file instanceof File) {
-            formData.append('media[]', file);
-        }
-    });
-
-    // DEBUG (à garder temporairement)
-    for (let [key, value] of formData.entries()) {
-        console.log(key, value);
+    /** ---------------- VALIDATION ---------------- */
+    if (!textarea.value.trim() && (!appState.uploadedFiles || appState.uploadedFiles.length === 0)) {
+        button.classList.add('shake-animation');
+        setTimeout(() => button.classList.remove('shake-animation'), 500);
+        showToast('Votre message est vide ✍️', 'warning');
+        return;
     }
 
+    /** ---------------- CONSTRUCTION DU FORMDATA ---------------- */
+    const formData = new FormData();
+
+    // CSRF token
+    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+    // Contenu
+    formData.append('contents', textarea.value);
+
+    // ✅ Poll - DIAGNOSTIC COMPLET
+    const pollContainer = document.getElementById('poll-container');
+    const pollQuestion = document.getElementById('poll-question');
+
+    console.log('=== DIAGNOSTIC POLL ===');
+    console.log('Poll Container exists:', !!pollContainer);
+    console.log('Poll Container hidden:', pollContainer ? pollContainer.classList.contains('hidden') : 'N/A');
+    console.log('Poll Question value:', pollQuestion ? pollQuestion.value : 'N/A');
+
+    if (pollContainer && !pollContainer.classList.contains('hidden')) {
+        const questionValue = pollQuestion ? pollQuestion.value.trim() : '';
+        const pollOptionsInputs = document.querySelectorAll('#poll-options input');
+        const pollOptions = Array.from(pollOptionsInputs)
+            .map(input => input.value.trim())
+            .filter(val => val !== '');
+
+        console.log('Question:', questionValue);
+        console.log('Options:', pollOptions);
+        console.log('Options count:', pollOptions.length);
+
+        if (questionValue && pollOptions.length >= 2) {
+            const pollData = {
+                question: questionValue,
+                options: pollOptions
+            };
+            console.log('✅ POLL AJOUTÉ:', pollData);
+            formData.append('poll', JSON.stringify(pollData));
+        } else {
+            console.log('❌ POLL NON AJOUTÉ - Question vide ou moins de 2 options');
+        }
+    } else {
+        console.log('❌ POLL NON AJOUTÉ - Container caché ou inexistant');
+    }
+
+    // Fichiers
+    if (appState.uploadedFiles && appState.uploadedFiles.length > 0) {
+        appState.uploadedFiles.forEach(file => formData.append('media[]', file));
+        console.log('📎 Files:', appState.uploadedFiles.length);
+    }
+
+    // Schedule
+    const scheduleContainer = document.getElementById('schedule-container');
+    if (scheduleContainer && !scheduleContainer.classList.contains('hidden')) {
+        const scheduleDate = document.getElementById('schedule-date').value;
+        const scheduleTime = document.getElementById('schedule-time').value;
+
+        if (scheduleDate) formData.append('scheduled_at_date', scheduleDate);
+        if (scheduleTime) formData.append('scheduled_at_time', scheduleTime);
+
+        console.log('📅 Schedule:', scheduleDate, scheduleTime);
+    }
+
+    // ✅ AFFICHER LE FORMDATA COMPLET
+    console.log('=== FORMDATA FINAL ===');
+    for (let [key, value] of formData.entries()) {
+        console.log(key + ':', value);
+    }
+    console.log('=====================');
+
+    /** ---------------- UI : DÉMARRAGE ---------------- */
+    button.disabled = true;
+    button.classList.add('sending');
+
+    if (typingIndicator) typingIndicator.classList.remove('hidden');
+
+    textarea.classList.add('aspiration-animation');
+
+    if (preview.children.length > 0) {
+        preview.classList.add('aspiration-animation');
+    }
+
+    setTimeout(() => {
+        icon.classList.add('spin-and-fly');
+        text.style.opacity = '0';
+        particles.style.opacity = '1';
+        particles.classList.add('particles-active');
+    }, 300);
+
+    setTimeout(() => {
+        button.classList.add('propulsion-animation');
+        if (typeof playSendSound === 'function') playSendSound();
+    }, 800);
+
+    /** ---------------- API CALL ---------------- */
     try {
         const res = await fetch('/vip', {
             method: 'POST',
             headers: {
-                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json'
             },
             body: formData
         });
 
         const data = await res.json();
 
-        if (!res.ok) throw new Error(data.message || 'Erreur serveur');
+        console.log('📥 Response status:', res.status);
+        console.log('📥 Response data:', data);
 
-        showToast('Post publié 🎉', 'success');
+        if (!res.ok) {
+            throw new Error(data.message || 'Erreur lors de l\'envoi');
+        }
 
-        // RESET
+        /** ---------------- SUCCÈS ---------------- */
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        showToast('Votre post a été publié 🎉', 'success');
+
+        if (appState.isFirstPost) {
+            if (typeof createConfetti === 'function') createConfetti();
+            localStorage.setItem('hasPosted', 'true');
+            appState.isFirstPost = false;
+        }
+
+        /** ---------------- RESET ---------------- */
         form.reset();
         appState.uploadedFiles = [];
-        document.getElementById('media-preview').innerHTML = '';
-        document.getElementById('media-preview').classList.add('hidden');
 
-    } catch (err) {
-        console.error(err);
-        showToast(err.message, 'error');
+        const pollCont = document.getElementById('poll-container');
+        const scheduleCont = document.getElementById('schedule-container');
+        const linkPrev = document.getElementById('link-preview');
+
+        if (pollCont) pollCont.classList.add('hidden');
+        if (scheduleCont) scheduleCont.classList.add('hidden');
+        if (linkPrev) linkPrev.classList.add('hidden');
+
+        preview.innerHTML = '';
+        preview.classList.add('hidden');
+        preview.classList.remove('aspiration-animation');
+
+        if (typeof updateCharCounter === 'function') updateCharCounter(0);
+
+        textarea.classList.remove('aspiration-animation');
+
+        if (typingIndicator) typingIndicator.classList.add('hidden');
+
+        button.classList.remove('sending', 'propulsion-animation');
+        icon.classList.remove('spin-and-fly');
+        text.style.opacity = '1';
+        particles.style.opacity = '0';
+        particles.classList.remove('particles-active');
+        button.disabled = false;
+
+    } catch (error) {
+        console.error('❌ ERROR:', error);
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        showToast(error.message || 'Une erreur est survenue', 'error');
+
+        textarea.classList.remove('aspiration-animation');
+
+        if (preview.children.length > 0) {
+            preview.classList.remove('aspiration-animation');
+        }
+
+        if (typingIndicator) typingIndicator.classList.add('hidden');
+
+        button.classList.remove('sending', 'propulsion-animation');
+        icon.classList.remove('spin-and-fly');
+        text.style.opacity = '1';
+        particles.style.opacity = '0';
+        particles.classList.remove('particles-active');
+        button.disabled = false;
     }
 }
 
-function handleImageUpload(event) {
-    const files = Array.from(event.target.files);
-
-    files.forEach(file => {
-        if (!file.type.startsWith('image/')) return;
-
-        // 🔐 Sécurité : vrai File uniquement
-        if (!(file instanceof File)) return;
-
-        appState.uploadedFiles.push(file);
-
-        // Preview
-        const reader = new FileReader();
-        reader.onload = e => {
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            img.className = 'rounded-lg object-cover w-full h-full';
-            document.getElementById('media-preview').appendChild(img);
-            document.getElementById('media-preview').classList.remove('hidden');
-        };
-        reader.readAsDataURL(file);
-    });
-
-    // Reset input (permet de re-sélectionner le même fichier)
-    event.target.value = '';
-}
-function handleVideoUpload(event) {
-    const files = Array.from(event.target.files);
-
-    files.forEach(file => {
-        if (!file.type.startsWith('video/')) return;
-        if (!(file instanceof File)) return;
-
-        appState.uploadedFiles.push(file);
-
-        const video = document.createElement('video');
-        video.src = URL.createObjectURL(file);
-        video.controls = true;
-        video.className = 'rounded-lg w-full h-full';
-        document.getElementById('media-preview').appendChild(video);
-        document.getElementById('media-preview').classList.remove('hidden');
-    });
-
-    event.target.value = '';
-}
+/**
+ * Envoie le message avec toutes les animations
+ */
 
 /**
  * Joue un son lors de l'envoi

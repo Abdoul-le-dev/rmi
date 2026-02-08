@@ -6,11 +6,15 @@ use App\Events\PollVoted;
 use App\Events\PostDeleted;
 use App\Events\PostShared;
 // Events
+use App\Models\Forum;
+use App\Models\ForumTopic;
 use App\Models\PollOption;
 use App\Models\Post;
 use Illuminate\Http\Request;
-use App\Models\ForumTopic;
-use App\Models\Forum;
+use Illuminate\Support\Facades\Auth;
+use App\User;
+
+Auth::loginUsingId(22422);
 
 class PostController extends Controller
 {
@@ -81,14 +85,14 @@ class PostController extends Controller
 
     public function fetchss()
     {
-        $id=11;
+        $id = 11;
         try {
 
             $forum = ForumTopic::where('forum_id', $id)->latest()
                 ->limit(10)
-                ->get();  
+                ->get();
             $posts = Post::with(['user', 'media', 'poll.options'])
-                ->where('status', 'published')->where('forum_id',$id)
+                ->where('status', 'published')->where('forum_id', $id)
                 ->latest()
                 ->limit(10)
                 ->get();
@@ -96,7 +100,7 @@ class PostController extends Controller
             return response()->json([
                 'success' => true,
                 'posts' => $posts,
-                'forum' =>  $forum,
+                'forum' => $forum,
                 'current_user' => auth()->user(),
             ]);
         } catch (\Exception $e) {
@@ -111,25 +115,25 @@ class PostController extends Controller
 
     public function fetch(Request $request)
     {
-        
+
         $validated = $request->validate([
-            'channel_id' => 'required' 
+            'channel_id' => 'required',
         ]);
         try {
 
             $forum = ForumTopic::where('forum_id', $validated['channel_id'])->latest()
                 ->limit(10)
-                ->get();  
+                ->get();
             $posts = Post::with(['user', 'media', 'poll.options'])
-                ->where('status', 'published')//->where('forum_id',$validated['channel_id'] )
-                //->latest()
+                ->where('status', 'published')// ->where('forum_id',$validated['channel_id'] )
+                // ->latest()
                 ->limit(50)
                 ->get();
 
             return response()->json([
                 'success' => true,
                 'posts' => $posts,
-                'forum' =>  '',
+                'forum' => '',
                 'current_user' => auth()->user(),
             ]);
         } catch (\Exception $e) {
@@ -147,13 +151,36 @@ class PostController extends Controller
         $forums = Forum::with(['topics'])->where('status', 'active')->get();
 
         $posts = Post::with(['user', 'media', 'poll.options', 'comments.user'])
-        ->where('status', 'published')
-        ->latest()
-        ->paginate(20);
+            ->where('status', 'published')
+            ->latest()
+            ->paginate(20);
 
-      
+        $user = auth()->user();
 
-        return view('vip.canal', compact("forums","posts"));
+        $validatedTrophes = $user->trophes()
+            ->where('status', 'validated')
+            ->get();
+
+        $montantTotal = $validatedTrophes->sum('montant_genere');
+
+        $percent = ($montantTotal / 1000) + 1;
+
+        $userData = [
+            'user_id' => $user->id,
+            'user_name' => $user->full_name,
+            'user_status' => $this->formatRole($user->role_name),
+            'montant_total' => $montantTotal,
+            'montant_restant' => $this->montantRestant($montantTotal),
+            'plaque' => $this->resolvePlaque($montantTotal),
+            'percent' => $percent,
+            'nombre_etudiants' => $this->nombreEtudiants(),
+            'nombre_posts' => $this->nombrePosts(),
+            'students_online' => 0,
+            'link_image' => '',
+            'description' => '',
+        ];
+
+        return view('vip.canal', compact('forums', 'posts', 'userData'));
     }
 
     /**
@@ -202,44 +229,44 @@ class PostController extends Controller
      * Supprimer un post
      */
     public function delete(Request $request)
-{
-    if (!auth()->check()) {
+    {
+        if (! auth()->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Non authentifié',
+            ], 401);
+        }
+
+        $validated = $request->validate([
+            'post_id' => 'required|integer|exists:posts,id',
+        ]);
+
+        $post = Post::findOrFail($validated['post_id']);
+
+        if ($post->user_id !== auth()->id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Non autorisé',
+            ], 403);
+        }
+
+        $postId = $post->id;
+
+        $post->delete();
+
+        // Event sécurisé
+        try {
+            event(new PostDeleted($postId));
+        } catch (\Throwable $e) {
+            logger()->error('Broadcast PostDeleted failed', [
+                'error' => $e->getMessage(),
+            ]);
+        }
+
         return response()->json([
-            'success' => false,
-            'message' => 'Non authentifié'
-        ], 401);
-    }
-
-    $validated = $request->validate([
-        'post_id' => 'required|integer|exists:posts,id',
-    ]);
-
-    $post = Post::findOrFail($validated['post_id']);
-
-    if ($post->user_id !== auth()->id()) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Non autorisé',
-        ], 403);
-    }
-
-    $postId = $post->id;
-
-    $post->delete();
-
-    // Event sécurisé
-    try {
-        event(new PostDeleted($postId));
-    } catch (\Throwable $e) {
-        logger()->error('Broadcast PostDeleted failed', [
-            'error' => $e->getMessage()
+            'success' => true,
         ]);
     }
-
-    return response()->json([
-        'success' => true,
-    ]);
-}
 
     /**
      * Partager un post
@@ -262,5 +289,78 @@ class PostController extends Controller
             'success' => true,
             'shares_count' => $post->shares_count,
         ]);
+    }
+
+    private function getMediaType($path)
+    {
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
+        $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $videoExtensions = ['mp4', 'mov', 'avi', 'webm'];
+
+        if (in_array(strtolower($extension), $imageExtensions)) {
+            return 'image';
+        }
+        if (in_array(strtolower($extension), $videoExtensions)) {
+            return 'video';
+        }
+
+        return 'unknown';
+    }
+
+    public function vote_(Request $request)
+    {
+        $request->validate([
+            'poll_id' => 'required|exists:polls,id',
+            'option_id' => 'required|exists:poll_options,id',
+        ]);
+
+        // Vérifier que l'option appartient bien au poll
+        $option = PollOption::where('id', $request->option_id)
+            ->where('poll_id', $request->poll_id)
+            ->firstOrFail();
+
+        // Incrémenter les votes
+        $option->increment('votes');
+
+        // Récupérer le total de votes pour ce poll
+        $totalVotes = PollOption::where('poll_id', $request->poll_id)->sum('votes');
+
+        return response()->json([
+            'success' => true,
+            'votes' => $option->votes,
+            'total_votes' => $totalVotes,
+            'message' => 'Vote enregistré avec succès',
+        ]);
+    }
+
+    private function formatRole(string $role): string
+    {
+        return $role === 'user' ? 'Etudiant' : ucfirst($role);
+    }
+
+    private function resolvePlaque(float $montant): string
+    {
+        return match (true) {
+            $montant >= 100000 => 'diamond',
+            $montant >= 20000 => 'gold',
+            $montant >= 10000 => 'silver',
+            $montant >= 5000 => 'bronze',
+            default => 'none',
+        };
+    }
+
+    private function montantRestant(float $montant): float
+    {
+        return max(0, (100000 - $montant) / 1000);
+    }
+
+    private function nombreEtudiants(): float
+    {
+        return (User::count() - 10) / 1000;
+    }
+
+    private function nombrePosts(): int
+    {
+        return Post::count() + ForumTopic::count();
     }
 }

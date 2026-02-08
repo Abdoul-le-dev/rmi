@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Canaux VIP</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ asset('assets/vip/vip.css') }}">
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         .scrollbar-hide::-webkit-scrollbar {
@@ -113,9 +115,9 @@
             class="fixed md:relative inset-y-0 left-0 w-full sm:w-80 md:w-96 lg:w-[420px] bg-white border-r border-gray-200 flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-40">
 
             <!-- Header Sidebar -->
-            <div class="p-4 border-b border-gray-200">
+            <div class="p-2 border-b border-gray-200">
                 <div class="flex justify-between items-center mb-4">
-                    <button id="sidebarMenuToggle" class="md:hidden p-2 hover:bg-gray-100 rounded-lg transition">
+                    <button  id="mobile-menu-btn" class="md:hidden p-2 hover:bg-gray-100 rounded-lg transition">
                         <svg class="w-6 h-6 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd"
                                 d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
@@ -187,7 +189,7 @@
             <!-- Liste des canaux -->
             <div class="flex-1 overflow-y-auto scrollbar-hide">
                 @foreach ($forums as $forum)
-                    <div class="channel-item {{ $loop->first ? 'active' : '' }} flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border-b border-gray-100"
+                    <div class="my-2 channel-item {{ $loop->first ? 'active' : '' }} flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border-b border-gray-100"
                         onclick="switchChannel(this, '{{ $forum->id }}', '{{ $forum->name ?? $forum->slug }}', '{{ asset($forum->icon) }}')"
                         data-channel-id="{{ $forum->id }}" 
                         data-channel-slug="{{ $forum->slug }}"
@@ -196,7 +198,7 @@
                         data-channel-members="300" 
                         data-channel-online="40">
 
-                        <div class="relative flex-shrink-0">
+                        <div class="relative flex-shrink-0 my-2">
                             @if($forum->icon)
                                 <img src="{{ asset($forum->icon) }}" alt="{{ $forum->name ?? $forum->slug }}"
                                     class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
@@ -460,7 +462,10 @@
         </div>
     </div>
 
+    @include('vip.composants.mobile')
+
     <script src="{{ asset('assets/vip/canal.js') }}"></script>
+    <script src="{{ asset('assets/vip/vip.js') }}"></script>
 
 </body>
 
