@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LiveClassController;
+use App\Http\Controllers\NotificationController;
 
 $prefix = getAdminPanelUrlPrefix();
 
@@ -1264,12 +1265,22 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             Route::put('/edit/{liveClass}', [LiveClassController::class, 'update_admin'])->name('sessions.update');
             Route::post('/destroy/{liveClass}', [LiveClassController::class, 'destroy_admin'])->name('sessions.destroy');
             
-            // Route::post('/getNetProfitChart', 'DashboardController@getNetProfitChartAjax');
-            // Route::get('/active_subscribed_users/export', 'DashboardController@exportActiveSubscribedUsers')->name('active_subscribed_users.export');
-            // Route::get('/expired_subscriptions/export', 'DashboardController@exportExpiredSubscriptions')->name('expired_subscriptions.export');
-            // Route::get('/admin/users-without-sales/export', 'DashboardController@exportUsersWithoutSales')->name('users_without_sales.export');
-            // Route::get('/admin/users-with-webinar-only/export', 'DashboardController@exportUsersWithWebinarOnly')->name('users_with_webinar_only.export');
+
         });
+
+          Route::group(['prefix' => 'new-notifications'], function () {
+            Route::get('', [NotificationController::class, 'index'])->name('notifications.index');
+            Route::post('/send-mail', [NotificationController::class, 'sendMail'])->name('send.mail');
+            Route::get('/history', [NotificationController::class, 'history'])->name('history');
+            Route::get('/statistics', [NotificationController::class, 'statistics'])->name('statistics');
+            Route::get('/{sentEmail}', [NotificationController::class, 'show'])->name('show');
+            Route::delete('/{sentEmail}', [NotificationController::class, 'destroy'])->name('destroy');
+            Route::post('/{sentEmail}/retry', [NotificationController::class, 'retry'])->name('retry');
+
+            Route::post('/preview-excel', [NotificationController::class, 'previewExcel'])->name('preview.excel');
+            Route::post('/validate-excel', [NotificationController::class, 'validateExcel'])->name('validate.excel');
+   
+            });
 
         /* End Admin Middleware */
 

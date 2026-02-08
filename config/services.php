@@ -52,11 +52,11 @@ return [
     ],
 
     'cloudfront' => [
-        'domain' => env('CLOUDFRONT_DOMAIN', 'media.societedesbots.com'),
+        'domain' => env('CLOUDFRONT_DOMAIN'),
         'key_pair_id' => env('CLOUDFRONT_KEY_PAIR_ID'),
         'private_key_path' => env('CLOUDFRONT_PRIVATE_KEY_PATH'),
         'url_expiration' => env('CLOUDFRONT_URL_EXPIRATION', 3600),
-        'cookie_domain' => env('CLOUDFRONT_COOKIE_DOMAIN', '.societedesbots.com'),
+        'cookie_domain' => env('CLOUDFRONT_COOKIE_DOMAIN'),
     ],
 
     /*
