@@ -76,8 +76,8 @@
 
 @push('scripts_bottom')
     {{-- <script src="/assets/default/vendors/video/video.min.js"></script> --}}
-    {{-- <script src="/assets/default/vendors/video/youtube.min.js"></script> --}}
-    {{-- <script src="/assets/default/vendors/video/vimeo.js"></script> --}}
+    <script src="/assets/default/vendors/video/youtube.min.js"></script>
+    <script src="/assets/default/vendors/video/vimeo.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.6.1/video.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-quality-levels/4.0.0/videojs-contrib-quality-levels.min.js"></script>
