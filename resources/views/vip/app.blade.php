@@ -9,7 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    @include('vip/composants/css')
+    @include('vip.composants.css')
 
 
 </head>
@@ -20,7 +20,7 @@
          HEADER PRINCIPAL
     ======================================== -->
 
-    @include('vip/composants/header')
+    @include('vip.composants.header')
 
     <!-- ========================================
          LAYOUT PRINCIPAL (3 COLONNES)
@@ -31,7 +31,7 @@
             <!-- ========================================
                  SIDEBAR GAUCHE - NAVIGATION
             ======================================== -->
-            @include('vip/composants/sidebar_gauche')
+            @include('vip.composants.sidebar_gauche')
 
             <!-- ========================================
                  COLONNE CENTRALE - FEED
@@ -40,7 +40,7 @@
             <main class="lg:col-span-6 main" id="menu_menu">
 
                 <!-- Zone de création de post -->
-                <div class="bg-white shadow-sm border border-gray-200 p-6 mb-6">
+                <div class="bg-white shadow-sm border border-gray-200 p-6 mb-6 max-w-2xl  mx-auto space-y-4">
                     <!-- Header -->
 
                     <div class="mb-4">
@@ -793,9 +793,9 @@
                                             <div class="aspect-square rounded-lg overflow-hidden bg-black relative group cursor-pointer"
                                                 onclick="openVideoFullscreen(this)">
                                                 <video class="w-full h-full object-cover" 
-                                                    data-video-src="{{ asset('storage/' . $media->path) }}"
+                                                    data-video-src="{{ asset('store/' . $media->path) }}"
                                                     preload="metadata">
-                                                    <source src="{{ asset('storage/' . $media->path) }}" type="video/mp4">
+                                                    <source src="{{ asset('store/' . $media->path) }}" type="video/mp4">
                                                 </video>
                                                 <!-- Overlay play button -->
                                                 <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-40 transition-all">
@@ -807,8 +807,8 @@
                                             </div>
                                         @else
                                             <div class="aspect-square rounded-lg overflow-hidden cursor-pointer"
-                                                onclick="openImageFullscreen('{{ asset('storage/' . $media->path) }}')">
-                                                <img src="{{ asset('storage/' . $media->path) }}" 
+                                                onclick="openImageFullscreen('{{ asset('store/' . $media->path) }}')">
+                                                <img src="{{ asset('store/' . $media->path) }}" 
                                                     alt="Image {{ $index + 1 }}"
                                                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
                                             </div>
@@ -1010,7 +1010,7 @@
                                         @if($media->type === 'video')
                                             <div class="relative group cursor-pointer" onclick="openVideoFullscreen(this)">
                                                 <video class="w-full max-h-64 object-cover rounded-lg" preload="metadata">
-                                                    <source src="{{ asset('storage/' . $media->path) }}" type="video/mp4">
+                                                    <source src="{{ asset('store/' . $media->path) }}" type="video/mp4">
                                                 </video>
                                                 <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-40 transition-all rounded-lg">
                                                     <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-all" 
@@ -1020,10 +1020,10 @@
                                                 </div>
                                             </div>
                                         @else
-                                            <img src="{{ asset('storage/' . $media->path) }}" 
+                                            <img src="{{ asset('store/' . $media->path) }}" 
                                                 alt="Image du sondage"
                                                 class="w-full max-h-64 object-cover rounded-lg cursor-pointer hover:opacity-95 transition-opacity"
-                                                onclick="openImageFullscreen('{{ asset('storage/' . $media->path) }}')">
+                                                onclick="openImageFullscreen('{{ asset('store/' . $media->path) }}')">
                                         @endif
                                     </div>
                                 @endif
@@ -1169,7 +1169,7 @@
                  SIDEBAR DROITE - SUGGESTIONS
             ======================================== -->
 
-            @include('vip/composants/sidebar_droite')
+            @include('vip.composants.sidebar_droite')
 
         </div>
 
@@ -1179,10 +1179,10 @@
     <!-- ========================================
          MENU MOBILE (Overlay)
     ======================================== -->
-    @include('vip/composants/mobile')
+    @include('vip.composants.mobile')
 
 
-    @include('vip/composants/js')
+    @include('vip.composants.js')
 </body>
 
 </html>

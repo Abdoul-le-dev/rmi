@@ -294,7 +294,7 @@
         <!-- Navigation -->
         <nav class="p-3">
 
-            <a href="#"
+            <a href="/vip"
                 class="group relative flex items-center space-x-3 px-4 py-4 rounded-lg bg-indigo-50 text-indigo-600 mb-2 overflow-hidden transition-all duration-300 hover:bg-indigo-600 hover:text-white hover:shadow-xl hover:scale-105">
                 <!-- Particules animées en arrière-plan -->
                 <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -465,7 +465,9 @@
                     </div>
                 </a>
 
-                <a href="/vip/evenement" onclick="moveToTop(this); playRandomClickSound(); return false;"
+
+
+                <a href="/vip/canal" onclick="moveToTop(this); playRandomClickSound(); return false;"
                     class="group relative flex items-center space-x-3 px-4 py-4 rounded-xl bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 text-gray-800 overflow-hidden transition-all duration-500 hover:from-blue-50 hover:via-indigo-50 hover:to-purple-50 hover:text-indigo-700 hover:shadow-xl hover:shadow-indigo-100/50 hover:scale-[1.02] hover:-translate-y-0.5 border border-gray-200/50 hover:border-indigo-200/50">
 
                     <div
@@ -506,12 +508,12 @@
                             class="absolute inset-0 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 opacity-0 group-hover:opacity-30 blur-md transition-all duration-500">
                         </div>
                         <i
-                            class="fas fa-calendar-alt text-sm transition-all duration-500 group-hover:drop-shadow-[0_0_8px_rgba(99,102,241,0.4)]"></i>
+                            class="fas fa-hashtag text-sm transition-all duration-500 group-hover:drop-shadow-[0_0_8px_rgba(99,102,241,0.4)]"></i>
                     </div>
 
                     <span
                         class="relative z-10 font-semibold text-sm tracking-normal transition-all duration-500 group-hover:tracking-wide group-hover:drop-shadow-[0_2px_8px_rgba(99,102,241,0.2)]">
-                        Événements
+                        Coach Community
                         <span
                             class="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-300 via-blue-200 to-transparent group-hover:w-full transition-all duration-500"></span>
                     </span>
@@ -524,7 +526,8 @@
                     </div>
                 </a>
 
-                <a href="/vip/messages" onclick="moveToTop(this); playRandomClickSound(); return false;"
+
+                <a href="javascript:void(0)" onclick="moveToTop(this); playRandomClickSound(); return false;"
                     class="group relative flex items-center space-x-3 px-4 py-4 rounded-xl bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 text-gray-800 overflow-hidden transition-all duration-500 hover:from-blue-50 hover:via-indigo-50 hover:to-purple-50 hover:text-indigo-700 hover:shadow-xl hover:shadow-indigo-100/50 hover:scale-[1.02] hover:-translate-y-0.5 border border-gray-200/50 hover:border-indigo-200/50">
 
                     <div
@@ -565,12 +568,12 @@
                             class="absolute inset-0 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 opacity-0 group-hover:opacity-30 blur-md transition-all duration-500">
                         </div>
                         <i
-                            class="fas fa-cog text-sm transition-all duration-500 group-hover:drop-shadow-[0_0_8px_rgba(99,102,241,0.4)]"></i>
+                            class="fas fa-chart-line text-sm transition-all duration-500 group-hover:drop-shadow-[0_0_8px_rgba(99,102,241,0.4)]"></i>
                     </div>
 
                     <span
                         class="relative z-10 font-semibold text-sm tracking-normal transition-all duration-500 group-hover:tracking-wide group-hover:drop-shadow-[0_2px_8px_rgba(99,102,241,0.2)]">
-                        Groupes
+                        Mon Journal de tranding
                         <span
                             class="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-300 via-blue-200 to-transparent group-hover:w-full transition-all duration-500"></span>
                     </span>
@@ -581,9 +584,25 @@
                             class="absolute bottom-0 left-0 h-full w-0 bg-gradient-to-r from-blue-200 via-indigo-200 to-purple-200 group-hover:w-full transition-all duration-1000 ease-out blur-sm">
                         </div>
                     </div>
+
+                    <div class="pointer-events-none absolute inset-0 z-20 
+                        flex items-center justify-center
+                        bg-slate-900/60 backdrop-blur-[2px]
+                        opacity-0 group-hover:opacity-100
+                        transition-opacity duration-300">
+
+                        <span class="px-5 py-2 rounded-full
+                        bg-white/90 text-indigo-700
+                        text-sm font-bold tracking-wide
+                        shadow-xl
+                        scale-95 group-hover:scale-100
+                        transition-transform duration-300">
+                            Bientôt
+                        </span>
+                    </div>
                 </a>
 
-                <a href="/vip/messages" onclick="moveToTop(this); playRandomClickSound(); return false;"
+                <a href="javascript:void(0)" onclick="moveToTop(this); playRandomClickSound(); return false;"
                     class="group relative flex items-center space-x-3 px-4 py-4 rounded-xl bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100 text-gray-800 overflow-hidden transition-all duration-500 hover:from-blue-50 hover:via-indigo-50 hover:to-purple-50 hover:text-indigo-700 hover:shadow-xl hover:shadow-indigo-100/50 hover:scale-[1.02] hover:-translate-y-0.5 border border-gray-200/50 hover:border-indigo-200/50">
 
                     <div
@@ -624,7 +643,7 @@
                             class="absolute inset-0 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 opacity-0 group-hover:opacity-30 blur-md transition-all duration-500">
                         </div>
                         <i
-                            class="fas fa-cog text-sm transition-all duration-500 group-hover:drop-shadow-[0_0_8px_rgba(99,102,241,0.4)]"></i>
+                            class="fas fa-brain text-sm transition-all duration-500 group-hover:drop-shadow-[0_0_8px_rgba(99,102,241,0.4)]"></i>
                     </div>
 
                     <span
@@ -639,6 +658,22 @@
                         <div
                             class="absolute bottom-0 left-0 h-full w-0 bg-gradient-to-r from-blue-200 via-indigo-200 to-purple-200 group-hover:w-full transition-all duration-1000 ease-out blur-sm">
                         </div>
+                    </div>
+
+                     <div class="pointer-events-none absolute inset-0 z-20 
+                        flex items-center justify-center
+                        bg-slate-900/60 backdrop-blur-[2px]
+                        opacity-0 group-hover:opacity-100
+                        transition-opacity duration-300">
+
+                        <span class="px-5 py-2 rounded-full
+                        bg-white/90 text-indigo-700
+                        text-sm font-bold tracking-wide
+                        shadow-xl
+                        scale-95 group-hover:scale-100
+                        transition-transform duration-300">
+                            Bientôt
+                        </span>
                     </div>
                 </a>
 

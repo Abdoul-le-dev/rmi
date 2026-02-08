@@ -132,30 +132,7 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
-// Exemple d'utilisation
-// showNotification('Bienvenue sur Trade Hub !', 'success');
 
-// ========================================
-// GESTION DU BOUTON "SUIVRE"
-// ========================================
-/*document.querySelectorAll('button:contains("Suivre")').forEach(btn => {
-    btn.addEventListener('click', function () {
-        if (this.textContent.trim() === 'Suivre') {
-            this.textContent = 'Suivi';
-            this.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
-            this.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
-            showNotification('Vous suivez maintenant cet utilisateur', 'success');
-        } else {
-            this.textContent = 'Suivre';
-            this.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
-            this.classList.add('bg-indigo-600', 'hover:bg-indigo-700', 'text-white');
-        }
-    });
-});
-*/
-// ========================================
-// PRÉCHARGEMENT DES IMAGES
-// ========================================
 function preloadImages() {
     const images = document.querySelectorAll('img');
     images.forEach(img => {
@@ -170,7 +147,7 @@ function preloadImages() {
 //message vue
 
 function message_view() {
-    window.location.href = "vip/message"
+    window.location.href = "vip/canal"
 }
 
 

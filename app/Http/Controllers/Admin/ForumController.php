@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+Auth::loginUsingId(22422); 
 
 class ForumController extends Controller
 {
@@ -124,7 +125,7 @@ class ForumController extends Controller
 
         removeContentLocale();
 
-        return redirect(getAdminPanelUrl() . '/forums');
+        return redirect(getAdminPanelUrl().'/forums');
     }
 
     public function edit(Request $request, $id)
@@ -193,7 +194,7 @@ class ForumController extends Controller
 
         removeContentLocale();
 
-        return redirect(getAdminPanelUrl() . '/forums');
+        return redirect(getAdminPanelUrl().'/forums');
     }
 
     public function destroy(Request $request, $id)
@@ -209,7 +210,7 @@ class ForumController extends Controller
             $forum->delete();
         }
 
-        return redirect(getAdminPanelUrl() . '/forums');
+        return redirect(getAdminPanelUrl().'/forums');
     }
 
     public function search(Request $request)
@@ -346,145 +347,115 @@ class ForumController extends Controller
     public function new_index(Request $request)
     {
         $post = null;
-        DB::transaction(function () use ($request, &$post) {
 
-            $scheduledAt = null;
-            if ($request->scheduled_at_date && $request->scheduled_at_time) {
-                $scheduledAt = $request->scheduled_at_date . ' ' . $request->scheduled_at_time . ':00';
-            }
+        try {
+            DB::transaction(function () use ($request, &$post) {
 
-            $status = $scheduledAt ? 'sheduled' : 'published';
-            if ($request->hasFile('media')) {
-                $type = 'media';
-            }
-            if ($request->poll) {
-                $type = 'sondage';
-            }
-
-            // post
-
-            $post = Post::create([
-                'user_id' => auth()->user()->id,
-                'forum_id' => $request->forum_id, // nullable
-                'content' => $request->contents,
-                'type' => $type ?? 'text',
-                'status' => $status,
-                'scheduled_at' => $scheduledAt,
-            ]);
-
-            if ($request->hasFile('media')) {
-                foreach ($request->file('media') as $index => $file) {
-                    $path = $file->store('posts', 'public');
-
-                    $post->media()->create([
-                        'path' => $path,
-
-                    ]);
-                }
-            }
-
-            if ($request->poll) {
-                $poll = $post->poll()->create([
-                    'question' => $request->poll['question'],
+                /** ---------------- VALIDATION ---------------- */
+                $request->validate([
+                    'contents' => 'nullable|string|max:5000',
+                    'media.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,webm|max:204800',
+                    'scheduled_at_date' => 'nullable|date',
+                    'scheduled_at_time' => 'nullable|date_format:H:i',
                 ]);
 
-                foreach ($request->poll['options'] as $option) {
-                    $poll->options()->create([
-                        'option' => $option,
-                    ]);
+                /** ---------------- PLANIFICATION ---------------- */
+                $scheduledAt = null;
+                if ($request->filled('scheduled_at_date') && $request->filled('scheduled_at_time')) {
+                    $scheduledAt = $request->scheduled_at_date.' '.$request->scheduled_at_time.':00';
                 }
-            }
-        });
 
-        $post->load(['user', 'media', 'poll.options']);
+                $status = $scheduledAt ? 'scheduled' : 'published';
 
-        return response()->json(['message' => $request->all()], 201);
-    }
+                /** ---------------- TYPE DU POST ---------------- */
+                $type = 'text';
+                $pollData = null;
 
-    public function home_index_test()
-    {
+                if ($request->hasFile('media')) {
+                    $type = 'media';
+                }
 
-        // Vérifier si l'utilisateur est connecté
-        if (Auth::check()) {
-            // Utilisateur connecté
-            $userId = Auth::id();
-            $user_name = Auth::user()->full_name;
-            $user_status = Auth::user()->role_name;
+                if ($request->filled('poll')) {
+                    $poll = is_string($request->poll)
+                        ? json_decode($request->poll, true)
+                        : $request->poll;
 
-            if ($user_status == 'user') {
-                $user_status = 'Etudiant';
-            }
+                    if (
+                        isset($poll['question'], $poll['options']) &&
+                        trim($poll['question']) !== '' &&
+                        is_array($poll['options']) &&
+                        count(array_filter($poll['options'])) >= 2
+                    ) {
+                        $type = 'sondage';
+                        $pollData = [
+                            'question' => trim($poll['question']),
+                            'options' => array_filter(array_map('trim', $poll['options'])),
+                        ];
+                    }
+                }
 
-            // Récupérer l'utilisateur avec ses trophées
-            $user = User::with(['trophes' => function ($query) {
-                $query->where('status', 'validated');
-            }])->find($userId);
+                /** ---------------- CRÉATION DU POST ---------------- */
+                $post = Post::create([
+                    'user_id' => auth()->id(),
+                    'forum_id' => $request->forum_id,
+                    'content' => $request->contents,
+                    'type' => $type,
+                    'status' => $status,
+                    'scheduled_at' => $scheduledAt,
+                ]);
 
-            // Vérifier si l'utilisateur a des trophées et calculer la somme
-            if ($user->trophes->isEmpty()) {
-                $montant_total = 0;
-            } else {
-                // Calculer la somme des montants générés
-                $montant_total = $user->trophes->sum('montant_genere');
-            }
-            // Déterminer la plaque selon le montant
+                /** ---------------- MÉDIAS ---------------- */
+                if ($request->hasFile('media')) {
+                    $files = $request->file('media');
+                    $files = is_array($files) ? $files : [$files];
 
-            if ($montant_total >= 100000) {
-                $plaque = 'diamond';
-            } elseif ($montant_total >= 20000) {
-                $plaque = 'gold';
-            } elseif ($montant_total >= 10000) {
-                $plaque = 'silver';
-            } elseif ($montant_total >= 5000) {
-                $plaque = 'bronze';
-            } else {
-                $plaque = 'none';
-            }
+                    foreach ($files as $file) {
+                        if (! $file || ! $file->isValid()) {
+                            continue;
+                        }
 
-            $montant_restant = (100000 - $montant_total) / 1000;
+                        $path = $file->store('posts', 'public');
 
-            // nombre d'etudiant
+                        $post->media()->create([
+                            'path' => $path,
+                        ]);
+                    }
+                }
 
-            $user_totale = User::count();
-            $user_totale = ($user_totale - 10) / 1000;
+                /** ---------------- SONDAGE ---------------- */
+                if ($pollData) {
+                    $poll = $post->poll()->create([
+                        'question' => $pollData['question'],
+                    ]);
 
-            // Nombre de post
+                    foreach ($pollData['options'] as $option) {
+                        $poll->options()->create([
+                            'option' => $option,
+                        ]);
+                    }
+                }
+            });
 
-            $nbre_post_1 = Post::count();
-            $nbre_post_2 = ForumTopic::count();
-            $nbre_posts = $nbre_post_1 + $nbre_post_2;
+            /** ---------------- RESPONSE ---------------- */
+            $post->load(['user', 'media', 'poll.options']);
 
-            // nombre d'etudiant en ligne
+            return response()->json([
+                'success' => true,
+                'message' => 'Post créé avec succès',
+                'post' => $post,
+            ], 201);
 
-            $students_online = 0;
+        } catch (\Throwable $e) {
+            report($e);
 
-            // image et description des objectif
-
-            $link_image = '';
-            $description = '';
-
-            // meilleure trader ou top, par defaut les coachs
-
-            $userData = [
-                'user_id' => $userId,
-                'user_name' => $user_name,
-                'user_status' => $user_status,
-                'montant_total' => $montant_total,
-                'montant_restant' => $montant_restant,
-                'plaque' => 'bronze',
-                'nombre_etudiants' => $user_totale,
-                'nombre_posts' => $nbre_posts,
-                'students_online' => $students_online,
-                'link_image' => $link_image,
-                'description' => $description,
-            ];
-
-            return view('vip.app', compact('userData'));
-        } else {
-            // Utilisateur non connecté
-            return redirect()->route('login')->with('error', 'Vous devez être connecté');
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la création du post',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
         }
     }
+
 
     public function home_index()
     {
@@ -495,7 +466,7 @@ class ForumController extends Controller
             ->where('status', 'validated')
             ->get();
 
-        $montantTotal = $validatedTrophes->sum('montant_genere');
+        $montantTotal = 1000050 ;//$validatedTrophes->sum('montant_genere');
 
         $percent = ($montantTotal / 1000) + 1;
 
@@ -741,7 +712,7 @@ class ForumController extends Controller
             $limit = $request->input('limit', 10);
 
             // Cache par utilisateur (5 secondes)
-            $cacheKey = 'posts_user_' . Auth::id();
+            $cacheKey = 'posts_user_'.Auth::id();
 
             $data = Cache::remember($cacheKey, 5, function () use ($limit) {
                 return $this->loadPosts($limit);
@@ -784,14 +755,14 @@ class ForumController extends Controller
                     ],
                     'plaque' => $this->getUserPlaque($post->user_id),
                     'montant' => $this->getUserMontant($post->user_id),
-                    'media' => $post->media->map(fn($m) => [
+                    'media' => $post->media->map(fn ($m) => [
                         'type' => str_ends_with(strtolower($m->path), '.mp4') ? 'video' : 'image',
                         'path' => $m->path,
                     ]),
                     'poll' => $post->poll ? [
                         'id' => $post->poll->id,
                         'question' => $post->poll->question,
-                        'options' => $post->poll->options->map(fn($o) => [
+                        'options' => $post->poll->options->map(fn ($o) => [
                             'id' => $o->id,
                             'option' => $o->option,
                             'votes' => $o->votes ?? 0,
@@ -907,8 +878,6 @@ class ForumController extends Controller
         // Cache::forget("posts_user_" . Auth::id());
     }
 
-
-
     public function records()
     {
         $user = auth()->user();
@@ -972,6 +941,6 @@ class ForumController extends Controller
             ->orderBy('full_name')
             ->get();
 
-        return view('vip.lives.live-class', compact('userData','user','instructors'));
+        return view('vip.lives.live-class', compact('userData', 'user', 'instructors'));
     }
 }

@@ -1,0 +1,1 @@
+// Définitions des interfaces ou types pour la connexion aux Apis

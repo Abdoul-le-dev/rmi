@@ -2,6 +2,9 @@ function handleTextInput() {
     // temporaire : juste éviter l’erreur
 }
 
+// Variables globales
+let isFirstChannelLoad = true; // Pour gérer le premier chargement
+let autoRefreshInterval = null; // Pour stocker l'ID du setInterval
 function handleKeyPress(event) {
     // temporaire : juste éviter l’erreur
 }
@@ -1182,92 +1185,106 @@ function setupKeyboardShortcuts() {
  * ============================================
  */
 
-/**
- * Envoie le message avec toutes les animations
- */
-function sendMessage() {
-
+async function sendMessage(event) {
     if (event) event.preventDefault();
+
     const button = document.getElementById('send-button');
     const icon = document.getElementById('send-icon');
     const text = document.getElementById('send-text');
     const textarea = document.getElementById('post-textarea');
     const particles = document.getElementById('send-particles');
     const preview = document.getElementById('media-preview');
-    const scheduleDate = document.getElementById('schedule-date');
-    const scheduleTime = document.getElementById('schedule-time');
-    const scheduleContainer = document.getElementById('schedule-container');
-
+    const typingIndicator = document.getElementById('typing-indicator');
     const form = document.getElementById('post-form');
 
-    const formData = new FormData(form);//récupérer le formulaire de façon dynamique
-    const pollContainer = document.getElementById('poll-container')
-    
-    // Ajouter scheduled_at SEULEMENT si les deux champs sont remplis
-    if (scheduleDate && scheduleDate.value && scheduleTime && scheduleTime.value) {
-        formData.append('scheduled_at_date', scheduleDate.value);
-        formData.append('scheduled_at_time', scheduleTime.value);
-    }
-
-
-
-    // Validation
-    if (!textarea.value.trim() && appState.uploadedFiles.length === 0) {
+    /** ---------------- VALIDATION ---------------- */
+    if (!textarea.value.trim() && (!appState.uploadedFiles || appState.uploadedFiles.length === 0)) {
         button.classList.add('shake-animation');
         setTimeout(() => button.classList.remove('shake-animation'), 500);
-        showToast('Votre message est vide ! ✍️', 'warning');
+        showToast('Votre message est vide ✍️', 'warning');
         return;
     }
 
-    formData.delete('poll[question]');
-    formData.delete('poll[option_1]');
-    formData.delete('poll[option_2]');
+    /** ---------------- CONSTRUCTION DU FORMDATA ---------------- */
+    const formData = new FormData();
 
-    let optionIndex = 0;
+    // CSRF token
+    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 
+    // Contenu
+    formData.append('contents', textarea.value);
 
-    if (!pollContainer.classList.contains('hidden')) {
-        const question = document.getElementById('poll-question').value.trim();
+    // ✅ Poll - DIAGNOSTIC COMPLET
+    const pollContainer = document.getElementById('poll-container');
+    const pollQuestion = document.getElementById('poll-question');
 
-        if (!question) {
-            setTimeout(() => button.classList.remove('shake-animation'), 500);
-            showToast("Question du sondage requise", 'warning');
-            return;
+    console.log('=== DIAGNOSTIC POLL ===');
+    console.log('Poll Container exists:', !!pollContainer);
+    console.log('Poll Container hidden:', pollContainer ? pollContainer.classList.contains('hidden') : 'N/A');
+    console.log('Poll Question value:', pollQuestion ? pollQuestion.value : 'N/A');
+
+    if (pollContainer && !pollContainer.classList.contains('hidden')) {
+        const questionValue = pollQuestion ? pollQuestion.value.trim() : '';
+        const pollOptionsInputs = document.querySelectorAll('#poll-options input');
+        const pollOptions = Array.from(pollOptionsInputs)
+            .map(input => input.value.trim())
+            .filter(val => val !== '');
+
+        console.log('Question:', questionValue);
+        console.log('Options:', pollOptions);
+        console.log('Options count:', pollOptions.length);
+
+        if (questionValue && pollOptions.length >= 2) {
+            const pollData = {
+                question: questionValue,
+                options: pollOptions
+            };
+            console.log('✅ POLL AJOUTÉ:', pollData);
+            formData.append('poll', JSON.stringify(pollData));
+        } else {
+            console.log('❌ POLL NON AJOUTÉ - Question vide ou moins de 2 options');
         }
-        formData.set('poll[question]', question);
-
-        document.querySelectorAll('#poll-options input').forEach(input => {
-            if (input.value.trim()) {
-                formData.append('poll[options][]', input.value.trim());
-                optionIndex++;
-            }
-            
-
-            
-        });
-
-        if (optionIndex < 2) {
-                showToast("Au moins 2 options sont requises", 'warning');
-                return;
-            }
+    } else {
+        console.log('❌ POLL NON AJOUTÉ - Container caché ou inexistant');
     }
 
+    // Fichiers
+    if (appState.uploadedFiles && appState.uploadedFiles.length > 0) {
+        appState.uploadedFiles.forEach(file => formData.append('media[]', file));
+        console.log('📎 Files:', appState.uploadedFiles.length);
+    }
 
-    // Désactiver le bouton
+    // Schedule
+    const scheduleContainer = document.getElementById('schedule-container');
+    if (scheduleContainer && !scheduleContainer.classList.contains('hidden')) {
+        const scheduleDate = document.getElementById('schedule-date').value;
+        const scheduleTime = document.getElementById('schedule-time').value;
+
+        if (scheduleDate) formData.append('scheduled_at_date', scheduleDate);
+        if (scheduleTime) formData.append('scheduled_at_time', scheduleTime);
+
+        console.log('📅 Schedule:', scheduleDate, scheduleTime);
+    }
+
+    // ✅ AFFICHER LE FORMDATA COMPLET
+    console.log('=== FORMDATA FINAL ===');
+    for (let [key, value] of formData.entries()) {
+        console.log(key + ':', value);
+    }
+    console.log('=====================');
+
+    /** ---------------- UI : DÉMARRAGE ---------------- */
     button.disabled = true;
     button.classList.add('sending');
 
-    // Afficher le typing indicator
-    const typingIndicator = document.getElementById('typing-indicator');
     if (typingIndicator) typingIndicator.classList.remove('hidden');
 
-    // Phase 1: Aspiration
     textarea.classList.add('aspiration-animation');
+
     if (preview.children.length > 0) {
         preview.classList.add('aspiration-animation');
     }
 
-    // Phase 2: Animation icône
     setTimeout(() => {
         icon.classList.add('spin-and-fly');
         text.style.opacity = '0';
@@ -1275,37 +1292,64 @@ function sendMessage() {
         particles.classList.add('particles-active');
     }, 300);
 
-    // Phase 3: Propulsion
     setTimeout(() => {
         button.classList.add('propulsion-animation');
-        playSendSound();
+        if (typeof playSendSound === 'function') playSendSound();
     }, 800);
 
-    // Phase 4: Confetti si première publication
-    if (appState.isFirstPost) {
-        setTimeout(() => {
-            createConfetti();
+    /** ---------------- API CALL ---------------- */
+    try {
+        const res = await fetch('/vip', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json'
+            },
+            body: formData
+        });
+
+        const data = await res.json();
+
+        console.log('📥 Response status:', res.status);
+        console.log('📥 Response data:', data);
+
+        if (!res.ok) {
+            throw new Error(data.message || 'Erreur lors de l\'envoi');
+        }
+
+        /** ---------------- SUCCÈS ---------------- */
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        showToast('Votre post a été publié 🎉', 'success');
+
+        if (appState.isFirstPost) {
+            if (typeof createConfetti === 'function') createConfetti();
             localStorage.setItem('hasPosted', 'true');
             appState.isFirstPost = false;
-        }, 1000);
-    }
+        }
 
-    // Phase 5: Reset
-    setTimeout(() => {
-        // Cacher typing indicator
-        if (typingIndicator) typingIndicator.classList.add('hidden');
-
-        // Reset textarea
-        textarea.value = '';
-        textarea.classList.remove('aspiration-animation');
-
-        // Reset fichiers
+        /** ---------------- RESET ---------------- */
+        form.reset();
         appState.uploadedFiles = [];
+
+        const pollCont = document.getElementById('poll-container');
+        const scheduleCont = document.getElementById('schedule-container');
+        const linkPrev = document.getElementById('link-preview');
+
+        if (pollCont) pollCont.classList.add('hidden');
+        if (scheduleCont) scheduleCont.classList.add('hidden');
+        if (linkPrev) linkPrev.classList.add('hidden');
+
         preview.innerHTML = '';
         preview.classList.add('hidden');
         preview.classList.remove('aspiration-animation');
 
-        // Reset bouton
+        if (typeof updateCharCounter === 'function') updateCharCounter(0);
+
+        textarea.classList.remove('aspiration-animation');
+
+        if (typingIndicator) typingIndicator.classList.add('hidden');
+
         button.classList.remove('sending', 'propulsion-animation');
         icon.classList.remove('spin-and-fly');
         text.style.opacity = '1';
@@ -1313,67 +1357,33 @@ function sendMessage() {
         particles.classList.remove('particles-active');
         button.disabled = false;
 
-        // Reset inputs
-        const imageUpload = document.getElementById('image-upload');
-        const videoUpload = document.getElementById('video-upload');
-        if (imageUpload) imageUpload.value = '';
-        if (videoUpload) videoUpload.value = '';
+    } catch (error) {
+        console.error('❌ ERROR:', error);
 
-        // Reset compteur
-        updateCharCounter(0);
+        await new Promise(resolve => setTimeout(resolve, 500));
 
-        // Fermer les panels
-        removePoll();
-        removeSchedule();
-        removeLinkPreview();
+        showToast(error.message || 'Une erreur est survenue', 'error');
 
-        // Success toast
-        fetch('/vip', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document
-                    .querySelector('meta[name="csrf-token"]')
-                    .getAttribute('content'),
-                'Accept': 'application/json'
-            },
-            body: formData
-        })
-            .then(async res => {
-                console.log('STATUS:', res.status);
-                const contentType = res.headers.get("content-type");
+        textarea.classList.remove('aspiration-animation');
 
-                if (contentType && contentType.includes("application/json")) {
-                    const data = await res.json();
-                    
+        if (preview.children.length > 0) {
+            preview.classList.remove('aspiration-animation');
+        }
 
-                    if (res.ok) {
+        if (typingIndicator) typingIndicator.classList.add('hidden');
 
-                        // Phase 5: Reset après succès
-                        
-                        showToast('Votre post à été publié ! 🎉', 'success');
-
-                        // Optionnel : Recharger ou ajouter le post à la page
-                        // location.reload();
-                    } else {
-                        showToast(data.message || 'Erreur lors de l\'envoi', 'error');
-                       
-                    }
-                } else {
-                    const text = await res.text();
-                    console.log('RESPONSE TEXT:', text);
-                    
-                   
-                }
-            })
-            .catch(err => {
-               
-              location.reload();
-            });
-
-        // TODO: Appel API pour envoyer le post
-
-    }, 1500);
+        button.classList.remove('sending', 'propulsion-animation');
+        icon.classList.remove('spin-and-fly');
+        text.style.opacity = '1';
+        particles.style.opacity = '0';
+        particles.classList.remove('particles-active');
+        button.disabled = false;
+    }
 }
+
+/**
+ * Envoie le message avec toutes les animations
+ */
 
 /**
  * Joue un son lors de l'envoi
@@ -1438,7 +1448,120 @@ function createConfetti() {
  * @param {string} message - Message à afficher
  * @param {string} type - Type de toast (success, error, warning, info)
  */
+
 function showToast(message, type = 'info') {
+    let container = document.getElementById('toast-container');
+
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'fixed top-4 right-4 z-50 flex flex-col gap-3 pointer-events-none';
+        container.style.maxWidth = '420px';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    
+    const config = {
+        success: {
+            icon: '✓',
+            gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            glowColor: 'rgba(102, 126, 234, 0.3)'
+        },
+        error: {
+            icon: '✕',
+            gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+            glowColor: 'rgba(245, 87, 108, 0.3)'
+        },
+        warning: {
+            icon: '⚠',
+            gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+            glowColor: 'rgba(254, 225, 64, 0.3)'
+        },
+        info: {
+            icon: 'ℹ',
+            gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            glowColor: 'rgba(102, 126, 234, 0.3)'
+        }
+    };
+
+    const style = config[type] || config.info;
+
+    toast.className = `
+        bg-white rounded-xl shadow-2xl 
+        pointer-events-auto transform transition-all duration-300 ease-out
+        flex items-start gap-3 p-4 min-w-[320px] max-w-[420px]
+        backdrop-blur-sm relative overflow-hidden
+    `.trim().replace(/\s+/g, ' ');
+
+    toast.style.cssText = `
+        animation: slideIn 0.3s ease-out;
+        box-shadow: 0 10px 40px ${style.glowColor}, 0 4px 12px rgba(0,0,0,0.1);
+    `;
+
+    toast.innerHTML = `
+        <div class="absolute top-0 left-0 right-0 h-1" style="background: ${style.gradient};"></div>
+        <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-lg text-white shadow-lg" 
+             style="background: ${style.gradient};">
+            ${style.icon}
+        </div>
+        <div class="flex-1 pt-1">
+            <p class="text-gray-800 font-medium text-sm leading-relaxed">${message}</p>
+        </div>
+        <button class="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-100" 
+                onclick="this.parentElement.remove()">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    `;
+
+    // Ajouter les animations CSS si elles n'existent pas
+    if (!document.getElementById('toast-animations')) {
+        const styleEl = document.createElement('style');
+        styleEl.id = 'toast-animations';
+        styleEl.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0) scale(1);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(400px) scale(0.95);
+                    opacity: 0;
+                }
+            }
+            .toast-removing {
+                animation: slideOut 0.3s ease-in forwards;
+            }
+        `;
+        document.head.appendChild(styleEl);
+    }
+
+    container.appendChild(toast);
+
+    // Animation de suppression après 4 secondes
+    setTimeout(() => {
+        toast.classList.add('toast-removing');
+        setTimeout(() => {
+            toast.remove();
+            if (container.children.length === 0) {
+                container.remove();
+            }
+        }, 300);
+    }, 4000);
+}
+function showToasts(message, type = 'info') {
     let container = document.getElementById('toast-container');
 
     if (!container) {

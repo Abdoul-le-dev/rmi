@@ -900,6 +900,8 @@
             });
         });
     </script>
+
+    <script src="{{ asset('assets/vip/vip.js') }}" defer></script>
 </body>
 
 </html>

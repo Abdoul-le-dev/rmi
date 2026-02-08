@@ -190,11 +190,11 @@
         <div class="text-center mt-8 text-gray-600">
             <p class="text-sm">
                 <i class="fas fa-shield-alt mr-2"></i>
-                Connexion sécurisée via Jitsi Meet
+                Connexion sécurisée via Royal Markets Inv  Meet
             </p>
         </div>
     </div>
-
+    <script src="{{ asset('assets/vip/vip.js') }}" defer></script>
     <script>
         const liveClassToken = '{{ $liveClass->public_token }}';
         const liveClassStatus = '{{ $liveClass->status }}';
