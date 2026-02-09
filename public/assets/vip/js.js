@@ -1357,6 +1357,11 @@ async function sendMessage(event) {
         particles.classList.remove('particles-active');
         button.disabled = false;
 
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 1);
+
     } catch (error) {
         console.error('❌ ERROR:', error);
 
@@ -1461,7 +1466,7 @@ function showToast(message, type = 'info') {
     }
 
     const toast = document.createElement('div');
-    
+
     const config = {
         success: {
             icon: '✓',
