@@ -116,7 +116,7 @@
             class="fixed md:relative inset-y-0 left-0 w-full sm:w-80 md:w-96 lg:w-[420px] bg-white border-r border-gray-200 flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-40">
 
             <!-- Header Sidebar -->
-            <div class="p-2 border-b border-gray-200">
+            <div class="p-2 border-b border-gray-200 my-2">
                 <div class="flex justify-between items-center mb-4">
                     <button id="mobile-menu-btn" class="md:hidden p-2 hover:bg-gray-100 rounded-lg transition">
                         <svg class="w-6 h-6 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
@@ -126,19 +126,27 @@
                         </svg>
                     </button>
 
-                    <h1 class="text-xl md:text-2xl font-semibold text-gray-900 flex-1 text-center md:text-left">
-                        Vos Coach Community
-                    </h1>
+                    <div class="flex ">
+
+                        <a href="/vip" class="hidden md:flex p-2 rounded-lg hover:bg-gray-100 transition text-gray-600"
+                        title="Retour VIP">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                       </a>
+
+                       <h1 class="text-base md:text-lg font-medium text-black uppercase tracking-wide p-1">
+                        Coach Community
+                       </h1>
+
+                    </div>
+
+
+
+
 
                     <div class="flex gap-2">
-                        <button class="md:hidden p-2 hover:bg-gray-100 rounded-lg transition"
-                            onclick="toggleSidebarSearch()">
-                            <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </button>
+                        
 
                         <div class="relative group hidden md:block">
                             <button class="p-2 hover:bg-gray-100 rounded-full transition">
@@ -147,44 +155,13 @@
                                         d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                                 </svg>
                             </button>
-                            <div
-                                class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                                <a href="/profil"
-                                    class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition rounded-t-lg">
-                                    <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                            d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                    <span class="text-sm font-medium text-gray-700">Dash</span>
-                                </a>
-                                <a href="/logout" onclick="return confirm('Voulez-vous vraiment vous déconnecter ?')"
-                                    class="flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition rounded-b-lg border-t border-gray-100">
-                                    <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                            d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                    <span class="text-sm font-medium text-red-600">Déconnexion</span>
-                                </a>
-                            </div>
+                           
                         </div>
                     </div>
                 </div>
 
                 <!-- Barre de recherche -->
-                <div id="sidebarSearchBox" class="hidden md:block">
-                    <div class="relative">
-                        <input type="text" placeholder="Rechercher une conversation..."
-                            class="w-full bg-gray-100 rounded-full pl-10 pr-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                        <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="currentColor"
-                            viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                </div>
+                
             </div>
 
             <!-- Liste des canaux -->
@@ -229,7 +206,7 @@
                             @if($forum->topics && $forum->topics->count() > 0)
                                 @php
                                     $lastTopic = $forum->topics->last();
-                                    $preview = $lastTopic->content?? 'Nouveau message';
+                                    $preview = $lastTopic->content ?? 'Nouveau message';
                                 @endphp
                                 <p class="text-xs text-gray-500 truncate">
                                     {{ \Illuminate\Support\Str::limit(strip_tags($preview), 45) }}
@@ -309,7 +286,7 @@
 
             <!-- BARRE DE MESSAGE FIXE -->
             <div class="bg-white border-t border-gray-200 p-3 sm:p-4 flex-shrink-0"
-                data-forum-id="{{ $forum->forum_id?? '' }}">
+                data-forum-id="{{ $forum->forum_id ?? '' }}">
                 <div class="max-w-4xl mx-auto">
                     <div class="flex items-center gap-2 sm:gap-3">
                         <!-- Avatar utilisateur -->
@@ -581,7 +558,7 @@
 
             {{-- Variable globale pour le forum_id --}}
             <script>
-                window.currentForumId = {{ $forum->forum_id?? 'null' }};
+                window.currentForumId = {{ $forum->forum_id ?? 'null' }};
             </script>
         </div>
     </div>
@@ -624,7 +601,7 @@
         </div>
     </div>
 
-    
+
 
     @include('vip.composants.mobile')
 
