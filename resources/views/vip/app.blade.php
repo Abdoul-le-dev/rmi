@@ -807,7 +807,7 @@
                                             </div>
                                         @else
                                             <div class="aspect-square rounded-lg overflow-hidden cursor-pointer"
-                                                onclick="openImageFullscreen('{{ \App\Helpers\S3Helper::getTemporaryUrl($media->path, 60)  : '' }}')">
+                                                onclick="openImageFullscreen('{{ $media->path ? \App\Helpers\S3Helper::getTemporaryUrl($media->path, 60)  : '' }}')">
                                                 <img src="{{$media->path ?  \App\Helpers\S3Helper::getTemporaryUrl($media->path, 60)  : '' }}" 
                                                     alt="Image {{ $index + 1 }}"
                                                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
