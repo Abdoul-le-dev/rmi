@@ -1010,7 +1010,7 @@
                                         @if($media->type === 'video')
                                             <div class="relative group cursor-pointer" onclick="openVideoFullscreen(this)">
                                                 <video class="w-full max-h-64 object-cover rounded-lg" preload="metadata">
-                                                    <source src="{{ \App\Helpers\S3Helper::getTemporaryUrl($media->path, 60)  : '' }}" type="video/mp4">
+                                                    <source src="{{ $media->path ? \App\Helpers\S3Helper::getTemporaryUrl($media->path, 60)  : '' }}" type="video/mp4">
                                                 </video>
                                                 <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-40 transition-all rounded-lg">
                                                     <svg class="w-16 h-16 text-white opacity-80 group-hover:opacity-100 transition-all" 
