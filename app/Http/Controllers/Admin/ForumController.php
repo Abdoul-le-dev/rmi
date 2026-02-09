@@ -414,7 +414,7 @@ class ForumController extends Controller
                             continue;
                         }
 
-                        $path = $request->file('live_cover')->store('live-covers', 's3');//$path = $file->store('posts', 'public');
+                        $path = $request->file('media')->store('live-covers', 's3');//$path = $file->store('posts', 'public');
 
                         $post->media()->create([
                             'path' => $path,
