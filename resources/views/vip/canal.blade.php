@@ -229,7 +229,7 @@
                             @if($forum->topics && $forum->topics->count() > 0)
                                 @php
                                     $lastTopic = $forum->topics->last();
-                                    $preview = $lastTopic->content?? 'Nouveau message';
+                                    $preview = $lastTopic->content ?? 'Nouveau message';
                                 @endphp
                                 <p class="text-xs text-gray-500 truncate">
                                     {{ \Illuminate\Support\Str::limit(strip_tags($preview), 45) }}
@@ -297,19 +297,19 @@
 
             <!-- ZONE CONTENU - Centré avec max-width -->
             <div id="messagesContainer" class="flex-1 overflow-y-auto scrollbar-hide bg-gray-50">
-                <!-- Container centré pour les messages -->
-                <div class="max-w-4xl mx-auto px-4 py-6 space-y-4">
-                    <!-- Les posts seront chargés ici par JavaScript -->
-                    <div class="flex justify-center items-center min-h-[400px]">
-                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+                <div class="max-w-2xl mx-auto px-3 py-3 space-y-2">
+                    <!-- loader -->
+                    <div class="flex justify-center items-center min-h-[200px]">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
                     </div>
                 </div>
             </div>
 
 
+
             <!-- BARRE DE MESSAGE FIXE -->
             <div class="bg-white border-t border-gray-200 p-3 sm:p-4 flex-shrink-0"
-                data-forum-id="{{ $forum->forum_id?? '' }}">
+                data-forum-id="{{ $forum->forum_id ?? '' }}">
                 <div class="max-w-4xl mx-auto">
                     <div class="flex items-center gap-2 sm:gap-3">
                         <!-- Avatar utilisateur -->
@@ -581,7 +581,7 @@
 
             {{-- Variable globale pour le forum_id --}}
             <script>
-                window.currentForumId = {{ $forum->forum_id?? 'null' }};
+                window.currentForumId = {{ $forum->forum_id ?? 'null' }};
             </script>
         </div>
     </div>
@@ -624,7 +624,7 @@
         </div>
     </div>
 
-    
+
 
     @include('vip.composants.mobile')
 
