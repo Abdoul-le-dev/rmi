@@ -46,7 +46,7 @@
                 <div class="relative">
                     <button id="user-menu-btn"
                         class="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-100 transition-colors">
-                        <img src="https://i.pravatar.cc/150?img=12" alt="Avatar"
+                        <img src="{{ Auth::user()->getAvatar(48) }}"  alt="Avatar"
                             class="w-7 h-7 rounded-full object-cover ring-2 ring-indigo-500">
                     </button>
 
