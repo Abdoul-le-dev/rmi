@@ -497,12 +497,6 @@ Route::get('vip', [ForumController::class, 'home_index']);
 
 Route::post('vip', [ForumController::class, 'new_index']);
 
-Route::get('vip/message', function () {
-    return view('vip.message');
-});
-
-
-Route::get('vip/evenement', [ForumController::class, 'event_index']);
 
 Route::get('vip/canal', [PostController::class, 'canal_index']);
 

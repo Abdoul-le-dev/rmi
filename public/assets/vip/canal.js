@@ -654,7 +654,7 @@ function addPollOption() {
     
     const input = document.createElement('input');
     input.type = 'text';
-    input.className = 'poll-option-input w-full px-4 py-2 border border-gray-300 rounded-lg';
+    input.className = 'poll-option-input w-full px-4 py-2 border border-gray-300 rounded-lg placeholder:border-indigo-300';
     input.placeholder = `Option ${optionCount + 1}`;
     
     container.appendChild(input);
@@ -689,7 +689,7 @@ function startAutoRefresh(intervalSeconds = 8000) {
         clearInterval(autoRefreshInterval);
     }
     
-    autoRefreshInterval = setInterval(async () => {
+    /*autoRefreshInterval = setInterval(async () => {
         if (currentChannelData && currentChannelData.id) {
             console.log('🔄 Rechargement automatique...');
             const result = await getPosts(currentChannelData.id);
@@ -698,7 +698,7 @@ function startAutoRefresh(intervalSeconds = 8000) {
                 displayAllContent(result.posts, result.forum, true);
             }
         }
-    }, intervalSeconds * 1000);
+    }, intervalSeconds * 1000);*/
 }
 
 function stopAutoRefresh() {
@@ -709,6 +709,10 @@ function stopAutoRefresh() {
 }
 
 async function refreshMessages() {
+    
+}
+
+async function refreshMessagess() {
     if (!currentChannelData || !currentChannelData.id) return;
     
     console.log('🔄 Rechargement manuel...');
@@ -747,6 +751,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+
+
 
 // Arrêter l'auto-refresh quand on quitte la page
 window.addEventListener('beforeunload', () => {
