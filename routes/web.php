@@ -453,7 +453,7 @@ Route::get('/test-cloudfront', function (CloudFrontUrlSigner $signer) {
 });
 
 
-Route::get('/player/test-cloudfront-view', [CourseVideoController::class, 'testCloudFrontCookies']);
+Route::get('/course/test-cloudfront-view', [CourseVideoController::class, 'testCloudFrontCookies']);
 
 
 
