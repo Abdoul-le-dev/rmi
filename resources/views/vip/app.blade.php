@@ -793,9 +793,9 @@
                                             <div class="aspect-square rounded-lg overflow-hidden bg-black relative group cursor-pointer"
                                                 onclick="openVideoFullscreen(this)">
                                                 <video class="w-full h-full object-cover" 
-                                                    data-video-src="{{ \App\Helpers\S3Helper::getTemporaryUrl($media->path, 60)  : '' }}"
+                                                    data-video-src="{{ $media->path ? \App\Helpers\S3Helper::getTemporaryUrl($media->path, 60)  : '' }}"
                                                     preload="metadata">
-                                                    <source src="{{ \App\Helpers\S3Helper::getTemporaryUrl($media->path, 60)  : '' }}" type="video/mp4">
+                                                    <source src="{{ $media->path ?  \App\Helpers\S3Helper::getTemporaryUrl($media->path, 60)  : '' }}" type="video/mp4">
                                                 </video>
                                                 <!-- Overlay play button -->
                                                 <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-40 transition-all">
@@ -808,7 +808,7 @@
                                         @else
                                             <div class="aspect-square rounded-lg overflow-hidden cursor-pointer"
                                                 onclick="openImageFullscreen('{{ \App\Helpers\S3Helper::getTemporaryUrl($media->path, 60)  : '' }}')">
-                                                <img src="{{ \App\Helpers\S3Helper::getTemporaryUrl($media->path, 60)  : '' }}" 
+                                                <img src="{{$media->path ?  \App\Helpers\S3Helper::getTemporaryUrl($media->path, 60)  : '' }}" 
                                                     alt="Image {{ $index + 1 }}"
                                                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
                                             </div>
@@ -1020,10 +1020,10 @@
                                                 </div>
                                             </div>
                                         @else
-                                            <img src="{{ \App\Helpers\S3Helper::getTemporaryUrl($media->path, 60)  : '' }}" 
+                                            <img src="{{$media->path ?  \App\Helpers\S3Helper::getTemporaryUrl($media->path, 60)  : '' }}" 
                                                 alt="Image du sondage"
                                                 class="w-full max-h-64 object-cover rounded-lg cursor-pointer hover:opacity-95 transition-opacity"
-                                                onclick="openImageFullscreen('{{ \App\Helpers\S3Helper::getTemporaryUrl($media->path, 60)  : '' }}')">
+                                                onclick="openImageFullscreen('{{ $media->path ? \App\Helpers\S3Helper::getTemporaryUrl($media->path, 60)  : '' }}')">
                                         @endif
                                     </div>
                                 @endif
