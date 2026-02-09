@@ -99,5 +99,6 @@ class Kernel extends HttpKernel
         'check.subscription' => \App\Http\Middleware\CheckSubscription::class,
         'capture.intended' => \App\Http\Middleware\CaptureIntendedUrl::class,
         'api.jibri-check' => \App\Http\Middleware\VerifyJibriToken::class,
+        'cloudfront.cookies' => \App\Http\Middleware\CloudFrontCookies::class,
     ];
 }
