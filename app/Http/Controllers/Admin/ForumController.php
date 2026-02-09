@@ -16,7 +16,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-Auth::loginUsingId(22422); 
+
+Auth::loginUsingId(22422);
 
 class ForumController extends Controller
 {
@@ -406,15 +407,17 @@ class ForumController extends Controller
 
                 /** ---------------- MÉDIAS ---------------- */
                 if ($request->hasFile('media')) {
+
                     $files = $request->file('media');
                     $files = is_array($files) ? $files : [$files];
 
                     foreach ($files as $file) {
+
                         if (! $file || ! $file->isValid()) {
                             continue;
                         }
 
-                        $path = $request->file('media')->store('live-covers', 's3');//$path = $file->store('posts', 'public');
+                        $path = $file->store('live-covers', 's3');
 
                         $post->media()->create([
                             'path' => $path,
@@ -456,7 +459,6 @@ class ForumController extends Controller
         }
     }
 
-
     public function home_index()
     {
 
@@ -466,9 +468,9 @@ class ForumController extends Controller
             ->where('status', 'validated')
             ->get();
 
-        $montantTotal = 10050 ;//$validatedTrophes->sum('montant_genere');
+        $montantTotal = 10050; // $validatedTrophes->sum('montant_genere');
 
-        $percent =(($montantTotal / 1000)+ 0.1) ;
+        $percent = (($montantTotal / 1000) + 0.1);
 
         $userData = [
             'user_id' => $user->id,
