@@ -15,21 +15,11 @@
                 </div>
             </div>
 
-            <!-- Barre de recherche (desktop uniquement) -->
-            <div class="hidden md:flex flex-1 max-w-md mx-8">
-                <div class="relative w-full">
-                    <input type="text" placeholder="Rechercher..."
-                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
-                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                </div>
-            </div>
+      
 
             <!-- Actions utilisateur -->
             <div class="flex items-center space-x-4">
-                <!-- Icône recherche mobile -->
-                <button class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                    <i class="fas fa-search text-gray-600"></i>
-                </button>
+                
 
                 <!-- Notifications -->
                 <button class="relative p-2 rounded-lg hover:bg-gray-100 transition-colors" onclick="toggleNotif()">

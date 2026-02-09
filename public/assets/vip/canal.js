@@ -307,45 +307,49 @@ function renderPost(post) {
     }
 }
 
+// ============================================
+// GÉNÉRATION DES POSTS - VERSION RESPONSIVE
+// ============================================
+
 function generateTextPost(post) {
     const isOwner = post.user.id === currentUserId;
     
     return `
-        <div class="flex gap-3 items-start" data-post-id="${post.id}" data-post-source="${post.source}">
+        <div class="flex gap-2 sm:gap-2.5 items-start w-full max-w-full sm:max-w-2xl" data-post-id="${post.id}" data-post-source="${post.source}">
             <!-- Avatar -->
             <div class="flex-shrink-0">
                 ${post.user.avatar 
-                    ? `<img src="${post.user.avatar}" class="w-10 h-10 rounded-full object-cover" alt="${escapeHtml(post.user.name)}">`
-                    : `<div class="w-10 h-10 bg-gradient-to-br from-${post.user.color}-500 to-${post.user.color}-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">${post.user.initials}</div>`
+                    ? `<img src="${post.user.avatar}" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover ring-1 sm:ring-2 ring-white shadow-sm" alt="${escapeHtml(post.user.name)}">`
+                    : `<div class="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-${post.user.color}-500 to-${post.user.color}-600 rounded-full flex items-center justify-center text-white font-semibold text-[10px] sm:text-xs shadow-sm ring-1 sm:ring-2 ring-white">${post.user.initials}</div>`
                 }
             </div>
             
             <!-- Message Bubble -->
             <div class="flex-1 min-w-0">
-                <div class="post-bubble p-4">
+                <div class="post-bubble bg-white rounded-xl sm:rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 shadow-sm border border-gray-100">
                     <!-- Header -->
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <span class="font-semibold text-sm text-gray-900">${escapeHtml(post.user.name)}</span>
-                            <span class="text-xs text-gray-500">${post.created_at_human}</span>
+                    <div class="flex items-center justify-between mb-1 sm:mb-1.5">
+                        <div class="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+                            <span class="font-semibold text-[11px] sm:text-xs text-gray-900 truncate">${escapeHtml(post.user.name)}</span>
+                            <span class="text-[9px] sm:text-[10px] text-gray-400 flex-shrink-0">${post.created_at_human}</span>
                         </div>
                         ${isOwner ? `
-                        <div class="relative">
-                            <button onclick="toggleMenu(this)" class="p-1 hover:bg-gray-100 rounded transition">
-                                <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="relative flex-shrink-0 ml-1">
+                            <button onclick="toggleMenu(this)" class="p-0.5 hover:bg-gray-100 rounded transition">
+                                <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
                                 </svg>
                             </button>
-                            <div class="dropdown-menu absolute right-0 mt-1 w-40 bg-white rounded-lg shadow-lg border py-1 z-10">
-                                <button onclick="editPost(${post.id}, '${post.source}')" class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50">Modifier</button>
-                                <button onclick="deletePost(${post.id}, '${post.source}')" class="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50">Supprimer</button>
+                            <div class="dropdown-menu absolute right-0 mt-1 w-28 sm:w-32 bg-white rounded-lg shadow-lg border py-1 z-10 hidden">
+                                <button onclick="editPost(${post.id}, '${post.source}')" class="w-full px-2.5 sm:px-3 py-1.5 text-left text-[11px] sm:text-xs text-gray-700 hover:bg-gray-50">Modifier</button>
+                                <button onclick="deletePost(${post.id}, '${post.source}')" class="w-full px-2.5 sm:px-3 py-1.5 text-left text-[11px] sm:text-xs text-red-600 hover:bg-red-50">Supprimer</button>
                             </div>
                         </div>
                         ` : ''}
                     </div>
                     
                     <!-- Content -->
-                    <p class="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap break-words">${escapeHtml(post.content)}</p>
+                    <p class="text-xs sm:text-[13px] text-gray-700 leading-relaxed whitespace-pre-wrap break-words">${escapeHtml(post.content)}</p>
                 </div>
                 
                 <!-- Reactions -->
@@ -358,83 +362,50 @@ function generateTextPost(post) {
 function generateMediaPost(post) {
     const isOwner = post.user.id === currentUserId;
     
-    let mediaHTML = '';
-    const mediaCount = post.media.length;
-    
-    if (mediaCount === 1) {
-        const media = post.media[0];
-        mediaHTML = `
-            <div class="rounded-lg overflow-hidden mb-3 cursor-pointer hover:opacity-95 transition">
-                <img src="/store/${media.path}" class="w-full max-h-96 object-cover" alt="Image">
-            </div>
-        `;
-    } else if (mediaCount === 2) {
-        mediaHTML = `<div class="grid grid-cols-2 gap-2 rounded-lg overflow-hidden mb-3">`;
-        post.media.forEach(media => {
-            mediaHTML += `
-                <div class="aspect-square cursor-pointer hover:opacity-95 transition">
-                    <img src="/store/${media.path}" class="w-full h-full object-cover" alt="Image">
-                </div>
-            `;
-        });
-        mediaHTML += `</div>`;
-    } else if (mediaCount > 2) {
-        mediaHTML = `<div class="grid grid-cols-2 gap-2 rounded-lg overflow-hidden mb-3">`;
-        post.media.slice(0, 4).forEach((media, index) => {
-            if (index === 3 && mediaCount > 4) {
-                mediaHTML += `
-                    <div class="aspect-square relative cursor-pointer">
-                        <img src="/store/${media.path}" class="w-full h-full object-cover" alt="Image">
-                        <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-                            <span class="text-white font-bold text-2xl">+${mediaCount - 4}</span>
-                        </div>
-                    </div>
-                `;
-            } else {
-                mediaHTML += `
-                    <div class="aspect-square cursor-pointer hover:opacity-95 transition">
-                        <img src="/store/${media.path}" class="w-full h-full object-cover" alt="Image">
-                    </div>
-                `;
-            }
-        });
-        mediaHTML += `</div>`;
-    }
+    // Générer le HTML des médias
+    let mediaHTML = generateMediaGallery(post.media, post.id);
     
     return `
-        <div class="flex gap-3 items-start" data-post-id="${post.id}" data-post-source="${post.source}">
+        <div class="flex gap-2 sm:gap-2.5 items-start w-full max-w-full sm:max-w-2xl" data-post-id="${post.id}" data-post-source="${post.source}">
+            <!-- Avatar -->
             <div class="flex-shrink-0">
                 ${post.user.avatar 
-                    ? `<img src="${post.user.avatar}" class="w-10 h-10 rounded-full object-cover" alt="${escapeHtml(post.user.name)}">`
-                    : `<div class="w-10 h-10 bg-gradient-to-br from-${post.user.color}-500 to-${post.user.color}-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">${post.user.initials}</div>`
+                    ? `<img src="${post.user.avatar}" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover ring-1 sm:ring-2 ring-white shadow-sm" alt="${escapeHtml(post.user.name)}">`
+                    : `<div class="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-${post.user.color}-500 to-${post.user.color}-600 rounded-full flex items-center justify-center text-white font-semibold text-[10px] sm:text-xs shadow-sm ring-1 sm:ring-2 ring-white">${post.user.initials}</div>`
                 }
             </div>
             
+            <!-- Content -->
             <div class="flex-1 min-w-0">
-                <div class="post-bubble p-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <span class="font-semibold text-sm text-gray-900">${escapeHtml(post.user.name)}</span>
-                            <span class="text-xs text-gray-500">${post.created_at_human}</span>
+                <div class="post-bubble bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-3 py-2 sm:px-3.5 sm:py-2.5">
+                        <div class="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+                            <span class="font-semibold text-[11px] sm:text-xs text-gray-900 truncate">${escapeHtml(post.user.name)}</span>
+                            <span class="text-[9px] sm:text-[10px] text-gray-400 flex-shrink-0">${post.created_at_human}</span>
                         </div>
                         ${isOwner ? `
-                        <div class="relative">
-                            <button onclick="toggleMenu(this)" class="p-1 hover:bg-gray-100 rounded transition">
-                                <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="relative flex-shrink-0 ml-1">
+                            <button onclick="toggleMenu(this)" class="p-0.5 hover:bg-gray-100 rounded transition">
+                                <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
                                 </svg>
                             </button>
-                            <div class="dropdown-menu absolute right-0 mt-1 w-40 bg-white rounded-lg shadow-lg border py-1 z-10">
-                                <button onclick="deletePost(${post.id}, '${post.source}')" class="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50">Supprimer</button>
+                            <div class="dropdown-menu absolute right-0 mt-1 w-28 sm:w-32 bg-white rounded-lg shadow-lg border py-1 z-10 hidden">
+                                <button onclick="deletePost(${post.id}, '${post.source}')" class="w-full px-2.5 sm:px-3 py-1.5 text-left text-[11px] sm:text-xs text-red-600 hover:bg-red-50">Supprimer</button>
                             </div>
                         </div>
                         ` : ''}
                     </div>
                     
-                    ${post.content ? `<p class="text-sm text-gray-700 leading-relaxed mb-3 whitespace-pre-wrap break-words">${escapeHtml(post.content)}</p>` : ''}
+                    <!-- Text (si présent) -->
+                    ${post.content ? `<div class="px-3 pb-2 sm:px-3.5 sm:pb-2"><p class="text-xs sm:text-[13px] text-gray-700 leading-relaxed whitespace-pre-wrap break-words">${escapeHtml(post.content)}</p></div>` : ''}
+                    
+                    <!-- Media Gallery -->
                     ${mediaHTML}
                 </div>
                 
+                <!-- Reactions -->
                 ${generateReactions(post)}
             </div>
         </div>
@@ -446,76 +417,247 @@ function generatePollPost(post) {
     const totalVotes = post.poll.options.reduce((sum, opt) => sum + opt.votes, 0);
     const maxVotes = Math.max(...post.poll.options.map(o => o.votes));
     
+    // Générer les options du sondage
     let optionsHTML = '';
     post.poll.options.forEach((option) => {
         const percentage = totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0;
         const isLeading = option.votes === maxVotes && maxVotes > 0;
         
         optionsHTML += `
-            <div class="relative border ${isLeading ? 'border-indigo-300 bg-indigo-50' : 'border-gray-200 bg-white'} rounded-lg p-3 cursor-pointer hover:shadow-sm transition">
-                <div class="absolute inset-0 bg-indigo-100 rounded-lg transition-all duration-300" style="width: ${percentage}%; opacity: 0.3;"></div>
-                <div class="relative flex items-center justify-between">
-                    <span class="text-sm font-medium text-gray-900 break-words pr-2">${escapeHtml(option.option)}</span>
-                    <span class="text-xs font-semibold ${isLeading ? 'text-indigo-600' : 'text-gray-600'} flex-shrink-0">${percentage}%</span>
+            <div class="relative border ${isLeading ? 'border-indigo-200 bg-indigo-50' : 'border-gray-100 bg-white'} rounded-lg px-2.5 py-1.5 sm:px-3 sm:py-2 cursor-pointer hover:shadow-sm transition">
+                <div class="absolute inset-0 bg-indigo-100 rounded-lg transition-all duration-300" style="width: ${percentage}%; opacity: 0.2;"></div>
+                <div class="relative flex items-center justify-between gap-2">
+                    <span class="text-[11px] sm:text-xs font-medium text-gray-900 break-words flex-1">${escapeHtml(option.option)}</span>
+                    <span class="text-[11px] sm:text-xs font-bold ${isLeading ? 'text-indigo-600' : 'text-gray-500'} flex-shrink-0">${percentage}%</span>
                 </div>
-                ${option.votes > 0 ? `<div class="relative text-xs text-gray-500 mt-1">${option.votes} vote${option.votes > 1 ? 's' : ''}</div>` : ''}
+                ${option.votes > 0 ? `<div class="relative text-[9px] sm:text-[10px] text-gray-400 mt-0.5">${option.votes} vote${option.votes > 1 ? 's' : ''}</div>` : ''}
             </div>
         `;
     });
     
+    // Générer les médias si présents
+    let mediaHTML = '';
+    if (post.media && post.media.length > 0) {
+        mediaHTML = `<div class="mt-2 sm:mt-2.5">${generateMediaGallery(post.media, post.id)}</div>`;
+    }
+    
     return `
-        <div class="flex gap-3 items-start" data-post-id="${post.id}" data-post-source="${post.source}">
+        <div class="flex gap-2 sm:gap-2.5 items-start w-full max-w-full sm:max-w-2xl" data-post-id="${post.id}" data-post-source="${post.source}">
+            <!-- Avatar -->
             <div class="flex-shrink-0">
                 ${post.user.avatar 
-                    ? `<img src="${post.user.avatar}" class="w-10 h-10 rounded-full object-cover" alt="${escapeHtml(post.user.name)}">`
-                    : `<div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">${post.user.initials}</div>`
+                    ? `<img src="${post.user.avatar}" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover ring-1 sm:ring-2 ring-white shadow-sm" alt="${escapeHtml(post.user.name)}">`
+                    : `<div class="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-[10px] sm:text-xs shadow-sm ring-1 sm:ring-2 ring-white">${post.user.initials}</div>`
                 }
             </div>
             
+            <!-- Content -->
             <div class="flex-1 min-w-0">
-                <div class="post-bubble p-4">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <span class="font-semibold text-sm text-gray-900">${escapeHtml(post.user.name)}</span>
-                            <span class="text-xs text-gray-500">${post.created_at_human}</span>
+                <div class="post-bubble bg-white rounded-xl sm:rounded-2xl px-3 py-2.5 sm:px-3.5 sm:py-3 shadow-sm border border-gray-100">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between mb-1.5 sm:mb-2">
+                        <div class="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+                            <span class="font-semibold text-[11px] sm:text-xs text-gray-900 truncate">${escapeHtml(post.user.name)}</span>
+                            <span class="text-[9px] sm:text-[10px] text-gray-400 flex-shrink-0">${post.created_at_human}</span>
                         </div>
                     </div>
                     
-                    <div class="flex items-center gap-2 mb-3">
-                        <svg class="w-5 h-5 text-indigo-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <!-- Poll Badge -->
+                    <div class="flex items-center gap-1.5 mb-1.5 sm:mb-2">
+                        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-indigo-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
                             <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5z" clip-rule="evenodd"/>
                         </svg>
-                        <span class="text-xs font-semibold text-indigo-600 uppercase">Sondage</span>
+                        <span class="text-[9px] sm:text-[10px] font-bold text-indigo-600 uppercase tracking-wide">Sondage</span>
                     </div>
                     
-                    <h3 class="font-semibold text-base text-gray-900 mb-4 break-words">${escapeHtml(post.poll.question)}</h3>
+                    <!-- Question -->
+                    <h3 class="font-semibold text-xs sm:text-sm text-gray-900 mb-2 sm:mb-2.5 break-words">${escapeHtml(post.poll.question)}</h3>
                     
-                    <div class="space-y-2 mb-3">${optionsHTML}</div>
+                    <!-- Options -->
+                    <div class="space-y-1.5 mb-2 sm:mb-2.5">${optionsHTML}</div>
                     
-                    <div class="text-xs text-gray-500 pt-2 border-t border-gray-100">
+                    <!-- Médias (si présents) -->
+                    ${mediaHTML}
+                    
+                    <!-- Stats -->
+                    <div class="text-[9px] sm:text-[10px] text-gray-400 pt-1.5 sm:pt-2 border-t border-gray-50">
                         ${totalVotes} vote${totalVotes > 1 ? 's' : ''} • ${post.created_at_human}
                     </div>
                 </div>
                 
+                <!-- Reactions -->
                 ${generateReactions(post)}
             </div>
         </div>
     `;
 }
 
+// ============================================
+// GALERIE DE MÉDIAS RESPONSIVE
+// ============================================
+function generateMediaGallery(media, postId) {
+    const mediaCount = media.length;
+    let html = '';
+    
+    if (mediaCount === 1) {
+        // 1 média : pleine largeur
+        const item = media[0];
+        html = `
+            <div class="relative cursor-pointer group" onclick="openMediaModal(${postId}, 0)">
+                ${item.type === 'video' 
+                    ? `<video src="${item.url}" class="w-full max-h-64 sm:max-h-80 object-cover" preload="metadata"></video>
+                       <div class="absolute inset-0 flex items-center justify-center">
+                           <div class="w-10 h-10 sm:w-12 sm:h-12 bg-black/50 rounded-full flex items-center justify-center group-hover:bg-black/70 transition">
+                               <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                   <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+                               </svg>
+                           </div>
+                       </div>`
+                    : `<img src="${item.url}" class="w-full max-h-64 sm:max-h-80 object-cover group-hover:opacity-95 transition" alt="Image">`
+                }
+            </div>
+        `;
+    } else if (mediaCount === 2) {
+        // 2 médias : côte à côte
+        html = `<div class="grid grid-cols-2 gap-0.5 sm:gap-1">`;
+        media.forEach((item, index) => {
+            html += `
+                <div class="aspect-square relative cursor-pointer group overflow-hidden" onclick="openMediaModal(${postId}, ${index})">
+                    ${item.type === 'video'
+                        ? `<video src="${item.url}" class="w-full h-full object-cover" preload="metadata"></video>
+                           <div class="absolute bottom-1.5 sm:bottom-2 right-1.5 sm:right-2 bg-black/60 text-white text-[9px] sm:text-[10px] px-1 sm:px-1.5 py-0.5 rounded">📹</div>`
+                        : `<img src="${item.url}" class="w-full h-full object-cover group-hover:opacity-95 transition" alt="Image">`
+                    }
+                </div>
+            `;
+        });
+        html += `</div>`;
+    } else if (mediaCount >= 3) {
+        // 3+ médias : grille 2x2
+        html = `<div class="grid grid-cols-2 gap-0.5 sm:gap-1">`;
+        media.slice(0, 4).forEach((item, index) => {
+            if (index === 3 && mediaCount > 4) {
+                // Overlay "+X" pour le 4ème élément
+                html += `
+                    <div class="aspect-square relative cursor-pointer group overflow-hidden" onclick="openMediaModal(${postId}, ${index})">
+                        <img src="${item.url}" class="w-full h-full object-cover" alt="Image">
+                        <div class="absolute inset-0 bg-black/70 flex items-center justify-center group-hover:bg-black/80 transition">
+                            <span class="text-white font-bold text-lg sm:text-xl">+${mediaCount - 4}</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="aspect-square relative cursor-pointer group overflow-hidden" onclick="openMediaModal(${postId}, ${index})">
+                        ${item.type === 'video'
+                            ? `<video src="${item.url}" class="w-full h-full object-cover" preload="metadata"></video>
+                               <div class="absolute bottom-1.5 sm:bottom-2 right-1.5 sm:right-2 bg-black/60 text-white text-[9px] sm:text-[10px] px-1 sm:px-1.5 py-0.5 rounded">📹</div>`
+                            : `<img src="${item.url}" class="w-full h-full object-cover group-hover:opacity-95 transition" alt="Image">`
+                        }
+                    </div>
+                `;
+            }
+        });
+        html += `</div>`;
+    }
+    
+    return html;
+}
+
+// ============================================
+// RÉACTIONS RESPONSIVE
+// ============================================
 function generateReactions(post) {
     return `
-        <div class="flex items-center gap-4 mt-2 px-2">
-            <button onclick="toggleLike(${post.id}, '${post.source}', this)" class="flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-red-500 transition group">
-                <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+        <div class="flex items-center gap-2 sm:gap-3 mt-1 sm:mt-1.5 px-0.5 sm:px-1">
+            <button onclick="toggleLike(${post.id}, '${post.source}', this)" 
+                class="flex items-center gap-1 text-[10px] sm:text-[11px] font-medium text-gray-400 hover:text-red-500 transition group">
+                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                 </svg>
-                <span>${post.likes_count}</span>
+                <span>${post.likes_count || 0}</span>
             </button>
         </div>
     `;
 }
+
+// ============================================
+// MODALE MÉDIA RESPONSIVE
+// ============================================
+function openMediaModal(postId, startIndex) {
+    const post = window.postsData?.find(p => p.id == postId);
+    if (!post || !post.media || !post.media[startIndex]) return;
+    
+    const media = post.media[startIndex];
+    
+    // Créer la modale
+    const modal = document.createElement('div');
+    modal.id = 'media-modal';
+    modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4';
+    modal.onclick = (e) => {
+        if (e.target === modal) closeMediaModal();
+    };
+    
+    modal.innerHTML = `
+        <button onclick="closeMediaModal()" 
+            class="absolute top-2 right-2 sm:top-4 sm:right-4 text-white hover:bg-white/10 rounded-full p-1.5 sm:p-2 transition z-10">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+        
+        <div class="max-w-full sm:max-w-5xl max-h-[85vh] sm:max-h-[90vh]">
+            ${media.type === 'video'
+                ? `<video src="${media.url}" controls autoplay class="max-w-full max-h-[85vh] sm:max-h-[90vh] rounded-lg shadow-2xl" playsinline></video>`
+                : `<img src="${media.url}" class="max-w-full max-h-[85vh] sm:max-h-[90vh] rounded-lg shadow-2xl" alt="Image">`
+            }
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+}
+
+function closeMediaModal() {
+    const modal = document.getElementById('media-modal');
+    if (modal) {
+        modal.remove();
+        document.body.style.overflow = '';
+    }
+}
+
+// Fermer avec Escape
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMediaModal();
+});
+
+// ============================================
+// MENU DROPDOWN
+// ============================================
+function toggleMenu(button) {
+    const menu = button.nextElementSibling;
+    const allMenus = document.querySelectorAll('.dropdown-menu');
+    
+    // Fermer tous les autres menus
+    allMenus.forEach(m => {
+        if (m !== menu) m.classList.add('hidden');
+    });
+    
+    // Toggle le menu cliqué
+    menu.classList.toggle('hidden');
+}
+
+// Fermer les menus au clic extérieur
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.relative')) {
+        document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
+    }
+});
+
+
+
 
 // ==================== UTILITAIRES ====================
 function escapeHtml(text) {

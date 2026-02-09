@@ -27,7 +27,7 @@
         <div class=" backdrop-blur-sm rounded-2xl p-5 mb-3">
             <div class="flex items-center justify-between mb-3">
                 <span class="text-sm text-gray-300 font-medium">Progression vers Diamond</span>
-                <span class="text-sm text-amber-400 font-bold">{{ $userData['montant_restant'] }}%</span>
+                <span class="text-sm text-amber-400 font-bold">{{ $userData['percent'] }}%</span>
             </div>
 
             <!-- Progress Bar -->
@@ -573,7 +573,7 @@
 
                     <span
                         class="relative z-10 font-semibold text-sm tracking-normal transition-all duration-500 group-hover:tracking-wide group-hover:drop-shadow-[0_2px_8px_rgba(99,102,241,0.2)]">
-                        Mon Journal de tranding
+                        Mon Journal de trading
                         <span
                             class="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-300 via-blue-200 to-transparent group-hover:w-full transition-all duration-500"></span>
                     </span>
