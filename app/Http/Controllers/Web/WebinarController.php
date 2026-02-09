@@ -588,7 +588,7 @@ class WebinarController extends Controller
                         } elseif ($file->storage == 'upload_archive') {
                             $path = url("/course/$webinar->slug/file/$file->id/showHtml");
                         }
-                        $signedCookies = $cloudFrontSigner->getSignedCookie();
+                        // $signedCookies = $cloudFrontSigner->getSignedCookie();
 
                         $response =  response()->json([
                             'code' => 200,
@@ -596,28 +596,27 @@ class WebinarController extends Controller
                             'path' => $path,
                             'storageService' => $file->storage,
                             'cloudFrontDomain' => config('services.cloudfront.domain'),
-                            'cookiesData' => $signedCookies
+                            // 'cookiesData' => $signedCookies
                         ]);
 
-                        foreach ($signedCookies as $name => $value) {
+                        // foreach ($signedCookies as $name => $value) {
 
-                            $cookie = cookie(
-                                $name,                          // name
-                                $value,                         // value
-                                config('services.cloudfront.url_expiration') / 60, // minutes
-                                '/',                            // path
-                                config('services.cloudfront.cookie_domain'),         // domain
-                                true,                           // secure (HTTPS)
-                                false,                          // httpOnly (false pour debug)
-                                false,                          // raw
-                                'none'                          // sameSite = CRITIQUE!
-                            );
+                        //     $cookie = cookie(
+                        //         $name,                          // name
+                        //         $value,                         // value
+                        //         config('services.cloudfront.url_expiration') / 60, // minutes
+                        //         '/',                            // path
+                        //         config('services.cloudfront.cookie_domain'),         // domain
+                        //         true,                           // secure (HTTPS)
+                        //         false,                          // httpOnly (false pour debug)
+                        //         false,                          // raw
+                        //         'none'                          // sameSite = CRITIQUE!
+                        //     );
 
 
-                            $response->withCookie($cookie);
-
-                            return $response;
-                        }
+                        //     $response->withCookie($cookie);
+                        // }
+                         return $response;
                     }
                 }
             }
