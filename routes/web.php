@@ -131,7 +131,7 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
         Route::post('/{id}/report', 'WebinarController@reportWebinar');
         Route::post('/{id}/learningStatus', 'WebinarController@learningStatus');
 
-        Route::group(['middleware' => 'web.auth'], function () {
+        Route::group(['middleware' => ['web.auth', 'cloudfront.cookies']], function () {
             Route::get('/{slug}/installments', 'WebinarController@getInstallmentsByCourse');
 
             Route::post('/learning/itemInfo', 'LearningPageController@getItemInfo');
@@ -453,7 +453,7 @@ Route::get('/test-cloudfront', function (CloudFrontUrlSigner $signer) {
 });
 
 
-Route::get('/course/test-cloudfront-view', [CourseVideoController::class, 'testCloudFrontCookies']);
+Route::get('/player/test-cloudfront-view', [CourseVideoController::class, 'testCloudFrontCookies']);
 
 
 

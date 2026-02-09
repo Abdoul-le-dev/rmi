@@ -50,8 +50,8 @@
         `;
 
         // 🔥 HLS (.m3u8)
-        // videoUrl.endsWith('.m3u8')
-        if (true) {
+       
+        if ( videoUrl.endsWith('.m3u8')) {
           console.log("HLS video detected:", videoUrl);
             return {
                 html,
@@ -80,7 +80,7 @@
                             "durationDisplay",
                             "progressControl",
                             // 'qualitySelector', // Sélecteur de qualité
-                            'httpSourceSelector',
+                          
                             "playbackRateMenuButton",
                             "fullscreenToggle",
                         ],
@@ -152,11 +152,11 @@
             container.html(playerData.html);
 
             playerInstance = videojs(playerId, playerData.options);
-            playerInstance.ready(() => {
-                playerInstance.httpSourceSelector({
-                    default: "auto",
-                });
-            });
+            // playerInstance.ready(() => {
+            //     playerInstance.httpSourceSelector({
+            //         default: "auto",
+            //     });
+            // });
 
             callback && callback();
         }).fail(function (xhr, status, error) {

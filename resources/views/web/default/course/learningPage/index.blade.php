@@ -3,9 +3,8 @@
 @push('styles_top')
     <link rel="stylesheet" href="/assets/default/learning_page/styles.css"/>
     {{-- <link rel="stylesheet" href="/assets/default/vendors/video/video-js.min.css"> --}}
-        {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.6.1/video-js.min.css" rel="stylesheet"> --}}
-        <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet">
-<link href="https://unpkg.com/videojs-http-source-selector/dist/videojs-http-source-selector.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.6.1/video-js.min.css" rel="stylesheet">
+
 @endpush
 
 @section('content')
@@ -78,15 +77,12 @@
 
 @push('scripts_bottom')
     {{-- <script src="/assets/default/vendors/video/video.min.js"></script> --}}
-    <script src="/assets/default/vendors/video/youtube.min.js"></script>
-    <script src="/assets/default/vendors/video/vimeo.js"></script>
+    {{-- <script src="/assets/default/vendors/video/youtube.min.js"></script> --}}
+    {{-- <script src="/assets/default/vendors/video/vimeo.js"></script> --}}
 
 
-<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
-
-<!-- Plugin qualité -->
-
-<script src="https://unpkg.com/videojs-http-source-selector/dist/videojs-http-source-selector.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.6.1/video.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-quality-levels/4.0.0/videojs-contrib-quality-levels.min.js"></script>
 
     <script>
         var defaultItemType = '{{ !empty(request()->get('type')) ? request()->get('type') : (!empty($userLearningLastView) ? $userLearningLastView->item_type : '') }}'

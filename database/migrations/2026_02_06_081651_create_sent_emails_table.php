@@ -14,8 +14,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('sent_emails', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
+            $table->unsignedInteger('user_id')->nullable();
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
             $table->enum('recipient_type', ['users', 'custom'])->default('custom');
             $table->text('recipients')->nullable();
             $table->string('subject');
@@ -33,7 +38,6 @@ return new class extends Migration
             $table->index('status');
             $table->index('created_at');
         });
-
     }
 
     /**
