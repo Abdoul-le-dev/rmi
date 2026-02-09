@@ -12,7 +12,7 @@ class CloudFrontCookies
     public function __construct()
     {
         // Injecter ton service CloudFrontSigner
-        $this->cloudFrontSigner = app()->make('App\Services\CloudFrontSigner');
+        $this->cloudFrontSigner = app()->make('App\Services\CloudFrontUrlSigner');
     }
 
     /**
