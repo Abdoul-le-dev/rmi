@@ -1,23 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SendEmailRequest;
 use App\Jobs\SendBulkEmailJob;
 use App\Models\EmailRecipient;
 use App\Models\SentEmail;
-use App\Models\User;
+use App\User;
 use App\Services\ExcelEmailExtractor;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class NotificationController extends Controller
 {
-     protected $emailExtractor;
+    protected $emailExtractor;
 
     public function __construct(ExcelEmailExtractor $emailExtractor)
     {
@@ -49,7 +51,7 @@ class NotificationController extends Controller
             // Sauvegarder le fichier Excel si fourni
             $excelFilePath = null;
             if ($request->hasFile('excel_file')) {
-                $excelFilePath = $request->file('excel_file')->store('emails/attachments', 'private');
+                $excelFilePath = $request->file('excel_file')->store('emails/attachments', 'laravel_public');
             }
 
             // Créer l'enregistrement de l'email envoyé
@@ -78,12 +80,15 @@ class NotificationController extends Controller
 
             DB::commit();
 
-            return back()->with('success', 
-                "Email ajouté à la file d'attente avec succès. " . 
-                count($recipients) . " destinataire(s) seront contactés."
+            return back()->with(
+                'success',
+                "Email ajouté à la file d'attente avec succès. " .
+                    count($recipients) . " destinataire(s) seront contactés."
             );
-
         } catch (Exception $e) {
+            Log::error('Failed to send email', [
+                'error' => $e->getMessage(),
+            ]);
             DB::rollBack();
 
             return back()
@@ -118,6 +123,10 @@ class NotificationController extends Controller
                 $excelEmails = $this->emailExtractor->extractEmails($request->file('excel_file'));
                 $recipients = array_merge($recipients, $excelEmails);
             } catch (Exception $e) {
+                Log::error('Failed to extract emails from Excel file', [
+                    'file' => $request->file('excel_file')->getClientOriginalName(),
+                    'error' => $e->getMessage(),
+                ]);
                 throw new Exception('Erreur lors de la lecture du fichier Excel : ' . $e->getMessage());
             }
         }
@@ -149,17 +158,17 @@ class NotificationController extends Controller
         }
 
         // Filtrer par date
-        if ($request->has('date_from')) {
-            $query->whereDate('created_at', '>=', $request->date_from);
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', Carbon::parse($request->date_from)->format('Y-m-d'));
         }
 
-        if ($request->has('date_to')) {
-            $query->whereDate('created_at', '<=', $request->date_to);
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', Carbon::parse($request->date_to)->format('Y-m-d'));
         }
 
         $sentEmails = $query->paginate(20);
 
-        return view('admin.notifications.history', compact('sentEmails'));
+        return view('admin.notification.history', compact('sentEmails'));
     }
 
     /**
@@ -169,7 +178,7 @@ class NotificationController extends Controller
     {
         $sentEmail->load(['user', 'emailRecipients']);
 
-        return view('admin.notifications.show', compact('sentEmail'));
+        return view('admin.notification.show', compact('sentEmail'));
     }
 
     /**
@@ -180,13 +189,17 @@ class NotificationController extends Controller
         try {
             // Supprimer le fichier Excel si présent
             if ($sentEmail->excel_file_path) {
-                Storage::disk('private')->delete($sentEmail->excel_file_path);
+                Storage::disk('laravel_public')->delete($sentEmail->excel_file_path);
             }
 
             $sentEmail->delete();
 
             return back()->with('success', 'Email supprimé avec succès.');
         } catch (Exception $e) {
+            Log::error('Failed to destroy sent email', [
+                'email_id' => $sentEmail->id,
+                'error' => $e->getMessage(),
+            ]);
             return back()->with('error', 'Erreur lors de la suppression : ' . $e->getMessage());
         }
     }
@@ -217,6 +230,10 @@ class NotificationController extends Controller
 
             return back()->with('success', 'Email ajouté à nouveau à la file d\'attente.');
         } catch (Exception $e) {
+            Log::error('Failed to retry sending email', [
+                'email_id' => $sentEmail->id,
+                'error' => $e->getMessage(),
+            ]);
             return back()->with('error', 'Erreur lors du renvoi : ' . $e->getMessage());
         }
     }
@@ -250,7 +267,7 @@ class NotificationController extends Controller
 
         try {
             $emails = $this->emailExtractor->previewEmails($request->file('excel_file'), 20);
-            
+
             return response()->json([
                 'success' => true,
                 'count' => count($emails),
@@ -258,6 +275,11 @@ class NotificationController extends Controller
                 'message' => count($emails) . ' email(s) valide(s) trouvé(s)',
             ]);
         } catch (Exception $e) {
+            Log::error('Failed to preview emails in Excel file', [
+                'file' => $request->file('excel_file')->getClientOriginalName(),
+                'error' => $e->getMessage(),
+            ]);
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -276,16 +298,20 @@ class NotificationController extends Controller
 
         try {
             $count = $this->emailExtractor->countEmails($request->file('excel_file'));
-            
+
             return response()->json([
                 'success' => true,
                 'valid' => $count > 0,
                 'count' => $count,
-                'message' => $count > 0 
-                    ? "$count email(s) valide(s) détecté(s)" 
+                'message' => $count > 0
+                    ? "$count email(s) valide(s) détecté(s)"
                     : "Aucun email valide trouvé dans le fichier",
             ]);
         } catch (Exception $e) {
+            Log::error('Failed to validate Excel file', [
+                'file' => $request->file('excel_file')->getClientOriginalName(),
+                'error' => $e->getMessage(),
+            ]);
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),

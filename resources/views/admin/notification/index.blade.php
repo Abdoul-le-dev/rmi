@@ -115,7 +115,7 @@
                         </ul>
 
                         <!-- Tabs Content -->
-                        <div class="tab-content mt-4" id="notificationTabsContent">
+                        <div class="mt-4 tab-content" id="notificationTabsContent">
                             <!-- Mail Tab -->
                             <div class="tab-pane fade show active" id="mail" role="tabpanel" aria-labelledby="mail-tab">
                                 <form id="mailForm" action="{{ route('send.mail') }}" method="POST" enctype="multipart/form-data">
@@ -137,7 +137,7 @@
     @if($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Erreurs de validation :</strong>
-            <ul class="mb-0 mt-2">
+            <ul class="mt-2 mb-0">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -147,10 +147,10 @@
     @endif
                                     
                                     <!-- Checkbox Envoyer aux utilisateurs -->
-                                    <div class="form-check mb-4">
+                                    <div class="mb-4 form-check">
                                         <input class="form-check-input" type="checkbox" id="sendToUsers" name="send_to_users">
                                         <label class="form-check-label" for="sendToUsers">
-                                            Envoyer à tous les utilisateurs enregistrés
+                                            Envoyer à tous les utilisateurs inscrits
                                         </label>
                                     </div>
 
@@ -171,9 +171,9 @@
 
                                     <!-- Subject -->
                                     <div class="mb-4">
-                                        <label for="emailSubject" class="form-label">Sujet du mail <span class="text-danger">*</span></label>
+                                        <label for="emailSubject" class="form-label">Objet du mail <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="emailSubject" name="subject" required 
-                                            placeholder="Entrez le sujet de votre email">
+                                            placeholder="Entrez l'objet de votre email">
                                     </div>
 
                                     <!-- Content -->
@@ -184,7 +184,7 @@
                                     </div>
 
                                     <!-- Submit Button -->
-                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <div class="gap-2 d-grid d-md-flex justify-content-md-end">
                                         <button type="reset" class="btn btn-secondary me-2">
                                             <i class="fas fa-redo me-1"></i> Réinitialiser
                                         </button>
@@ -198,10 +198,10 @@
                             <!-- SMS Tab -->
                             <div class="tab-pane fade" id="sms" role="tabpanel" aria-labelledby="sms-tab">
                                 <div class="card">
-                                    <div class="card-body text-center py-5">
-                                        <i class="fas fa-sms fa-4x text-muted mb-3"></i>
+                                    <div class="py-5 text-center card-body">
+                                        <i class="mb-3 fas fa-sms fa-4x text-muted"></i>
                                         <h5 class="text-muted">Indisponible pour le moment</h5>
-                                        <p class="text-muted">Cette fonctionnalité sera bientôt disponible.</p>
+                                        <p class="text-muted">Cette fonctionnalité n'est pas encore disponible pour plusieurs raisons.</p>
                                     </div>
                                 </div>
                             </div>
@@ -209,10 +209,10 @@
                             <!-- Telegram Tab -->
                             <div class="tab-pane fade" id="telegram" role="tabpanel" aria-labelledby="telegram-tab">
                                 <div class="card">
-                                    <div class="card-body text-center py-5">
-                                        <i class="fab fa-telegram fa-4x text-muted mb-3"></i>
+                                    <div class="py-5 text-center card-body">
+                                        <i class="mb-3 fab fa-telegram fa-4x text-muted"></i>
                                         <h5 class="text-muted">Indisponible pour le moment</h5>
-                                        <p class="text-muted">Cette fonctionnalité sera bientôt disponible.</p>
+                                        <p class="text-muted">Cette fonctionnalité n'est pas encore disponible pour plusieurs raisons.</p>
                                     </div>
                                 </div>
                             </div>
@@ -220,10 +220,10 @@
                             <!-- WhatsApp Tab -->
                             <div class="tab-pane fade" id="whatsapp" role="tabpanel" aria-labelledby="whatsapp-tab">
                                 <div class="card">
-                                    <div class="card-body text-center py-5">
-                                        <i class="fab fa-whatsapp fa-4x text-muted mb-3"></i>
+                                    <div class="py-5 text-center card-body">
+                                        <i class="mb-3 fab fa-whatsapp fa-4x text-muted"></i>
                                         <h5 class="text-muted">Indisponible pour le moment</h5>
-                                        <p class="text-muted">Cette fonctionnalité sera bientôt disponible.</p>
+                                        <p class="text-muted">Cette fonctionnalité n'est pas encore disponible pour plusieurs raisons.</p>
                                     </div>
                                 </div>
                             </div>
@@ -231,10 +231,10 @@
 
                               <div class="tab-pane fade" id="mobile" role="tabpanel" aria-labelledby="mobile-tab">
                                 <div class="card">
-                                    <div class="card-body text-center py-5">
-                                        <i class="fas fa-mobile-alt fa-4x text-muted mb-3"></i>
+                                    <div class="py-5 text-center card-body">
+                                        <i class="mb-3 fas fa-mobile-alt fa-4x text-muted"></i>
                                         <h5 class="text-muted">Indisponible pour le moment</h5>
-                                        <p class="text-muted">Cette fonctionnalité sera bientôt disponible.</p>
+                                        <p class="text-muted">Cette fonctionnalité n'est pas encore disponible pour plusieurs raisons.</p>
                                     </div>
                                 </div>
                             </div>
@@ -254,131 +254,198 @@
 
 @push('scripts_bottom')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sendToUsersCheckbox = document.getElementById('sendToUsers');
-            const customEmailsSection = document.getElementById('customEmailsSection');
-            const customEmailsTextarea = document.getElementById('customEmails');
-            const excelFileInput = document.getElementById('excelFile');
+    document.addEventListener('DOMContentLoaded', function() {
+        const sendToUsersCheckbox = document.getElementById('sendToUsers');
+        const customEmailsSection = document.getElementById('customEmailsSection');
+        const customEmailsTextarea = document.getElementById('customEmails');
+        const excelFileInput = document.getElementById('excelFile');
 
-            // Fonction pour afficher/masquer la section emails personnalisés
-            function toggleCustomEmailsSection() {
-                if (sendToUsersCheckbox.checked) {
-                    customEmailsSection.style.display = 'none';
+        // Fonction pour afficher/masquer la section emails personnalisés
+        function toggleCustomEmailsSection() {
+            if (sendToUsersCheckbox.checked) {
+                customEmailsSection.style.display = 'none';
+                customEmailsTextarea.required = false;
+                excelFileInput.required = false;
+            } else {
+                customEmailsSection.style.display = 'block';
+                updateRequiredFields();
+            }
+        }
+
+        // Fonction pour mettre à jour les champs required
+        function updateRequiredFields() {
+            const hasCustomEmails = customEmailsTextarea.value.trim() !== '';
+            const hasExcelFile = excelFileInput.files.length > 0;
+
+            if (sendToUsersCheckbox.checked) {
+                // Si "envoyer aux utilisateurs" est coché, rien n'est requis
+                customEmailsTextarea.required = false;
+                excelFileInput.required = false;
+            } else {
+                // Si au moins un fichier Excel est fourni, le textarea n'est pas requis
+                if (hasExcelFile) {
                     customEmailsTextarea.required = false;
+                } else if (hasCustomEmails) {
+                    // Si des emails sont saisis, le fichier n'est pas requis
+                    excelFileInput.required = false;
                 } else {
-                    customEmailsSection.style.display = 'block';
+                    // Sinon, au moins l'un des deux est requis
                     customEmailsTextarea.required = true;
+                    excelFileInput.required = false; // On ne peut pas mettre required sur un file input de cette manière
+                }
+            }
+        }
+
+        // Initial state
+        toggleCustomEmailsSection();
+
+        // Event listener sur le checkbox
+        sendToUsersCheckbox.addEventListener('change', toggleCustomEmailsSection);
+
+        // Event listener sur le textarea pour mettre à jour le required
+        customEmailsTextarea.addEventListener('input', updateRequiredFields);
+
+        // Event listener sur le fichier Excel pour mettre à jour le required
+        excelFileInput.addEventListener('change', function() {
+            updateRequiredFields();
+            
+            // Valider le fichier Excel
+            const file = this.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('excel_file', file);
+
+            fetch('/admin_d_fiacre/new-notifications/validate-excel', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.valid) {
+                    // Afficher un message de succès
+                    showAlert('success', `${data.count} email(s) valide(s) détecté(s) dans le fichier`);
+                } else {
+                    showAlert('warning', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                showAlert('danger', 'Erreur lors de la validation du fichier');
+            });
+        });
+
+        // Validation du formulaire
+        document.getElementById('mailForm').addEventListener('submit', function(e) {
+            // Ne pas empêcher la soumission par défaut, laisser HTML5 gérer
+            
+            // Vérifier qu'au moins une source d'emails est fournie
+            if (!sendToUsersCheckbox.checked) {
+                const hasCustomEmails = customEmailsTextarea.value.trim() !== '';
+                const hasExcelFile = excelFileInput.files.length > 0;
+
+                if (!hasCustomEmails && !hasExcelFile) {
+                    e.preventDefault();
+                    showAlert('danger', 'Veuillez fournir des emails (manuellement ou via fichier Excel) ou cocher "Envoyer à tous les utilisateurs"');
+                    return false;
                 }
             }
 
-            // Initial state
-            toggleCustomEmailsSection();
+            // Le formulaire peut être soumis
+            // Afficher un loader ou message de traitement si nécessaire
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Envoi en cours...';
+        });
 
-            // Event listener sur le checkbox
-            sendToUsersCheckbox.addEventListener('change', toggleCustomEmailsSection);
+        // ========== GESTION DES TOOLTIPS ==========
+        const tooltip = document.getElementById('customTooltip');
+        const infoIcons = document.querySelectorAll('.info-icon');
 
-            // Validation du formulaire
-            document.getElementById('mailForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                // Vérifier qu'au moins une source d'emails est fournie
-                if (!sendToUsersCheckbox.checked) {
-                    const hasCustomEmails = customEmailsTextarea.value.trim() !== '';
-                    const hasExcelFile = excelFileInput.files.length > 0;
-
-                    if (!hasCustomEmails && !hasExcelFile) {
-                        alert('Veuillez fournir des emails (manuellement ou via fichier Excel) ou cocher "Envoyer à tous les utilisateurs"');
-                        return;
-                    }
+        infoIcons.forEach(icon => {
+            // Afficher le tooltip au survol
+            icon.addEventListener('mouseenter', function(e) {
+                const tooltipText = this.getAttribute('data-tooltip');
+                const rect = this.getBoundingClientRect();
+                
+                // Définir le contenu du tooltip
+                tooltip.textContent = tooltipText;
+                tooltip.classList.add('show');
+                
+                // Calculer la position
+                const tooltipHeight = tooltip.offsetHeight;
+                const tooltipWidth = tooltip.offsetWidth;
+                
+                let top = rect.top - tooltipHeight - 10;
+                let left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+                
+                // Ajuster si le tooltip dépasse à gauche
+                if (left < 10) {
+                    left = 10;
                 }
-
-                // Soumission du formulaire (vous pouvez ajouter votre logique AJAX ici)
-                alert('Formulaire prêt à être envoyé!');
-                // this.submit(); // Décommentez pour soumettre réellement
+                
+                // Ajuster si le tooltip dépasse à droite
+                if (left + tooltipWidth > window.innerWidth - 10) {
+                    left = window.innerWidth - tooltipWidth - 10;
+                }
+                
+                // Ajuster si le tooltip dépasse en haut
+                if (top < 10) {
+                    top = rect.bottom + 10; // Afficher en bas de l'icône
+                }
+                
+                tooltip.style.top = top + 'px';
+                tooltip.style.left = left + 'px';
             });
 
-            // ========== GESTION DES TOOLTIPS ==========
-            const tooltip = document.getElementById('customTooltip');
-            const infoIcons = document.querySelectorAll('.info-icon');
-
-            infoIcons.forEach(icon => {
-                // Afficher le tooltip au survol
-                icon.addEventListener('mouseenter', function(e) {
-                    const tooltipText = this.getAttribute('data-tooltip');
-                    const rect = this.getBoundingClientRect();
-                    
-                    // Définir le contenu du tooltip
-                    tooltip.textContent = tooltipText;
-                    tooltip.classList.add('show');
-                    
-                    // Calculer la position
-                    const tooltipHeight = tooltip.offsetHeight;
-                    const tooltipWidth = tooltip.offsetWidth;
-                    
-                    let top = rect.top - tooltipHeight - 10;
-                    let left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
-                    
-                    // Ajuster si le tooltip dépasse à gauche
-                    if (left < 10) {
-                        left = 10;
-                    }
-                    
-                    // Ajuster si le tooltip dépasse à droite
-                    if (left + tooltipWidth > window.innerWidth - 10) {
-                        left = window.innerWidth - tooltipWidth - 10;
-                    }
-                    
-                    // Ajuster si le tooltip dépasse en haut
-                    if (top < 10) {
-                        top = rect.bottom + 10; // Afficher en bas de l'icône
-                    }
-                    
-                    tooltip.style.top = top + 'px';
-                    tooltip.style.left = left + 'px';
-                });
-
-                // Masquer le tooltip quand on quitte l'icône
-                icon.addEventListener('mouseleave', function() {
-                    tooltip.classList.remove('show');
-                });
-            });
-
-            // Masquer le tooltip lors du scroll
-            window.addEventListener('scroll', function() {
+            // Masquer le tooltip quand on quitte l'icône
+            icon.addEventListener('mouseleave', function() {
                 tooltip.classList.remove('show');
             });
         });
 
+        // Masquer le tooltip lors du scroll
+        window.addEventListener('scroll', function() {
+            tooltip.classList.remove('show');
+        });
 
+        // ========== FONCTION POUR AFFICHER DES ALERTES ==========
+        function showAlert(type, message) {
+            const alertContainer = document.querySelector('.tab-pane.active');
+            const existingAlerts = alertContainer.querySelectorAll('.alert');
+            
+            // Supprimer les anciennes alertes
+            existingAlerts.forEach(alert => alert.remove());
 
-        // Dans votre fichier blade ou JS
-document.getElementById('excelFile').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.setAttribute('role', 'alert');
+            
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'danger') icon = 'exclamation-circle';
+            if (type === 'warning') icon = 'exclamation-triangle';
+            
+            alertDiv.innerHTML = `
+                <i class="fas fa-${icon} me-2"></i>${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            // Insérer l'alerte au début du formulaire
+            const form = document.getElementById('mailForm');
+            form.insertBefore(alertDiv, form.firstChild);
 
-    const formData = new FormData();
-    formData.append('excel_file', file);
-
-    fetch('/admin_d_fiacre/new-notifications/validate-excel', {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success && data.valid) {
-            alert(`${data.count} email(s) valide(s) détecté(s) dans le fichier`);
-        } else {
-            alert(data.message);
+            // Auto-fermer après 5 secondes
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+                setTimeout(() => alertDiv.remove(), 150);
+            }, 5000);
         }
-    })
-    .catch(error => {
-        console.error('Erreur:', error);
     });
-});
-    </script>
+</script>
 
     
 @endpush

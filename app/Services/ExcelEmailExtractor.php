@@ -6,6 +6,7 @@ use Illuminate\Http\UploadedFile;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\EmailsImport;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ExcelEmailExtractor
 {
@@ -27,6 +28,10 @@ class ExcelEmailExtractor
             return $this->validateEmails($emails);
             
         } catch (Exception $e) {
+            Log::error('Failed to extract emails from file', [
+                        'file' => $file->getClientOriginalName(),
+                        'error' => $e->getMessage(),
+                    ]);
             throw new Exception('Erreur lors de la lecture du fichier : ' . $e->getMessage());
         }
     }
@@ -67,6 +72,10 @@ class ExcelEmailExtractor
             return $import->getEmails();
             
         } catch (Exception $e) {
+            Log::error('Failed to preview emails in file', [
+                        'file' => $file->getClientOriginalName(),
+                        'error' => $e->getMessage(),
+                    ]);
             throw new Exception('Erreur lors de la prévisualisation : ' . $e->getMessage());
         }
     }
@@ -83,6 +92,10 @@ class ExcelEmailExtractor
             $emails = $this->extractEmails($file);
             return count($emails);
         } catch (Exception $e) {
+            Log::error('Failed to count emails in file', [
+                        'file' => $file->getClientOriginalName(),
+                        'error' => $e->getMessage(),
+                    ]);
             return 0;
         }
     }
@@ -99,6 +112,10 @@ class ExcelEmailExtractor
             $emails = $this->extractEmails($file);
             return count($emails) > 0;
         } catch (Exception $e) {
+            Log::error('Failed to check if file has valid emails', [
+                        'file' => $file->getClientOriginalName(),
+                        'error' => $e->getMessage(),
+                    ]);
             return false;
         }
     }

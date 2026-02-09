@@ -1271,11 +1271,11 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
           Route::group(['prefix' => 'new-notifications'], function () {
             Route::get('', [NotificationController::class, 'index'])->name('notifications.index');
             Route::post('/send-mail', [NotificationController::class, 'sendMail'])->name('send.mail');
-            Route::get('/history', [NotificationController::class, 'history'])->name('history');
-            Route::get('/statistics', [NotificationController::class, 'statistics'])->name('statistics');
-            Route::get('/{sentEmail}', [NotificationController::class, 'show'])->name('show');
-            Route::delete('/{sentEmail}', [NotificationController::class, 'destroy'])->name('destroy');
-            Route::post('/{sentEmail}/retry', [NotificationController::class, 'retry'])->name('retry');
+            Route::get('/history', [NotificationController::class, 'history'])->name('notifications.history');
+            Route::get('/statistics', [NotificationController::class, 'statistics'])->name('notifications.statistics');
+            Route::get('/{sentEmail}', [NotificationController::class, 'show'])->name('notifications.show');
+            Route::delete('/{sentEmail}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+            Route::post('/{sentEmail}/retry', [NotificationController::class, 'retry'])->name('notifications.retry');
 
             Route::post('/preview-excel', [NotificationController::class, 'previewExcel'])->name('preview.excel');
             Route::post('/validate-excel', [NotificationController::class, 'validateExcel'])->name('validate.excel');

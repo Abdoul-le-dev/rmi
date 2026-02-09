@@ -796,6 +796,34 @@
                 </li>
             @endcan
 
+            
+            @can('admin_notifications')
+                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/new-notifications*', false))) ? 'active' : '' }}">
+                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications(v2) </span>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        @can('admin_notifications_list')
+                            <li class="{{ (request()->is(getAdminPanelUrl('/new-notifications', false))) ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/new-notifications/history">Mails</a>
+                            </li>
+                        @endcan
+
+
+                        @can('admin_notifications_send')
+                            <li class="{{ (request()->is(getAdminPanelUrl('/new-notifications', false))) ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/new-notifications">Nouveau</a>
+                            </li>
+                        @endcan
+
+                      
+                    </ul>
+                </li>
+            @endcan
+
+
             @if($authUser->can('admin_blog') or
                 $authUser->can('admin_pages') or
                 $authUser->can('admin_additional_pages') or
