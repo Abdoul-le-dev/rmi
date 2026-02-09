@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
-Auth::loginUsingId(22422);
+//Auth::loginUsingId(22422);
 
 class ForumController extends Controller
 {
