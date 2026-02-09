@@ -3,7 +3,9 @@
 @push('styles_top')
     <link rel="stylesheet" href="/assets/default/learning_page/styles.css"/>
     {{-- <link rel="stylesheet" href="/assets/default/vendors/video/video-js.min.css"> --}}
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.6.1/video-js.min.css" rel="stylesheet">
+        {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.6.1/video-js.min.css" rel="stylesheet"> --}}
+        <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet">
+<link href="https://unpkg.com/videojs-http-source-selector/dist/videojs-http-source-selector.css" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -23,7 +25,7 @@
                         <a class="position-relative font-14 d-flex align-items-center active" id="content-tab"
                            data-toggle="tab" href="#content" role="tab" aria-controls="content"
                            aria-selected="true">
-                            <i class="learning-page-tabs-icons mr-5">
+                            <i class="mr-5 learning-page-tabs-icons">
                                 @include('web.default.panel.includes.sidebar_icons.webinars')
                             </i>
                             <span class="learning-page-tabs-link-text">{{ trans('product.content') }}</span>
@@ -34,7 +36,7 @@
                         <a class="position-relative font-14 d-flex align-items-center" id="quizzes-tab" data-toggle="tab"
                            href="#quizzes" role="tab" aria-controls="quizzes"
                            aria-selected="false">
-                            <i class="learning-page-tabs-icons mr-5">
+                            <i class="mr-5 learning-page-tabs-icons">
                                 @include('web.default.panel.includes.sidebar_icons.quizzes')
                             </i>
                             <span class="learning-page-tabs-link-text">{{ trans('quiz.quizzes') }}</span>
@@ -45,7 +47,7 @@
                         <a class="position-relative font-14 d-flex align-items-center" id="certificates-tab" data-toggle="tab"
                            href="#certificates" role="tab" aria-controls="certificates"
                            aria-selected="false">
-                            <i class="learning-page-tabs-icons mr-5">
+                            <i class="mr-5 learning-page-tabs-icons">
                                 @include('web.default.panel.includes.sidebar_icons.certificate')
                             </i>
                             <span class="learning-page-tabs-link-text">{{ trans('panel.certificates') }}</span>
@@ -59,12 +61,12 @@
                         @include('web.default.course.learningPage.components.content_tab.index')
                     </div>
 
-                    <div class="pb-20 tab-pane fade  h-100" id="quizzes" role="tabpanel"
+                    <div class="pb-20 tab-pane fade h-100" id="quizzes" role="tabpanel"
                          aria-labelledby="quizzes-tab">
                         @include('web.default.course.learningPage.components.quiz_tab.index')
                     </div>
 
-                    <div class="pb-20 tab-pane fade  h-100" id="certificates" role="tabpanel"
+                    <div class="pb-20 tab-pane fade h-100" id="certificates" role="tabpanel"
                          aria-labelledby="certificates-tab">
                         @include('web.default.course.learningPage.components.certificate_tab.index')
                     </div>
@@ -79,8 +81,12 @@
     <script src="/assets/default/vendors/video/youtube.min.js"></script>
     <script src="/assets/default/vendors/video/vimeo.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.6.1/video.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-quality-levels/4.0.0/videojs-contrib-quality-levels.min.js"></script>
+
+<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+
+<!-- Plugin qualité -->
+
+<script src="https://unpkg.com/videojs-http-source-selector/dist/videojs-http-source-selector.js"></script>
 
     <script>
         var defaultItemType = '{{ !empty(request()->get('type')) ? request()->get('type') : (!empty($userLearningLastView) ? $userLearningLastView->item_type : '') }}'
