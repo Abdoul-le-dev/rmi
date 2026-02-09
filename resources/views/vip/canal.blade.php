@@ -7,7 +7,7 @@
     <title>Canaux VIP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('assets/vip/vip.css') }}">
-       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         .scrollbar-hide::-webkit-scrollbar {
@@ -65,6 +65,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -117,7 +118,7 @@
             <!-- Header Sidebar -->
             <div class="p-2 border-b border-gray-200">
                 <div class="flex justify-between items-center mb-4">
-                    <button  id="mobile-menu-btn" class="md:hidden p-2 hover:bg-gray-100 rounded-lg transition">
+                    <button id="mobile-menu-btn" class="md:hidden p-2 hover:bg-gray-100 rounded-lg transition">
                         <svg class="w-6 h-6 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd"
                                 d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
@@ -191,12 +192,10 @@
                 @foreach ($forums as $forum)
                     <div class="my-2 channel-item {{ $loop->first ? 'active' : '' }} flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border-b border-gray-100"
                         onclick="switchChannel(this, '{{ $forum->id }}', '{{ $forum->name ?? $forum->slug }}', '{{ asset($forum->icon) }}')"
-                        data-channel-id="{{ $forum->id }}" 
-                        data-channel-slug="{{ $forum->slug }}"
+                        data-channel-id="{{ $forum->id }}" data-channel-slug="{{ $forum->slug }}"
                         data-channel-name="{{ $forum->name ?? $forum->slug }}"
                         data-channel-description="{{ $forum->description ?? 'Canal de discussion de la communauté' }}"
-                        data-channel-members="300" 
-                        data-channel-online="40">
+                        data-channel-members="300" data-channel-online="40">
 
                         <div class="relative flex-shrink-0 my-2">
                             @if($forum->icon)
@@ -262,8 +261,7 @@
                         <div class="relative flex-shrink-0">
                             <img id="channelHeaderImage"
                                 src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=100&h=100&fit=crop"
-                                alt="Channel"
-                                class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl object-cover shadow-lg">
+                                alt="Channel" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl object-cover shadow-lg">
                         </div>
 
                         <div class="flex-1 min-w-0">
@@ -308,8 +306,10 @@
                 </div>
             </div>
 
+
             <!-- BARRE DE MESSAGE FIXE -->
-            <div class="bg-white border-t border-gray-200 p-3 sm:p-4 flex-shrink-0">
+            <div class="bg-white border-t border-gray-200 p-3 sm:p-4 flex-shrink-0"
+                data-forum-id="{{ $forum->id ?? '' }}">
                 <div class="max-w-4xl mx-auto">
                     <div class="flex items-center gap-2 sm:gap-3">
                         <!-- Avatar utilisateur -->
@@ -325,26 +325,31 @@
                                 onkeypress="handleMessageKeyPress(event)">
 
                             <!-- Boutons à l'intérieur de l'input -->
-                            <div
-                                class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5 sm:gap-1">
-                                <button class="p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition" title="Emoji">
-                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5 sm:gap-1">
+                                <!-- Bouton Sondage (avec indicateur visuel) -->
+                                <button onclick="openPollModal()"
+                                    class="p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition relative"
+                                    title="Créer un sondage">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
+                                    <!-- L'indicateur sera ajouté dynamiquement ici -->
                                 </button>
 
+                                <!-- Bouton Image (avec indicateur visuel + compteur) -->
                                 <button onclick="document.getElementById('imageInput').click()"
-                                    class="p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition"
+                                    class="p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition relative"
                                     title="Ajouter une image">
-                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
+                                    <!-- L'indicateur avec compteur sera ajouté dynamiquement ici -->
                                 </button>
-                                <input type="file" id="imageInput" class="hidden" multiple accept="image/*">
+                                <input type="file" id="imageInput" class="hidden" multiple accept="image/*,video/*">
                             </div>
                         </div>
 
@@ -358,23 +363,226 @@
                             </svg>
                         </button>
                     </div>
+                </div>
+            </div>
 
-                    <!-- Boutons de création -->
-                    <div class="flex items-center gap-2 mt-3 flex-wrap">
-                        <button onclick="openPollModal()"
-                            class="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition">
-                            <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                                <path fill-rule="evenodd"
-                                    d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            Sondage
+            <!-- MODAL SONDAGE -->
+            <div id="poll-modal"
+                class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-bold">📊 Créer un sondage</h3>
+                            <button onclick="closePollModal()"
+                                class="text-white hover:bg-white/20 rounded-full p-2 transition">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="p-6 space-y-4">
+                        <!-- Question -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Question</label>
+                            <input type="text" id="poll-question" placeholder="Quelle est votre question ?"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200">
+                        </div>
+
+                        <!-- Options -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Options</label>
+                            <div id="poll-options" class="space-y-2">
+                                <input type="text" placeholder="Option 1"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500">
+                                <input type="text" placeholder="Option 2"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500">
+                                <input type="text" placeholder="Option 3 (facultatif)"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500">
+                                <input type="text" placeholder="Option 4 (facultatif)"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="bg-gray-50 px-6 py-4 flex items-center justify-between gap-3">
+                        <button onclick="deletePoll()"
+                            class="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition font-medium">
+                            Supprimer
                         </button>
+                        <div class="flex gap-2">
+                            <button onclick="closePollModal()"
+                                class="px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-lg transition font-medium">
+                                Annuler
+                            </button>
+                            <button onclick="savePoll()"
+                                class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition font-medium">
+                                Ajouter
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Le conteneur de preview des médias sera inséré dynamiquement ici -->
+
+            <style>
+                /* Animations pour les indicateurs */
+                @keyframes pulse {
+
+                    0%,
+                    100% {
+                        opacity: 1;
+                    }
+
+                    50% {
+                        opacity: 0.5;
+                    }
+                }
+
+                .animate-pulse {
+                    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+                }
+
+                /* Indicateur sondage (vert) */
+                .poll-indicator {
+                    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+                }
+
+                /* Indicateur média (bleu) */
+                .media-indicator {
+                    animation: none;
+                    /* Pas d'animation pour le compteur */
+                }
+
+                /* Animation shake */
+                @keyframes shake {
+
+                    0%,
+                    100% {
+                        transform: translateX(0);
+                    }
+
+                    10%,
+                    30%,
+                    50%,
+                    70%,
+                    90% {
+                        transform: translateX(-5px);
+                    }
+
+                    20%,
+                    40%,
+                    60%,
+                    80% {
+                        transform: translateX(5px);
+                    }
+                }
+
+                .shake-animation {
+                    animation: shake 0.5s ease-in-out;
+                }
+
+                /* Animation rotation rapide */
+                @keyframes spin-fast {
+                    from {
+                        transform: rotate(0deg);
+                    }
+
+                    to {
+                        transform: rotate(360deg);
+                    }
+                }
+
+                .animate-spin-fast {
+                    animation: spin-fast 0.6s linear infinite;
+                }
+
+                /* Animation bounce */
+                @keyframes bounce-once {
+
+                    0%,
+                    100% {
+                        transform: translateY(0);
+                    }
+
+                    50% {
+                        transform: translateY(-10px);
+                    }
+                }
+
+                .animate-bounce-once {
+                    animation: bounce-once 0.5s ease;
+                }
+
+                /* Animation aspiration */
+                @keyframes message-aspiration {
+                    0% {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+
+                    50% {
+                        opacity: 0.8;
+                        transform: scale(0.99);
+                    }
+
+                    100% {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                }
+
+                .message-aspiration {
+                    animation: message-aspiration 0.8s ease-in-out;
+                }
+
+                /* Animation pulsation envoi */
+                @keyframes pulse-sending {
+
+                    0%,
+                    100% {
+                        transform: scale(0.95);
+                        opacity: 1;
+                    }
+
+                    50% {
+                        transform: scale(1);
+                        opacity: 0.9;
+                    }
+                }
+
+                .sending-pulse {
+                    animation: pulse-sending 1.2s ease-in-out infinite;
+                }
+
+                /* Glow succès */
+                @keyframes success-glow {
+
+                    0%,
+                    100% {
+                        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7);
+                    }
+
+                    50% {
+                        box-shadow: 0 0 20px 10px rgba(99, 102, 241, 0.3);
+                    }
+                }
+
+                .success-glow {
+                    animation: success-glow 0.6s ease-in-out;
+                }
+            </style>
+
+            {{-- Variable globale pour le forum_id --}}
+            <script>
+                window.currentForumId = {{ $forum->id ?? 'null' }};
+            </script>
         </div>
     </div>
 
@@ -416,56 +624,13 @@
         </div>
     </div>
 
-    <!-- Modal Sondage -->
-    <div class="modal-overlay" id="pollModal">
-        <div class="modal-content">
-            <div class="p-4 sm:p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-semibold text-lg">Créer un sondage</h3>
-                    <button onclick="closePollModal()" class="p-2 hover:bg-gray-100 rounded-full transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-
-                <input type="text" id="pollQuestion"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 mb-3"
-                    placeholder="Votre question...">
-
-                <div id="pollOptions" class="space-y-2 mb-4">
-                    <input type="text"
-                        class="poll-option-input w-full px-4 py-2 border border-gray-300 rounded-lg"
-                        placeholder="Option 1">
-                    <input type="text"
-                        class="poll-option-input w-full px-4 py-2 border border-gray-300 rounded-lg"
-                        placeholder="Option 2">
-                </div>
-
-                <button onclick="addPollOption()"
-                    class="text-sm text-indigo-600 hover:text-indigo-700 font-medium mb-4">
-                    + Ajouter une option
-                </button>
-
-                <div class="flex justify-end gap-2">
-                    <button onclick="closePollModal()"
-                        class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition">
-                        Annuler
-                    </button>
-                    <button onclick="publishPoll()"
-                        class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium">
-                        Publier
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     @include('vip.composants.mobile')
 
     <script src="{{ asset('assets/vip/canal.js') }}"></script>
     <script src="{{ asset('assets/vip/vip.js') }}"></script>
+    <script src="{{ asset('assets/vip/send_message_canal.js') }}"></script>
 
 </body>
 
