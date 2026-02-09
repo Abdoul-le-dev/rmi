@@ -27,7 +27,7 @@
         <div class=" backdrop-blur-sm rounded-2xl p-5 mb-3">
             <div class="flex items-center justify-between mb-3">
                 <span class="text-sm text-gray-300 font-medium">Progression vers Diamond</span>
-                <span class="text-sm text-amber-400 font-bold">{{ $userData['montant_restant'] }}%</span>
+                <span class="text-sm text-amber-400 font-bold">{{ $userData['percent'] }}%</span>
             </div>
 
             <!-- Progress Bar -->

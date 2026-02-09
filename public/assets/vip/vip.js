@@ -156,12 +156,15 @@ window.addEventListener('load', preloadImages);
 // Fonction pour déplacer le bouton cliqué en haut
 function moveToTop(clickedElement) {
     const container = document.getElementById('sidebar-buttons');
+    const container_mob = document.getElementById('sidebar-buttons-mobile');
     const firstElement = container.firstElementChild;
+    const firstElement_mob = container_mob.firstElementChild;
 
     // Si l'élément cliqué n'est pas déjà le premier
     if (clickedElement !== firstElement) {
         // Insérer l'élément cliqué avant le premier élément
         container.insertBefore(clickedElement, firstElement);
+        container_mob.insertBefore(clickedElement, firstElement_mob);
     }
 }
 

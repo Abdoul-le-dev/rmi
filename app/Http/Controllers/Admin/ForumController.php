@@ -414,7 +414,7 @@ class ForumController extends Controller
                             continue;
                         }
 
-                        $path = $file->store('posts', 'public');
+                        $path = $request->file('live_cover')->store('live-covers', 's3');//$path = $file->store('posts', 'public');
 
                         $post->media()->create([
                             'path' => $path,
@@ -466,9 +466,9 @@ class ForumController extends Controller
             ->where('status', 'validated')
             ->get();
 
-        $montantTotal = 1000050 ;//$validatedTrophes->sum('montant_genere');
+        $montantTotal = 10050 ;//$validatedTrophes->sum('montant_genere');
 
-        $percent = ($montantTotal / 1000) + 1;
+        $percent =(($montantTotal / 1000)+ 0.1) ;
 
         $userData = [
             'user_id' => $user->id,

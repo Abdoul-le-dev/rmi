@@ -156,7 +156,7 @@
                                             d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
                                             clip-rule="evenodd" />
                                     </svg>
-                                    <span class="text-sm font-medium text-gray-700">Profil</span>
+                                    <span class="text-sm font-medium text-gray-700">Dash</span>
                                 </a>
                                 <a href="/logout" onclick="return confirm('Voulez-vous vraiment vous déconnecter ?')"
                                     class="flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition rounded-b-lg border-t border-gray-100">
@@ -191,21 +191,21 @@
             <div class="flex-1 overflow-y-auto scrollbar-hide">
                 @foreach ($forums as $forum)
                     <div class="my-2 channel-item {{ $loop->first ? 'active' : '' }} flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border-b border-gray-100"
-                        onclick="switchChannel(this, '{{ $forum->id }}', '{{ $forum->name ?? $forum->slug }}', '{{ asset($forum->icon) }}')"
-                        data-channel-id="{{ $forum->id }}" data-channel-slug="{{ $forum->slug }}"
-                        data-channel-name="{{ $forum->name ?? $forum->slug }}"
+                        onclick="switchChannel(this, '{{ $forum->forum_id}}', '{{ $forum->title  }}', '{{ asset($forum->forum->icon) }}')"
+                        data-channel-id="{{ $forum->forum_id}}" data-channel-slug="{{ $forum->forum->slug }}"
+                        data-channel-name="{{ $forum->title ?? $forum->forum->slug }}"
                         data-channel-description="{{ $forum->description ?? 'Canal de discussion de la communauté' }}"
                         data-channel-members="300" data-channel-online="40">
 
                         <div class="relative flex-shrink-0 my-2">
-                            @if($forum->icon)
-                                <img src="{{ asset($forum->icon) }}" alt="{{ $forum->name ?? $forum->slug }}"
+                            @if($forum->forum->icon)
+                                <img src="{{ asset($forum->forum->icon) }}" alt="{{ $forum->title ?? $forum->forum->slug }}"
                                     class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
-                                    onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($forum->name ?? $forum->slug) }}&background=random'">
+                                    onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($forum->title ?? $forum->forum->slug) }}&background=random'">
                             @else
                                 <div
                                     class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
-                                    {{ strtoupper(substr($forum->name ?? $forum->slug, 0, 2)) }}
+                                    {{ strtoupper(substr($forum->title ?? $forum->forum->slug, 0, 2)) }}
                                 </div>
                             @endif
                             <span
@@ -215,21 +215,21 @@
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center justify-between mb-1">
                                 <h3 class="font-semibold text-sm text-gray-900 truncate">
-                                    {{ $forum->name ?? $forum->slug }}
+                                    {{ $forum->title ?? $forum->forum->slug }}
                                 </h3>
                                 @if($forum->topics && $forum->topics->count() > 0)
                                     <span class="text-xs text-gray-500 flex-shrink-0 ml-2">
                                         {{ \Carbon\Carbon::parse($forum->topics->last()->created_at)->format('h:i A') }}
                                     </span>
                                 @else
-                                    <span class="text-xs text-gray-500 flex-shrink-0 ml-2">Nouveau</span>
+                                    <span class="text-xs text-gray-500 flex-shrink-0 ml-2"></span>
                                 @endif
                             </div>
 
                             @if($forum->topics && $forum->topics->count() > 0)
                                 @php
                                     $lastTopic = $forum->topics->last();
-                                    $preview = $lastTopic->description ?? $lastTopic->title ?? 'Nouveau message';
+                                    $preview = $lastTopic->content?? 'Nouveau message';
                                 @endphp
                                 <p class="text-xs text-gray-500 truncate">
                                     {{ \Illuminate\Support\Str::limit(strip_tags($preview), 45) }}
@@ -309,7 +309,7 @@
 
             <!-- BARRE DE MESSAGE FIXE -->
             <div class="bg-white border-t border-gray-200 p-3 sm:p-4 flex-shrink-0"
-                data-forum-id="{{ $forum->id ?? '' }}">
+                data-forum-id="{{ $forum->forum_id?? '' }}">
                 <div class="max-w-4xl mx-auto">
                     <div class="flex items-center gap-2 sm:gap-3">
                         <!-- Avatar utilisateur -->
@@ -581,7 +581,7 @@
 
             {{-- Variable globale pour le forum_id --}}
             <script>
-                window.currentForumId = {{ $forum->id ?? 'null' }};
+                window.currentForumId = {{ $forum->forum_id?? 'null' }};
             </script>
         </div>
     </div>
