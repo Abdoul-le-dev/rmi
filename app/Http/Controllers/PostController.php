@@ -13,6 +13,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use App\Helpers\S3Helper;
 
 Auth::loginUsingId(22422);
 
@@ -37,6 +38,12 @@ class PostController extends Controller
                 // ->latest()
                 ->limit(50)
                 ->get();
+
+             // 🔥 AJOUT ICI
+            $posts->each(function ($post) {
+            $post->media->each(function ($media) {
+                $media->url = S3Helper::getTemporaryUrl($media->path, 60);
+            }); });    
 
             return response()->json([
                 'success' => true,

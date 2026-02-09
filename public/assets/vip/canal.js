@@ -365,7 +365,7 @@ function generateMediaPost(post) {
         const media = post.media[0];
         mediaHTML = `
             <div class="rounded-lg overflow-hidden mb-3 cursor-pointer hover:opacity-95 transition">
-                <img src="{{\App\Helpers\S3Helper::getTemporaryUrl(${media.path}, 60);}}" class="w-full max-h-96 object-cover" alt="Image">
+                <img src="${media.url}" class="w-full max-h-96 object-cover" alt="Image">
             </div>
         `;
     } else if (mediaCount === 2) {
@@ -373,7 +373,7 @@ function generateMediaPost(post) {
         post.media.forEach(media => {
             mediaHTML += `
                 <div class="aspect-square cursor-pointer hover:opacity-95 transition">
-                    <img src="{{\App\Helpers\S3Helper::getTemporaryUrl(${media.path}, 60);}}" class="w-full h-full object-cover" alt="Image"> 
+                    <img src="${media.url}" class="w-full h-full object-cover" alt="Image"> 
                 </div>
             `;
         });
@@ -384,7 +384,7 @@ function generateMediaPost(post) {
             if (index === 3 && mediaCount > 4) {
                 mediaHTML += `
                     <div class="aspect-square relative cursor-pointer">
-                        <img src="{{\App\Helpers\S3Helper::getTemporaryUrl(${media.path}, 60);}}" class="w-full h-full object-cover" alt="Image">
+                        <img src="${media.url}" class="w-full h-full object-cover" alt="Image">
                         <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
                             <span class="text-white font-bold text-2xl">+${mediaCount - 4}</span>
                         </div>
@@ -393,7 +393,7 @@ function generateMediaPost(post) {
             } else {
                 mediaHTML += `
                     <div class="aspect-square cursor-pointer hover:opacity-95 transition">
-                        <img src="{{\App\Helpers\S3Helper::getTemporaryUrl(${media.path}, 60);}}" class="w-full h-full object-cover" alt="Image">
+                        <img src="${media.url}" class="w-full h-full object-cover" alt="Image">
                     </div>
                 `;
             }
