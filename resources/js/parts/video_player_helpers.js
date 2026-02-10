@@ -79,7 +79,7 @@
                             "timeDivider",
                             "durationDisplay",
                             "progressControl",
-                            'qualitySelector', 
+                            // 'qualitySelector', 
                             "playbackRateMenuButton",
                             "fullscreenToggle",
                         ],
@@ -152,10 +152,9 @@
 
             playerInstance = videojs(playerId, playerData.options);
              playerInstance.ready(() => {
-                    playerInstance.hlsQualitySelector({
-                        displayCurrentQuality: true,
-                    });
-                });
+        // Pour @silvermine/videojs-quality-selector
+        playerInstance.controlBar.addChild('QualitySelector');
+    });
 
             callback && callback();
         }).fail(function (xhr, status, error) {

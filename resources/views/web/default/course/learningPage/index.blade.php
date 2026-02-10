@@ -3,7 +3,8 @@
 @push('styles_top')
     <link rel="stylesheet" href="/assets/default/learning_page/styles.css"/>
     {{-- <link rel="stylesheet" href="/assets/default/vendors/video/video-js.min.css"> --}}
-<link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.6.1/video-js.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@silvermine/videojs-quality-selector@1.3.1/dist/css/quality-selector.css" rel="stylesheet">
 
 @endpush
 
@@ -81,11 +82,10 @@
     {{-- <script src="/assets/default/vendors/video/vimeo.js"></script> --}}
 
 
-<script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.6.1/video.min.js"></script>
 <!-- Plugin de sélection de qualité pour Video.js -->
-<script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@2.2.0/dist/videojs-contrib-quality-levels.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/videojs-hls-quality-selector@1.1.4/dist/videojs-hls-quality-selector.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@silvermine/videojs-quality-selector@1.3.1/dist/js/silvermine-videojs-quality-selector.min.js"></script>
+
 
     <script>
         var defaultItemType = '{{ !empty(request()->get('type')) ? request()->get('type') : (!empty($userLearningLastView) ? $userLearningLastView->item_type : '') }}'
