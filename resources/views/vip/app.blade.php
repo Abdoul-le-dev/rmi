@@ -492,7 +492,7 @@
                         <div class="p-4 border-b border-gray-100">
                             <div class="flex items-start gap-3">
                                 <div class="profile-avatar">
-                                   <div class="w-9 h-9 rounded-full border-4 border-white shadow-lg mx-auto overflow-hidden flex items-center justify-center {{ Auth::user() && Auth::user()->avatar ? '' : 'bg-gradient-to-br from-purple-500 to-pink-500' }}">
+                                   <div class="w-10 h-10 rounded-full border-4 border-white shadow-lg mx-auto overflow-hidden flex items-center justify-center {{ Auth::user() && Auth::user()->avatar ? '' : 'bg-gradient-to-br from-purple-500 to-pink-500' }}">
 
                                         @if(Auth::user() && Auth::user()->avatar)
                                             <img src="{{ Auth::user()->getAvatar(48) }}" alt="Avatar" class="w-7 h-7 rounded-full object-cover">
