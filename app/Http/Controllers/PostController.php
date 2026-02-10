@@ -14,7 +14,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-//Auth::loginUsingId(22422);
+Auth::loginUsingId(22422);
 
 class PostController extends Controller
 {
