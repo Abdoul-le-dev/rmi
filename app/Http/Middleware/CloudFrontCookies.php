@@ -35,7 +35,7 @@ class CloudFrontCookies
             $response = $next($request);
 
             // Ajouter les cookies à la réponse
-            $minutes = ceil($this->cloudFrontSigner->expiration / 60);
+            $minutes = ceil((8*config('services.cloudfront.url_expiration', 3600)) / 60);
             foreach ($signedCookies as $name => $value) {
                 $cookie = cookie(
                     $name,
