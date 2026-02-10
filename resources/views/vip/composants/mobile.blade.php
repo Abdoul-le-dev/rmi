@@ -17,7 +17,7 @@
             <!-- Profil utilisateur -->
             <div class="text-center">
                 <div class="relative inline-block mb-3">
-                    <img src="https://i.pravatar.cc/150?img=12" alt="Profil"
+                    <img src="{{ Auth::user()->getAvatar(48) }}"  alt="Profil"
                         class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg mx-auto">
                     <div class="absolute bottom-1 right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
                 </div>
