@@ -620,62 +620,442 @@
     <script src="{{ asset('assets/vip/canal.js') }}"></script>
     <script src="{{ asset('assets/vip/vip.js') }}"></script>
     <script>
-        .calendar - grid {
-            display: grid;
-            grid - template - columns: 60px repeat(7, 1fr);
-            min - width: 900px;
+        // ============================================
+        // ÉTAT GLOBAL DES CONTENUS
+        // ============================================
+        const messageState = {
+            poll: null,           // Sondage ajouté
+            media: [],            // Images/vidéos ajoutées
+            text: ''              // Texte du message
+        };
+
+        // ============================================
+        // GESTION DU SONDAGE
+        // ============================================
+        function openPollModal() {
+            // Ouvrir votre modal de sondage existant
+            // Si un sondage existe déjà, pré-remplir le modal
+            if (messageState.poll) {
+                document.getElementById('poll-question').value = messageState.poll.question;
+                messageState.poll.options.forEach((option, index) => {
+                    const input = document.querySelector(`#poll-options input:nth-child(${index + 1})`);
+                    if (input) input.value = option;
+                });
+            }
+
+            // Afficher le modal
+            const modal = document.getElementById('poll-modal');
+            if (modal) modal.classList.remove('hidden');
         }
 
-        @media(max - width: 768px) {
-    .calendar - grid {
-                grid - template - columns: 50px repeat(7, minmax(100px, 1fr));
-                min - width: 750px;
+        function savePoll() {
+            const question = document.getElementById('poll-question')?.value.trim();
+            const optionInputs = document.querySelectorAll('#poll-options input');
+            const options = Array.from(optionInputs)
+                .map(input => input.value.trim())
+                .filter(val => val !== '');
+
+            if (!question || options.length < 2) {
+                if (typeof showToast === 'function') {
+                    showToast('Le sondage doit avoir une question et au moins 2 options', 'warning');
+                }
+                return;
+            }
+
+            // Sauvegarder dans l'état
+            messageState.poll = { question, options };
+
+            // Afficher l'indicateur
+            showPollIndicator();
+
+            // Fermer le modal
+            closePollModal();
+
+            if (typeof showToast === 'function') {
+                showToast('Sondage ajouté ✅', 'success');
             }
         }
 
-.time - slot {
-            border - right: 1px solid #e5e7eb;
-            border - bottom: 1px solid #e5e7eb;
-            min - height: 64px;
+        function closePollModal() {
+            const modal = document.getElementById('poll-modal');
+            if (modal) modal.classList.add('hidden');
         }
 
-.day - column {
-            position: relative;
+        function showPollIndicator() {
+            const pollButton = document.querySelector('button[onclick="openPollModal()"]');
+            if (!pollButton) return;
+
+            // Retirer l'ancien indicateur s'il existe
+            const oldIndicator = pollButton.querySelector('.poll-indicator');
+            if (oldIndicator) oldIndicator.remove();
+
+            // Ajouter le nouvel indicateur
+            const indicator = document.createElement('div');
+            indicator.className = 'poll-indicator absolute -top-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full animate-pulse';
+            indicator.title = 'Sondage ajouté';
+            pollButton.style.position = 'relative';
+            pollButton.appendChild(indicator);
         }
 
-/* Modal */
-.modal - backdrop {
-            backdrop - filter: blur(4px);
-            transition: opacity 0.2s ease;
+        function removePollIndicator() {
+            const indicator = document.querySelector('.poll-indicator');
+            if (indicator) indicator.remove();
         }
 
-.modal - content {
-            transform: scale(0.95);
-            opacity: 0;
-            transition: all 0.2s ease;
+        function deletePoll() {
+            messageState.poll = null;
+            removePollIndicator();
+            closePollModal();
+
+            // Réinitialiser le formulaire du modal
+            const pollQuestion = document.getElementById('poll-question');
+            if (pollQuestion) pollQuestion.value = '';
+
+            const optionInputs = document.querySelectorAll('#poll-options input');
+            optionInputs.forEach(input => input.value = '');
+
+            if (typeof showToast === 'function') {
+                showToast('Sondage supprimé', 'info');
+            }
         }
 
-.modal - backdrop.active.modal - content {
-            transform: scale(1);
-            opacity: 1;
+        // ============================================
+        // GESTION DES MÉDIAS (IMAGES/VIDÉOS)
+        // ============================================
+        function handleMediaSelection(event) {
+            const files = event.target.files;
+            if (!files || files.length === 0) return;
+
+            // Ajouter les fichiers à l'état
+            messageState.media = Array.from(files);
+
+            // Afficher l'indicateur
+            showMediaIndicator(files.length);
+
+            // Afficher la preview
+            showMediaPreview();
+
+            if (typeof showToast === 'function') {
+                showToast(`${files.length} fichier(s) ajouté(s) ✅`, 'success');
+            }
         }
 
-        /* Animation événement en cours */
-        @keyframes pulse - live {
+        function showMediaIndicator(count) {
+            const imageButton = document.querySelector('button[onclick*="imageInput"]');
+            if (!imageButton) return;
 
-            0 %,
-                100 % {
-                    opacity: 1;
+            // Retirer l'ancien indicateur s'il existe
+            const oldIndicator = imageButton.querySelector('.media-indicator');
+            if (oldIndicator) oldIndicator.remove();
+
+            // Ajouter le nouvel indicateur avec compteur
+            const indicator = document.createElement('div');
+            indicator.className = 'media-indicator absolute -top-1 -right-1 w-5 h-5 bg-blue-500 border-2 border-white rounded-full flex items-center justify-center text-white text-[10px] font-bold';
+            indicator.textContent = count;
+            indicator.title = `${count} fichier(s)`;
+            imageButton.style.position = 'relative';
+            imageButton.appendChild(indicator);
+        }
+
+        function removeMediaIndicator() {
+            const indicator = document.querySelector('.media-indicator');
+            if (indicator) indicator.remove();
+        }
+
+        function showMediaPreview() {
+            // Créer ou afficher le conteneur de preview
+            let previewContainer = document.getElementById('media-preview-container');
+
+            if (!previewContainer) {
+                previewContainer = document.createElement('div');
+                previewContainer.id = 'media-preview-container';
+                previewContainer.className = 'mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200';
+
+                // Insérer avant la barre de message
+                const messageBar = document.querySelector('[data-forum-id]');
+                if (messageBar) {
+                    messageBar.parentNode.insertBefore(previewContainer, messageBar);
+                }
+            }
+
+            // Construire le HTML de preview
+            let html = `
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-gray-700">
+                📎 ${messageState.media.length} fichier(s) sélectionné(s)
+            </span>
+            <button onclick="deleteAllMedia()" 
+                class="text-xs text-red-600 hover:text-red-800 font-medium">
+                Tout supprimer
+            </button>
+        </div>
+        <div class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+    `;
+
+            messageState.media.forEach((file, index) => {
+                const isVideo = file.type.startsWith('video/');
+                const url = URL.createObjectURL(file);
+
+                html += `
+            <div class="relative group">
+                ${isVideo ?
+                        `<video src="${url}" class="w-full h-20 object-cover rounded-lg"></video>` :
+                        `<img src="${url}" class="w-full h-20 object-cover rounded-lg">`
+                    }
+                <button onclick="deleteMedia(${index})" 
+                    class="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+                ${isVideo ? '<div class="absolute bottom-1 right-1 bg-black/50 text-white text-xs px-1 rounded">📹</div>' : ''}
+            </div>
+        `;
+            });
+
+            html += `</div>`;
+            previewContainer.innerHTML = html;
+            previewContainer.classList.remove('hidden');
+        }
+
+        function hideMediaPreview() {
+            const previewContainer = document.getElementById('media-preview-container');
+            if (previewContainer) {
+                previewContainer.classList.add('hidden');
+            }
+        }
+
+        function deleteMedia(index) {
+            messageState.media.splice(index, 1);
+
+            if (messageState.media.length === 0) {
+                deleteAllMedia();
+            } else {
+                showMediaIndicator(messageState.media.length);
+                showMediaPreview();
+            }
+        }
+
+        function deleteAllMedia() {
+            messageState.media = [];
+            removeMediaIndicator();
+            hideMediaPreview();
+
+            // Réinitialiser l'input file
+            const imageInput = document.getElementById('imageInput');
+            if (imageInput) imageInput.value = '';
+
+            if (typeof showToast === 'function') {
+                showToast('Fichiers supprimés', 'info');
+            }
+        }
+
+        // ============================================
+        // ENVOI DU MESSAGE (VERSION COMPLÈTE)
+        // ============================================
+        async function sendQuickMessage() {
+            const input = document.getElementById('messageInput');
+            const sendButton = document.querySelector('button[onclick="sendQuickMessage()"]');
+            const sendIcon = sendButton?.querySelector('svg');
+            const pollButton = document.querySelector('button[onclick="openPollModal()"]');
+            const imageButton = document.querySelector('button[onclick*="imageInput"]');
+
+            /** ---------------- VALIDATION ---------------- */
+            const hasText = input.value.trim() !== '';
+            const hasPoll = messageState.poll !== null;
+            const hasMedia = messageState.media.length > 0;
+
+            if (!hasText && !hasPoll && !hasMedia) {
+                sendButton?.classList.add('shake-animation');
+                setTimeout(() => sendButton?.classList.remove('shake-animation'), 500);
+
+                if (typeof showToast === 'function') {
+                    showToast('Ajoutez du texte, un sondage ou une image', 'warning');
+                }
+                return;
+            }
+
+            /** ---------------- RÉCUPÉRATION DU FORUM_ID ---------------- */
+            const forumId = document.querySelector('[data-forum-id]')?.dataset.forumId || window.currentForumId;
+
+            if (!forumId) {
+                console.error('❌ Forum ID non trouvé');
+                if (typeof showToast === 'function') {
+                    showToast('Erreur: Forum non identifié', 'error');
+                }
+                return;
+            }
+
+            /** ---------------- CONSTRUCTION DU FORMDATA ---------------- */
+            const formData = new FormData();
+            formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+            formData.append('forum_id', forumId);
+
+            // Texte (peut être vide si sondage ou média)
+            formData.append('contents', input.value.trim());
+
+            // Sondage
+            if (messageState.poll) {
+                formData.append('poll', JSON.stringify(messageState.poll));
+            }
+
+            // Médias
+            if (messageState.media.length > 0) {
+                messageState.media.forEach(file => {
+                    formData.append('media[]', file);
+                });
+            }
+
+            console.log('📤 Envoi du message...');
+            console.log('Texte:', input.value.trim());
+            console.log('Sondage:', messageState.poll);
+            console.log('Médias:', messageState.media.length);
+
+            /** ---------------- UI : DÉMARRAGE ANIMATION ---------------- */
+            // 🔒 BOUTON 1 : BLOQUER TOUT
+            sendButton.disabled = true;
+            if (pollButton) {
+                pollButton.disabled = true;
+                pollButton.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+            if (imageButton) {
+                imageButton.disabled = true;
+                imageButton.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+            input.disabled = true;
+            input.classList.add('opacity-70', 'cursor-not-allowed');
+
+            // 🔄 BOUTON 2 : ANIMATION ENVOI
+            if (sendIcon) sendIcon.classList.add('animate-spin-fast');
+            sendButton.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+            sendButton.classList.add('bg-blue-500', 'scale-95', 'sending-pulse');
+            input.classList.add('message-aspiration');
+
+            /** ---------------- API CALL ---------------- */
+            try {
+                const res = await fetch('/vip', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                const data = await res.json();
+                console.log('📥 Response:', data);
+
+                if (!res.ok) {
+                    throw new Error(data.message || 'Erreur lors de l\'envoi');
                 }
 
-            50 % {
-                opacity: 0.8;
+                /** ---------------- SUCCÈS ---------------- */
+                // 🟢 ANIMATION SUCCÈS
+                if (sendIcon) sendIcon.classList.remove('animate-spin-fast');
+                sendButton.classList.remove('bg-blue-500', 'scale-95', 'sending-pulse');
+                sendButton.classList.add('bg-indigo-600', 'scale-110', 'success-glow');
+                if (sendIcon) sendIcon.classList.add('animate-bounce-once');
+
+                if (typeof showToast === 'function') {
+                    showToast('Message envoyé 🎉', 'success');
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 600));
+
+                /** ---------------- RESET COMPLET ---------------- */
+                // Réinitialiser l'input
+                input.value = '';
+                input.disabled = false;
+                input.classList.remove('message-aspiration', 'opacity-70', 'cursor-not-allowed');
+
+                // Réinitialiser l'état
+                messageState.poll = null;
+                messageState.media = [];
+                messageState.text = '';
+
+                // Supprimer les indicateurs
+                removePollIndicator();
+                removeMediaIndicator();
+                hideMediaPreview();
+
+                // Réinitialiser l'input file
+                const imageInput = document.getElementById('imageInput');
+                if (imageInput) imageInput.value = '';
+
+                // 🔓 DÉBLOQUER TOUT
+                sendButton.disabled = false;
+                if (pollButton) {
+                    pollButton.disabled = false;
+                    pollButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+                if (imageButton) {
+                    imageButton.disabled = false;
+                    imageButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+
+                // 🔵 RETOUR À LA NORMALE
+                sendButton.classList.remove('scale-110', 'success-glow');
+                sendButton.classList.add('hover:bg-indigo-700');
+                if (sendIcon) sendIcon.classList.remove('animate-bounce-once');
+
+                // 🔄 RAFRAÎCHIR LES MESSAGES
+                if (typeof refreshMessagess === 'function') {
+                    refreshMessagess();
+                }
+
+            } catch (error) {
+                console.error('❌ ERROR:', error);
+
+                /** ---------------- ERREUR ---------------- */
+                if (sendIcon) sendIcon.classList.remove('animate-spin-fast');
+                sendButton.classList.remove('bg-blue-500', 'scale-95', 'sending-pulse');
+                sendButton.classList.add('bg-red-500', 'shake-animation');
+
+                if (typeof showToast === 'function') {
+                    showToast(error.message || 'Une erreur est survenue', 'error');
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 800));
+
+                /** ---------------- RESET APRÈS ERREUR ---------------- */
+                input.disabled = false;
+                input.classList.remove('message-aspiration', 'opacity-70', 'cursor-not-allowed');
+
+                sendButton.disabled = false;
+                if (pollButton) {
+                    pollButton.disabled = false;
+                    pollButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+                if (imageButton) {
+                    imageButton.disabled = false;
+                    imageButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+
+                sendButton.classList.remove('bg-red-500', 'shake-animation');
+                sendButton.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
             }
         }
 
-.live - badge {
-            animation: pulse - live 2s ease -in -out infinite;
+        // ============================================
+        // GESTION ENTER
+        // ============================================
+        function handleMessageKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendQuickMessage();
+            }
         }
+
+        // ============================================
+        // INITIALISATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function () {
+            // Attacher l'event listener sur l'input file
+            const imageInput = document.getElementById('imageInput');
+            if (imageInput) {
+                imageInput.addEventListener('change', handleMediaSelection);
+            }
+        });
     </script>
 
 </body>
