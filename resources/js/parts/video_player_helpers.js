@@ -150,12 +150,34 @@
             container.html(playerData.html);
 
             playerInstance = videojs(playerId, playerData.options);
-            playerInstance.ready(function () {
-                if (videoUrl.endsWith(".m3u8")) {
-                    
-                    this.qualitySelectorHls();
+          playerInstance.ready(function () {
+    if (videoUrl.endsWith(".m3u8")) {
+        // 1. Initialise le plugin
+        this.qualitySelectorHls();
+
+        // 2. Récupère la liste des niveaux
+        const qualityLevels = this.qualityLevels();
+
+        // 3. Écoute quand l'utilisateur change de niveau via le menu
+        qualityLevels.on('change', function () {
+            // Si selectedIndex est -1, c'est le mode "Auto"
+            const isAuto = qualityLevels.selectedIndex === -1;
+            
+            console.log(isAuto ? "Mode Auto activé" : "Qualité manuelle : " + qualityLevels[qualityLevels.selectedIndex].height + "p");
+
+            // On boucle sur tous les niveaux pour forcer l'activation du seul choisi
+            for (let i = 0; i < qualityLevels.length; i++) {
+                if (isAuto) {
+                    // En auto, on laisse tout activé
+                    qualityLevels[i].enabled = true;
+                } else {
+                    // En manuel, on désactive tout SAUF celui choisi
+                    qualityLevels[i].enabled = (i === qualityLevels.selectedIndex);
                 }
-            });
+            }
+        });
+    }
+});
 
             callback && callback();
         }).fail(function (xhr, status, error) {
