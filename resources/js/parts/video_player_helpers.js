@@ -152,28 +152,29 @@
             playerInstance = videojs(playerId, playerData.options);
           playerInstance.ready(function () {
     if (videoUrl.endsWith(".m3u8")) {
-        // 1. Initialise le plugin
-        this.qualitySelectorHls();
+        const player = this;
+        player.qualitySelectorHls();
 
-        // 2. Récupère la liste des niveaux
-        const qualityLevels = this.qualityLevels();
+        const qualityLevels = player.qualityLevels();
 
-        // 3. Écoute quand l'utilisateur change de niveau via le menu
         qualityLevels.on('change', function () {
-            // Si selectedIndex est -1, c'est le mode "Auto"
-            const isAuto = qualityLevels.selectedIndex === -1;
-            
-            console.log(isAuto ? "Mode Auto activé" : "Qualité manuelle : " + qualityLevels[qualityLevels.selectedIndex].height + "p");
+            const selectedIndex = qualityLevels.selectedIndex;
+            const isAuto = selectedIndex === -1;
 
-            // On boucle sur tous les niveaux pour forcer l'activation du seul choisi
+            // 1. On active/désactive les niveaux pour forcer le moteur
             for (let i = 0; i < qualityLevels.length; i++) {
-                if (isAuto) {
-                    // En auto, on laisse tout activé
-                    qualityLevels[i].enabled = true;
-                } else {
-                    // En manuel, on désactive tout SAUF celui choisi
-                    qualityLevels[i].enabled = (i === qualityLevels.selectedIndex);
-                }
+                qualityLevels[i].enabled = isAuto ? true : (i === selectedIndex);
+            }
+
+            // 2. FORCE : Si on est en manuel, on vide le buffer pour changer l'image MAINTENANT
+            if (!isAuto) {
+                const currentTime = player.currentTime();
+                
+                // On force le moteur HLS à oublier les segments déjà téléchargés en haute qualité
+                // On fait un micro-jump pour forcer le rechargement du segment à la bonne résolution
+                player.currentTime(currentTime + 0.01); 
+                
+                console.log("🚀 Switch forcé vers :", qualityLevels[selectedIndex].height + "p");
             }
         });
     }
