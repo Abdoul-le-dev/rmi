@@ -151,10 +151,7 @@
             container.html(playerData.html);
 
             playerInstance = videojs(playerId, playerData.options);
-             playerInstance.ready(() => {
-        // Pour @silvermine/videojs-quality-selector
-        playerInstance.controlBar.addChild('QualitySelector');
-    });
+            let qualityLevels = playerInstance.qualityLevels();
 
             callback && callback();
         }).fail(function (xhr, status, error) {
