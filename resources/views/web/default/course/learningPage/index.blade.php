@@ -82,7 +82,7 @@
     {{-- <script src="/assets/default/vendors/video/vimeo.js"></script> --}}
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.6.1/video.min.js"></script>
+<script src="https://app.unpkg.com/@videojs/http-streaming@3.17.3/files/dist/videojs-http-streaming.min.js"></script>
 <!-- Plugin de sélection de qualité pour Video.js -->
 <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@4.1.0/dist/videojs-contrib-quality-levels.min.js"></script>
 
