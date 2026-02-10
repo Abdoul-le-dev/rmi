@@ -4,7 +4,15 @@
     <link rel="stylesheet" href="/assets/default/learning_page/styles.css"/>
     {{-- <link rel="stylesheet" href="/assets/default/vendors/video/video-js.min.css"> --}}
 <link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.6.1/video-js.min.css" rel="stylesheet">
-
+<style>
+    .vjs-quality-selector {
+    display: block;
+}
+.vjs-quality-selector .vjs-menu-button {
+    margin: 0;
+    padding: 0;
+}
+</style>
 
 @endpush
 
@@ -86,7 +94,8 @@
 
 <!-- Plugin de sélection de qualité pour Video.js -->
 <script src="https://unpkg.com/videojs-contrib-quality-levels@4.1.0/dist/videojs-contrib-quality-levels.min.js"></script>
-<script src="https://unpkg.com/videojs-http-source-selector@1.1.6/dist/videojs-http-source-selector.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/videojs-quality-selector-hls/dist/videojs-quality-selector-hls.min.js"></script>
 
     <script>
         var defaultItemType = '{{ !empty(request()->get('type')) ? request()->get('type') : (!empty($userLearningLastView) ? $userLearningLastView->item_type : '') }}'

@@ -79,8 +79,6 @@
                             "timeDivider",
                             "durationDisplay",
                             "progressControl",
-                            // 'qualitySelector',
-                            "httpSourceSelector",
                             "playbackRateMenuButton",
                             "fullscreenToggle",
                         ],
@@ -152,14 +150,11 @@
             container.html(playerData.html);
 
             playerInstance = videojs(playerId, playerData.options);
-            if (videoUrl.endsWith(".m3u8")) {
-                playerInstance.httpSourceSelector();
-            }
-
-            let qualityLevels = playerInstance.qualityLevels();
-            qualityLevels.on("addqualitylevel", function () {
-                const qualityLevel = this[this.length - 1];
-                console.log("Niveau de qualité ajouté :", qualityLevel);
+            playerInstance.ready(function () {
+                if (videoUrl.endsWith(".m3u8")) {
+                    // Initialisation du nouveau plugin compatible
+                    this.qualitySelectorHls();
+                }
             });
 
             callback && callback();
