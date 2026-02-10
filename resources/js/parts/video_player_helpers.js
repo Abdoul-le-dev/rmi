@@ -119,7 +119,7 @@
         const height = $(window).width() > 991 ? 426 : 264;
 
         $.post("/course/getFilePath", { file_id: fileId }, function (response) {
-            console.log("📦 Réponse brute backend:", response);
+            // console.log("📦 Réponse brute backend:", response);
             if (!response || response.code !== 200) {
                 return showAccessError();
             }
@@ -150,49 +150,38 @@
             container.html(playerData.html);
 
             playerInstance = videojs(playerId, playerData.options);
-          playerInstance.ready(function () {
-    if (videoUrl.endsWith(".m3u8")) {
-        const player = this;
-        player.qualitySelectorHls();
-
-        const qualityLevels = player.qualityLevels();
-
-        qualityLevels.on('change', function () {
-            const selectedIndex = qualityLevels.selectedIndex;
-            const isAuto = selectedIndex === -1;
-
-            // 1. On active/désactive les niveaux pour forcer le moteur
-            for (let i = 0; i < qualityLevels.length; i++) {
-                qualityLevels[i].enabled = isAuto ? true : (i === selectedIndex);
-            }
-
-            // 2. FORCE : Si on est en manuel, on vide le buffer pour changer l'image MAINTENANT
-            if (!isAuto) {
-                const currentTime = player.currentTime();
-                
-                // On force le moteur HLS à oublier les segments déjà téléchargés en haute qualité
-                // On fait un micro-jump pour forcer le rechargement du segment à la bonne résolution
-                player.currentTime(currentTime + 0.01); 
-                
-                console.log("🚀 Switch forcé vers :", qualityLevels[selectedIndex].height + "p");
-            }
-        });
-    }
-});
+            playerInstance.ready(function () {
+                if (videoUrl.endsWith(".m3u8")) {
+                   
+                    this.qualitySelectorHls();
+                    const qualityLevels = this.qualityLevels();
+                    qualityLevels.on("change", function () {
+                        const isAuto = qualityLevels.selectedIndex === -1;
+                        for (let i = 0; i < qualityLevels.length; i++) {
+                            if (isAuto) {
+                                qualityLevels[i].enabled = true;
+                            } else {
+                                qualityLevels[i].enabled =
+                                    i === qualityLevels.selectedIndex;
+                            }
+                        }
+                    });
+                }
+            });
 
             callback && callback();
         }).fail(function (xhr, status, error) {
-            console.error("❌ ERREUR AJAX");
-            console.error("Status HTTP :", xhr.status); // 500
-            console.error("Status text :", xhr.statusText);
-            console.error("Erreur JS :", error);
+            // console.error("❌ ERREUR AJAX");
+            // console.error("Status HTTP :", xhr.status); // 500
+            // console.error("Status text :", xhr.statusText);
+            // console.error("Erreur JS :", error);
 
-            console.error("ResponseText brut :");
-            console.error(xhr.responseText);
+            // console.error("ResponseText brut :");
+            // console.error(xhr.responseText);
 
             // si backend renvoie du JSON même en erreur
             try {
-                console.error("Response JSON :", JSON.parse(xhr.responseText));
+                // console.error("Response JSON :", JSON.parse(xhr.responseText));
             } catch (e) {
                 console.warn("Response non JSON");
             }
