@@ -79,8 +79,7 @@
                             "timeDivider",
                             "durationDisplay",
                             "progressControl",
-                            // 'qualitySelector', // Sélecteur de qualité
-                          
+                            'qualitySelector', 
                             "playbackRateMenuButton",
                             "fullscreenToggle",
                         ],
@@ -152,11 +151,11 @@
             container.html(playerData.html);
 
             playerInstance = videojs(playerId, playerData.options);
-            // playerInstance.ready(() => {
-            //     playerInstance.httpSourceSelector({
-            //         default: "auto",
-            //     });
-            // });
+             playerInstance.ready(() => {
+                    playerInstance.hlsQualitySelector({
+                        displayCurrentQuality: true,
+                    });
+                });
 
             callback && callback();
         }).fail(function (xhr, status, error) {
