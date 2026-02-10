@@ -76,7 +76,7 @@ class PostController extends Controller
             ->where('status', 'validated')
             ->get();
 
-        $montantTotal = $validatedTrophes->sum('montant_genere');
+        $montantTotal = 100000;//$validatedTrophes->sum('montant_genere');
 
         $percent = ($montantTotal / 1000) + 1;
 
