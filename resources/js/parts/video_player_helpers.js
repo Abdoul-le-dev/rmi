@@ -152,6 +152,10 @@
 
             playerInstance = videojs(playerId, playerData.options);
             let qualityLevels = playerInstance.qualityLevels();
+            qualityLevels.on("addqualitylevel", function () {
+                const qualityLevel = this[this.length - 1];
+                console.log("Niveau de qualité ajouté :", qualityLevel);
+            });
 
             callback && callback();
         }).fail(function (xhr, status, error) {
