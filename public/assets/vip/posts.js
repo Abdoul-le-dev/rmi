@@ -459,16 +459,16 @@ async function deletePost(button) {
 
     const post = button.closest('.post-card');
     post.style.opacity = '0';
-     post.style.transform = 'scale(0.95)';
+    post.style.transform = 'scale(0.95)';
     if (confirm('Êtes-vous sûr de vouloir supprimer ce post ?')) {
-        
-        
+
+
         setTimeout(() => post.remove(), 200);
     }
 
     const postId = post.dataset.postId;
 
-    
+
 
     try {
         const response = await fetch('/posts/delete', {
@@ -501,7 +501,7 @@ function openShareModal(button, id) {
     const modal = document.getElementById('shareModal');
     const post = button.closest('.post-card');
     const postId = id;
-    
+
     // Générer un lien unique pour chaque post
     document.getElementById('shareLink').value = `https://rmiclass.com/vip/${id}`;
 
@@ -510,10 +510,10 @@ function openShareModal(button, id) {
 
     // Réinitialiser le message de succès
     document.getElementById('copySuccess').style.opacity = '0';
-    
+
     // Enregistrer le partage en base de données
     saveShareToDatabases(id, '/posts/share');
-    
+
     // Incrémenter le compteur de partages dans la vue
     const shareCount = post.querySelector('.flex.items-center.gap-4 span:nth-child(3) span');
     if (shareCount) {
@@ -554,7 +554,7 @@ document.getElementById('shareModal').addEventListener('click', (e) => {
 const $ = (s) => document.querySelector(s);
 const csrf = () => $('meta[name="csrf-token"]').content;
 // Like avec animation subtile
-function handleLike(button,id) {
+function handleLike(button, id) {
     const isLiked = button.classList.contains('liked');
     const post = button.closest('.post-card');
     const likeCount = post.querySelector('.flex.items-center.gap-4 span:first-child span');
@@ -589,7 +589,7 @@ async function addComment(input) {
     if (!text) return;
 
     const post = input.closest('.post-card');
-    const postId = post.getAttribute('data-post-id'); 
+    const postId = post.getAttribute('data-post-id');
     const commentList = post.querySelector('.comment-section .space-y-2');
     const commentSection = post.querySelector('.comment-section');
 
@@ -954,7 +954,7 @@ async function saveShareToDatabase(postId) {
         console.error('Erreur enregistrement partage:', error);
     }
 }
-async function saveShareToDatabases(postId,url) {
+async function saveShareToDatabases(postId, url) {
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -1040,10 +1040,10 @@ function openImageFullscreen(imageSrc) {
 function openVideoFullscreen(container) {
     const video = container.querySelector('video');
     const videoSrc = video.querySelector('source').src;
-    
+
     const modal = document.createElement('div');
     modal.className = 'fixed inset-0 z-50 bg-black flex items-center justify-center';
-    
+
     modal.innerHTML = `
         <button class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10" 
                 onclick="closeVideoFullscreen(this)">
@@ -1055,7 +1055,7 @@ function openVideoFullscreen(container) {
             <source src="${videoSrc}" type="video/mp4">
         </video>
     `;
-    
+
     document.body.appendChild(modal);
     document.body.style.overflow = 'hidden';
 }
@@ -1077,7 +1077,10 @@ async function votePoll(pollId, optionId, optionElement) {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
             },
-            body: JSON.stringify({ option_id: optionId })
+            body: JSON.stringify({
+                poll_id: pollId,
+                option_id: optionId
+            })
         });
 
         const data = await response.json();
@@ -1086,14 +1089,14 @@ async function votePoll(pollId, optionId, optionElement) {
             // Mettre à jour les pourcentages
             const poll = optionElement.closest('.space-y-2');
             const options = poll.querySelectorAll('.poll-option');
-            
+
             data.poll.options.forEach((opt, index) => {
                 const progress = options[index].querySelector('.poll-progress');
                 const percentage = options[index].querySelector('.poll-percentage');
-                const percent = data.poll.total_votes > 0 
-                    ? Math.round((opt.votes_count / data.poll.total_votes) * 100) 
+                const percent = data.poll.total_votes > 0
+                    ? Math.round((opt.votes_count / data.poll.total_votes) * 100)
                     : 0;
-                
+
                 progress.style.width = percent + '%';
                 percentage.textContent = percent + '%';
             });
@@ -1117,7 +1120,7 @@ async function votePoll(pollId, optionId, optionElement) {
 // INITIALISATION GLOBALE
 // ============================================
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initializeApp();
 });
 
@@ -1132,14 +1135,14 @@ function initializeCommentsPagination() {
     document.querySelectorAll('.post-card').forEach(post => {
         const commentList = post.querySelector('.comment-section .space-y-2');
         if (!commentList) return;
-        
+
         const allComments = commentList.querySelectorAll('.comment-item');
         allComments.forEach((comment, index) => {
             if (index >= 10) {
                 comment.classList.add('hidden');
             }
         });
-        
+
         updateShowMoreButton(post);
     });
 }
@@ -1164,13 +1167,13 @@ function initializeEscapeKey() {
             if (shareModal?.classList.contains('active')) {
                 closeShareModal();
             }
-            
+
             // Fermer modal d'édition
             const editModal = document.getElementById('editModal');
             if (editModal?.classList.contains('active')) {
                 closeEditModal();
             }
-            
+
             // Fermer fullscreen image/video
             const fullscreen = document.querySelector('.fixed.inset-0.z-50');
             if (fullscreen) {
@@ -1184,7 +1187,7 @@ function initializeEscapeKey() {
 // 4. Lazy loading des vidéos (performance)
 function initializeVideoLazyLoading() {
     const videos = document.querySelectorAll('video[data-video-src]');
-    
+
     if ('IntersectionObserver' in window) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1197,7 +1200,7 @@ function initializeVideoLazyLoading() {
                 }
             });
         });
-        
+
         videos.forEach(video => observer.observe(video));
     } else {
         // Fallback pour anciens navigateurs
@@ -1210,19 +1213,19 @@ function initializeVideoLazyLoading() {
 }
 function initializeApp() {
     console.log('🚀 Initialisation du feed...');
-    
+
     // 1. Initialiser la pagination des commentaires
     initializeCommentsPagination();
-    
+
     // 2. Fermer les menus au clic extérieur
     initializeClickOutside();
-    
+
     // 3. Fermer les modals avec Escape
     initializeEscapeKey();
-    
+
     // 4. Lazy loading des vidéos
     initializeVideoLazyLoading();
-    
+
     console.log('✅ Initialisation terminée');
 }
 
