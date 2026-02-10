@@ -1156,7 +1156,7 @@
 
                 <!-- Modal de partage -->
                                          
-                <div class="share-modal hidden" id="shareModal">
+                <div class="share-modal" id="shareModal">
                     <div class="share-modal-content">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="font-semibold text-base">Partager le post</h3>
