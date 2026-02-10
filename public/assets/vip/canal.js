@@ -326,9 +326,9 @@ function generateTextPost(post) {
         <div class="flex gap-2 sm:gap-2.5 items-start w-full max-w-full sm:max-w-2xl" data-post-id="${post.id}" data-post-source="${post.source}">
             <!-- Avatar -->
             <div class="flex-shrink-0">
-                ${post.user.avatar 
-                    ? `<img src="${post.user.avatar}" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover ring-1 sm:ring-2 ring-white shadow-sm" alt="${escapeHtml(post.user.name)}">`
-                    : `<div class="w-10 h-10 sm:w-8 sm:h-8 bg-gradient-to-br from-${post.user.color}-500 to-${post.user.color}-600 rounded-full flex items-center justify-center text-white font-semibold text-[10px] sm:text-xs shadow-sm ring-1 sm:ring-2 ring-white">${post.user.initials}</div>`
+                 ${post.user.avatar 
+                    ? `<img src="${post.user.avatar}" onerror="this.src='https://ui-avatars.com/api/?name=${post.user.name}&background=random'" class="w-10 h-10 sm:w-8 sm:h-8 rounded-full object-cover ring-1 sm:ring-2 ring-white shadow-sm" alt="${escapeHtml(post.user.name)}">`
+                    : `<div class="w-10 h-10 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-[10px] sm:text-xs shadow-sm ring-1 sm:ring-2 ring-white">${post.user.initials}</div>`
                 }
             </div>
             
@@ -377,9 +377,9 @@ function generateMediaPost(post) {
         <div class="flex gap-2 sm:gap-2.5 items-start w-full max-w-full sm:max-w-2xl" data-post-id="${post.id}" data-post-source="${post.source}">
             <!-- Avatar -->
             <div class="flex-shrink-0">
-                ${post.user.avatar 
-                    ? `<img src="${post.user.avatar}" class="w-10 h-10 sm:w-8 sm:h-8 rounded-full object-cover ring-1 sm:ring-2 ring-white shadow-sm" alt="${escapeHtml(post.user.name)}">`
-                    : `<div class="w-10 h-10 sm:w-8 sm:h-8 bg-gradient-to-br from-${post.user.color}-500 to-${post.user.color}-600 rounded-full flex items-center justify-center text-white font-semibold text-[10px] sm:text-xs shadow-sm ring-1 sm:ring-2 ring-white">${post.user.initials}</div>`
+                 ${post.user.avatar 
+                    ? `<img src="${post.user.avatar}" onerror="this.src='https://ui-avatars.com/api/?name=${post.user.name}&background=random'" class="w-10 h-10 sm:w-8 sm:h-8 rounded-full object-cover ring-1 sm:ring-2 ring-white shadow-sm" alt="${escapeHtml(post.user.name)}">`
+                    : `<div class="w-10 h-10 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-[10px] sm:text-xs shadow-sm ring-1 sm:ring-2 ring-white">${post.user.initials}</div>`
                 }
             </div>
             
