@@ -492,14 +492,16 @@
                         <div class="p-4 border-b border-gray-100">
                             <div class="flex items-start gap-3">
                                 <div class="profile-avatar">
-                                   <div class="w-10 h-10 rounded-full border-4 border-white shadow-lg mx-auto overflow-hidden flex items-center justify-center {{ Auth::user() && Auth::user()->avatar ? '' : 'bg-gradient-to-br from-purple-500 to-pink-500' }}">
+                                   <div class="w-10 h-10 rounded-full border-white shadow-lg mx-auto overflow-hidden flex items-center justify-center {{ Auth::user() && Auth::user()->avatar ? '' : 'bg-gradient-to-br from-purple-500 to-pink-500' }}">
 
                                         @if(Auth::user() && Auth::user()->avatar)
-                                            <img src="{{ Auth::user()->getAvatar(48) }}" alt="Avatar" class="w-7 h-7 rounded-full object-cover">
+                                            <img src="{{ $post->user->getAvatar(48) }}" alt="Avatar" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"  
+                                            onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($post->user->full_name) }}&background=random'">
+                                           
                                         @else
-                                            <span class="text-white text-2xl font-bold select-none">
-                                            {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
-                                            </span>
+                                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
+                                               {{ strtoupper(substr($post->user->full_name ?? $post->user->full_name , 0, 2)) }}
+                                            </div>
                                         @endif
                                     </div>
 
@@ -682,9 +684,18 @@
                             <div class="p-4 border-b border-gray-100">
                                 <div class="flex items-start gap-3">
                                     <div class="profile-avatar">
-                                        <div
-                                            class="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex-shrink-0">
-                                        </div>
+                                        <div class="w-10 h-10 rounded-full border-white shadow-lg mx-auto overflow-hidden flex items-center justify-center {{ Auth::user() && Auth::user()->avatar ? '' : 'bg-gradient-to-br from-purple-500 to-pink-500' }}">
+
+                                        @if(Auth::user() && Auth::user()->avatar)
+                                            <img src="{{ $post->user->getAvatar(48) }}" alt="Avatar" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"  
+                                            onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($post->user->full_name) }}&background=random'">
+                                           
+                                        @else
+                                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
+                                               {{ strtoupper(substr($post->user->full_name ?? $post->user->full_name , 0, 2)) }}
+                                            </div>
+                                        @endif
+                                       </div>
                                         <div class="profile-tooltip">
                                             <div class="text-xs text-gray-500 mb-1">Performance</div>
                                             <div class="flex items-center justify-between mb-2">
@@ -900,9 +911,18 @@
                         <div class="p-4 border-b border-gray-100">
                                 <div class="flex items-start gap-3">
                                     <div class="profile-avatar">
-                                        <div
-                                            class="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex-shrink-0">
-                                        </div>
+                                       <div class="w-10 h-10 rounded-full border-white shadow-lg mx-auto overflow-hidden flex items-center justify-center {{ Auth::user() && Auth::user()->avatar ? '' : 'bg-gradient-to-br from-purple-500 to-pink-500' }}">
+
+                                        @if(Auth::user() && Auth::user()->avatar)
+                                            <img src="{{ $post->user->getAvatar(48) }}" alt="Avatar" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"  
+                                            onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($post->user->full_name) }}&background=random'">
+                                           
+                                        @else
+                                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
+                                               {{ strtoupper(substr($post->user->full_name ?? $post->user->full_name , 0, 2)) }}
+                                            </div>
+                                        @endif
+                                    </div>
                                         <div class="profile-tooltip">
                                             <div class="text-xs text-gray-500 mb-1">Performance</div>
                                             <div class="flex items-center justify-between mb-2">
