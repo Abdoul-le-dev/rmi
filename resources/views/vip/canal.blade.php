@@ -615,7 +615,7 @@
 
     <script src="{{ asset('assets/vip/canal.js') }}"></script>
     <script src="{{ asset('assets/vip/vip.js') }}"></script>
-    <script src="{{ asset('assets/vip/send_message_canal.js') }}"></script>
+    <script src="{{ asset('assets/vip/event.js') }}"></script>
 
 </body>
 
