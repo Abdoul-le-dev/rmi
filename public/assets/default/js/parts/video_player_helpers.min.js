@@ -30,8 +30,6 @@
         height,
         playerId,
     ) {
-       
-
         const html = `
             <video 
                 id="${playerId}" 
@@ -52,7 +50,6 @@
         // 🔥 HLS (.m3u8)
 
         if (videoUrl.endsWith(".m3u8")) {
-           
             return {
                 html,
                 options: {
@@ -152,17 +149,36 @@
             playerInstance = videojs(playerId, playerData.options);
             playerInstance.ready(function () {
                 if (videoUrl.endsWith(".m3u8")) {
-                   
-                    this.qualitySelectorHls();
-                    const qualityLevels = this.qualityLevels();
+                    const player = this;
+
+                    // 1. Initialisation simple
+                    player.qualitySelectorHls();
+
+                    // 2. On récupère les niveaux
+                    const qualityLevels = player.qualityLevels();
+
+                    // 3. On écoute le changement SANS faire de boucle manuelle sur 'enabled'
+                    // On laisse Video.js gérer le changement de piste interne
                     qualityLevels.on("change", function () {
-                        const isAuto = qualityLevels.selectedIndex === -1;
-                        for (let i = 0; i < qualityLevels.length; i++) {
-                            if (isAuto) {
+                        const selectedIndex = qualityLevels.selectedIndex; // -1 pour Auto
+
+                        if (selectedIndex !== -1) {
+                            const selectedLevel = qualityLevels[selectedIndex];
+                            console.log(
+                                "🎯 Changement vers :",
+                                selectedLevel.height + "p",
+                            );
+
+                            // Au lieu de désactiver les autres, on demande au moteur VHS
+                            // de donner la priorité absolue à cette résolution
+                            // (Cela évite l'erreur IndexSizeError)
+                            for (let i = 0; i < qualityLevels.length; i++) {
+                                qualityLevels[i].enabled = i === selectedIndex;
+                            }
+                        } else {
+                            // Si on repasse en Auto, on réactive tout
+                            for (let i = 0; i < qualityLevels.length; i++) {
                                 qualityLevels[i].enabled = true;
-                            } else {
-                                qualityLevels[i].enabled =
-                                    i === qualityLevels.selectedIndex;
                             }
                         }
                     });
