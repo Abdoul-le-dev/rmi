@@ -58,8 +58,8 @@
                             overrideNative: true,
                             enableLowInitialPlaylist: true,
                             withCredentials: true,
-                            // smoothQualityChange: true,
-                            fastQualityChange: true,
+                            smoothQualityChange: true,
+                            
                         },
                         nativeAudioTracks: false,
                         nativeVideoTracks: false,
