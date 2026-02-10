@@ -150,37 +150,45 @@
             playerInstance.ready(function () {
                 if (videoUrl.endsWith(".m3u8")) {
                     const player = this;
-
-                    // 1. Initialisation simple
                     player.qualitySelectorHls();
 
-                    // 2. On récupère les niveaux
                     const qualityLevels = player.qualityLevels();
 
-                    // 3. On écoute le changement SANS faire de boucle manuelle sur 'enabled'
-                    // On laisse Video.js gérer le changement de piste interne
+                    // On écoute le changement de sélection dans le menu
                     qualityLevels.on("change", function () {
-                        const selectedIndex = qualityLevels.selectedIndex; // -1 pour Auto
+                        // On récupère l'index choisi par l'utilisateur dans l'interface
+                        const newIndex = qualityLevels.selectedIndex;
 
-                        if (selectedIndex !== -1) {
-                            const selectedLevel = qualityLevels[selectedIndex];
-                            console.log(
-                                "🎯 Changement vers :",
-                                selectedLevel.height + "p",
-                            );
+                        console.log(
+                            newIndex === -1
+                                ? "Retour en mode Auto"
+                                : "🎯 Tentative vers l'index : " + newIndex,
+                        );
 
-                            // Au lieu de désactiver les autres, on demande au moteur VHS
-                            // de donner la priorité absolue à cette résolution
-                            // (Cela évite l'erreur IndexSizeError)
-                            for (let i = 0; i < qualityLevels.length; i++) {
-                                qualityLevels[i].enabled = i === selectedIndex;
+                        // TECHNIQUE DE SÉCURITÉ :
+                        // Au lieu de faire une boucle for qui déclenche l'IndexSizeError,
+                        // on utilise un setTimeout pour laisser Video.js finir son cycle actuel.
+                        setTimeout(() => {
+                            try {
+                                for (let i = 0; i < qualityLevels.length; i++) {
+                                    // Si -1 (Auto), on active tout. Sinon, on n'active que l'index choisi.
+                                    qualityLevels[i].enabled =
+                                        newIndex === -1 || i === newIndex;
+                                }
+
+                                // Si on a choisi une qualité spécifique, on force un petit saut
+                                // pour vider le buffer proprement sans faire planter le moteur.
+                                if (newIndex !== -1) {
+                                    const currentTime = player.currentTime();
+                                    player.currentTime(currentTime + 0.01);
+                                }
+                            } catch (e) {
+                                console.warn(
+                                    "Erreur de changement de qualité évitée :",
+                                    e,
+                                );
                             }
-                        } else {
-                            // Si on repasse en Auto, on réactive tout
-                            for (let i = 0; i < qualityLevels.length; i++) {
-                                qualityLevels[i].enabled = true;
-                            }
-                        }
+                        }, 100); // 100ms de délai pour stabiliser le moteur
                     });
                 }
             });
