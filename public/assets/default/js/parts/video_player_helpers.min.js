@@ -151,30 +151,18 @@
             playerInstance.ready(function () {
                 if (videoUrl.endsWith(".m3u8")) {
                     const player = this;
-
-                    // 1. Initialiser le plugin
                     player.qualitySelectorHls();
 
-                    // 2. Récupérer l'accès aux niveaux
                     const qualityLevels = player.qualityLevels();
 
-                    // 3. Au lieu de forcer, on dit à Video.js de préférer la sélection utilisateur
                     qualityLevels.on("change", function () {
                         const selectedIndex = qualityLevels.selectedIndex;
 
                         if (selectedIndex !== -1) {
-                            console.log(
-                                "Qualité choisie :",
-                                qualityLevels[selectedIndex].height + "p",
-                            );
-
-                            // On active uniquement le niveau choisi de façon sécurisée
-                            // sans déclencher l'erreur IndexSizeError
                             for (let i = 0; i < qualityLevels.length; i++) {
                                 qualityLevels[i].enabled = i === selectedIndex;
                             }
                         } else {
-                            // Mode Auto : on réactive tout proprement
                             for (let i = 0; i < qualityLevels.length; i++) {
                                 qualityLevels[i].enabled = true;
                             }
