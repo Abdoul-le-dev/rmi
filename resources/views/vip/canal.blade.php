@@ -176,9 +176,9 @@
 
                         <div class="relative flex-shrink-0 my-2">
                             @if($forum->forum->icon)
-                                <img src="{{ asset($forum->forum->icon) }}" alt="{{ $forum->title ?? $forum->forum->slug }}"
+                                <img src="{{$forum->forum->getAvatar(48) }}" alt="{{ $forum->title ?? $forum->forum->slug }}"
                                     class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
-                                    onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($forum->title ?? $forum->forum->slug) }}&background=random'">
+                                    onerror="this.src='https://ui-avatars.com/api/?name={{ strtoupper(substr($forum->title ?? $forum->forum->slug, 0, 2)) }}&background=random'">
                             @else
                                 <div
                                     class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">

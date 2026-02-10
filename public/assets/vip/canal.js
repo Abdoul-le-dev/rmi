@@ -328,7 +328,7 @@ function generateTextPost(post) {
             <div class="flex-shrink-0">
                 ${post.user.avatar 
                     ? `<img src="${post.user.avatar}" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover ring-1 sm:ring-2 ring-white shadow-sm" alt="${escapeHtml(post.user.name)}">`
-                    : `<div class="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-${post.user.color}-500 to-${post.user.color}-600 rounded-full flex items-center justify-center text-white font-semibold text-[10px] sm:text-xs shadow-sm ring-1 sm:ring-2 ring-white">${post.user.initials}</div>`
+                    : `<div class="w-10 h-10 sm:w-8 sm:h-8 bg-gradient-to-br from-${post.user.color}-500 to-${post.user.color}-600 rounded-full flex items-center justify-center text-white font-semibold text-[10px] sm:text-xs shadow-sm ring-1 sm:ring-2 ring-white">${post.user.initials}</div>`
                 }
             </div>
             
@@ -378,8 +378,8 @@ function generateMediaPost(post) {
             <!-- Avatar -->
             <div class="flex-shrink-0">
                 ${post.user.avatar 
-                    ? `<img src="${post.user.avatar}" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover ring-1 sm:ring-2 ring-white shadow-sm" alt="${escapeHtml(post.user.name)}">`
-                    : `<div class="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-${post.user.color}-500 to-${post.user.color}-600 rounded-full flex items-center justify-center text-white font-semibold text-[10px] sm:text-xs shadow-sm ring-1 sm:ring-2 ring-white">${post.user.initials}</div>`
+                    ? `<img src="${post.user.avatar}" class="w-10 h-10 sm:w-8 sm:h-8 rounded-full object-cover ring-1 sm:ring-2 ring-white shadow-sm" alt="${escapeHtml(post.user.name)}">`
+                    : `<div class="w-10 h-10 sm:w-8 sm:h-8 bg-gradient-to-br from-${post.user.color}-500 to-${post.user.color}-600 rounded-full flex items-center justify-center text-white font-semibold text-[10px] sm:text-xs shadow-sm ring-1 sm:ring-2 ring-white">${post.user.initials}</div>`
                 }
             </div>
             
@@ -454,8 +454,8 @@ function generatePollPost(post) {
             <!-- Avatar -->
             <div class="flex-shrink-0">
                 ${post.user.avatar 
-                    ? `<img src="${post.user.avatar}" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover ring-1 sm:ring-2 ring-white shadow-sm" alt="${escapeHtml(post.user.name)}">`
-                    : `<div class="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-[10px] sm:text-xs shadow-sm ring-1 sm:ring-2 ring-white">${post.user.initials}</div>`
+                    ? `<img src="${post.user.avatar}" onerror="this.src='https://ui-avatars.com/api/?name=${post.user.name}&background=random'" class="w-10 h-10 sm:w-8 sm:h-8 rounded-full object-cover ring-1 sm:ring-2 ring-white shadow-sm" alt="${escapeHtml(post.user.name)}">`
+                    : `<div class="w-10 h-10 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-[10px] sm:text-xs shadow-sm ring-1 sm:ring-2 ring-white">${post.user.initials}</div>`
                 }
             </div>
             
@@ -535,7 +535,7 @@ function generateMediaGallery(media, postId) {
                     ${item.type === 'video'
                         ? `<video src="${item.url}" class="w-full h-full object-cover" preload="metadata"></video>
                            <div class="absolute bottom-1.5 sm:bottom-2 right-1.5 sm:right-2 bg-black/60 text-white text-[9px] sm:text-[10px] px-1 sm:px-1.5 py-0.5 rounded">📹</div>`
-                        : `<img src="${item.url}" class="w-full h-full object-cover group-hover:opacity-95 transition" alt="Image">`
+                        : `<img src="${item.url}" class="w-full h-full object-cover group-hover:opacity-95 transition" alt="Image" >`
                     }
                 </div>
             `;
