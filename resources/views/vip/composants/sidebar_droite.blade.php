@@ -1,4 +1,4 @@
-<aside class="hidden lg:block lg:col-span-3 ">
+<aside class="hidden lg:block lg:col-span-3 xl:col-span-3 ">
 
     <!-- Version améliorée du sidebar sticky -->
     <div class="sticky top-20 space-y-5 group relative  overflow-hidden rounded-r-xl">

@@ -1,11 +1,11 @@
-<aside class="hidden lg:block lg:col-span-3">
+<aside class="hidden xl:block xl:col-span-3">
     <div class="bg-white rounded-l-xl shadow-sm border border-gray-200 overflow-hidden sticky top-20">
 
         <!-- Profil utilisateur -->
         <div class="p-6 text-center border-b border-gray-200 gradient-bg">
             <div class="relative inline-block mb-3">
                 <img src="{{ Auth::user()->getAvatar(48) }}" alt=""
-                    class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg mx-auto">
+                    class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg mx-auto" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(string: Auth::user()->full_name) }}&background=random'">
                 <div class="absolute bottom-2 right-2 w-3 h-3 bg-green-500 border-3 border-white rounded-full">
                 </div>
             </div>
@@ -357,7 +357,7 @@
                     <div
                         class="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 animate-status-fade-in">
                         <span
-                            class="text-[8px] font-black tracking-wider text-white uppercase px-1.5 py-0.5 bg-indigo-600 rounded-sm">REPLAY</span>
+                            class="hidden md:block text-[8px] font-black tracking-wider text-white uppercase px-1.5 py-0.5 bg-indigo-600 rounded-sm">REPLAY</span>
                     </div>
 
                     <div
@@ -428,7 +428,7 @@
                         <div class="w-1.5 h-1.5 bg-red-500 rounded-full animate-live-pulse shadow-lg shadow-red-500/60">
                         </div>
                         <span
-                            class="text-[8px] font-black tracking-wider text-white uppercase px-1.5 py-0.5 bg-red-600 rounded-sm">LIVE</span>
+                            class="hidden lg:flex text-[8px] font-black tracking-wider text-white uppercase px-1.5 py-0.5 bg-red-600 rounded-sm">LIVE</span>
                     </div>
 
                     <div
