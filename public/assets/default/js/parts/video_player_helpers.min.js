@@ -152,17 +152,8 @@
             playerInstance = videojs(playerId, playerData.options);
             playerInstance.ready(function () {
                 if (videoUrl.endsWith(".m3u8")) {
-                    // 1. Activer le sélecteur dès que possible
+                    
                     this.qualitySelectorHls();
-
-                    // 2. Gestionnaire de secours pour s'assurer que le clic force le changement
-                    const qualityLevels = this.qualityLevels();
-
-                    // On force le player à accepter le changement immédiat
-                    qualityLevels.on("addqualitylevel", function (event) {
-                        let qualityLevel = event.qualityLevel;
-                        qualityLevel.enabled = true; // S'assure que le niveau est sélectionnable
-                    });
                 }
             });
 
