@@ -751,36 +751,7 @@ function handleMessageKeyPress(event) {
     }
 }
 
-async function sendQuickMessage() {
-    const input = document.getElementById('messageInput');
-    const message = input.value.trim();
-    
-    if (!message) return;
-    
-    console.log('Envoi message rapide:', {
-        channel: currentChannelData?.id,
-        message: message
-    });
-    
-    // TODO: Implémenter l'envoi API
-    
-    input.value = '';
-}
 
-// ==================== MODALS ====================
-function openPollModal() {
-    document.getElementById('pollModal').classList.add('active');
-    document.getElementById('pollQuestion').focus();
-}
-
-function closePollModal() {
-    document.getElementById('pollModal').classList.remove('active');
-    document.getElementById('pollQuestion').value = '';
-    document.getElementById('pollOptions').innerHTML = `
-        <input type="text" class="poll-option-input w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Option 1">
-        <input type="text" class="poll-option-input w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Option 2">
-    `;
-}
 
 function addPollOption() {
     const container = document.getElementById('pollOptions');

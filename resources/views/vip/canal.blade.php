@@ -133,15 +133,15 @@
                     <div class="flex ">
 
                         <a href="/vip" class="hidden md:flex p-2 rounded-lg hover:bg-gray-100 transition text-gray-600"
-                        title="Retour VIP">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                        </svg>
-                       </a>
+                            title="Retour VIP">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </a>
 
-                       <h1 class="text-base md:text-lg font-medium text-black uppercase tracking-wide p-1">
-                        Coach Community
-                       </h1>
+                        <h1 class="text-base md:text-lg font-medium text-black uppercase tracking-wide p-1">
+                            Coach Community
+                        </h1>
 
                     </div>
 
@@ -150,7 +150,7 @@
 
 
                     <div class="flex gap-2">
-                        
+
 
                         <div class="relative group hidden md:block">
                             <button class="p-2 hover:bg-gray-100 rounded-full transition">
@@ -159,13 +159,13 @@
                                         d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                                 </svg>
                             </button>
-                           
+
                         </div>
                     </div>
                 </div>
 
                 <!-- Barre de recherche -->
-                
+
             </div>
 
             <!-- Liste des canaux -->
@@ -292,66 +292,66 @@
 
             @if (auth()->user()->role_name != 'user')
 
-                                        
-                                            
-                                      
-            <div class="bg-white border-t border-gray-200 p-3 sm:p-4 flex-shrink-0"
-                data-forum-id="{{ $forum->forum_id ?? '' }}">
-                <div class="max-w-4xl mx-auto">
-                    <div class="flex items-center gap-2 sm:gap-3">
-                        <!-- Avatar utilisateur -->
-                        <div
-                            class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold text-xs sm:text-sm flex-shrink-0">
-                            {{ strtoupper(substr(auth()->user()->full_name ?? 'U', 0, 2)) }}
-                        </div>
 
-                        <!-- Input message -->
-                        <div class="flex-1 relative">
-                            <input type="text" id="messageInput" placeholder="Écrivez un message..."
-                                class="w-full px-3 sm:px-4 py-2 sm:py-3 pr-24 sm:pr-32 border border-gray-300 rounded-full focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition text-sm sm:text-base"
-                                onkeypress="handleMessageKeyPress(event)">
 
-                            <!-- Boutons à l'intérieur de l'input -->
-                            <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5 sm:gap-1">
-                                <!-- Bouton Sondage (avec indicateur visuel) -->
-                                <button onclick="openPollModal()"
-                                    class="p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition relative"
-                                    title="Créer un sondage">
-                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                    <!-- L'indicateur sera ajouté dynamiquement ici -->
-                                </button>
 
-                                <!-- Bouton Image (avec indicateur visuel + compteur) -->
-                                <button onclick="document.getElementById('imageInput').click()"
-                                    class="p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition relative"
-                                    title="Ajouter une image">
-                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                    <!-- L'indicateur avec compteur sera ajouté dynamiquement ici -->
-                                </button>
-                                <input type="file" id="imageInput" class="hidden" multiple accept="image/*,video/*">
+                <div class="bg-white border-t border-gray-200 p-3 sm:p-4 flex-shrink-0"
+                    data-forum-id="{{ $forum->forum_id ?? '' }}">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="flex items-center gap-2 sm:gap-3">
+                            <!-- Avatar utilisateur -->
+                            <div
+                                class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold text-xs sm:text-sm flex-shrink-0">
+                                {{ strtoupper(substr(auth()->user()->full_name ?? 'U', 0, 2)) }}
                             </div>
-                        </div>
 
-                        <!-- Bouton Envoyer -->
-                        <button onclick="sendQuickMessage()"
-                            class="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-600 hover:bg-indigo-700 rounded-full flex items-center justify-center transition flex-shrink-0">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                            </svg>
-                        </button>
+                            <!-- Input message -->
+                            <div class="flex-1 relative">
+                                <input type="text" id="messageInput" placeholder="Écrivez un message..."
+                                    class="w-full px-3 sm:px-4 py-2 sm:py-3 pr-24 sm:pr-32 border border-gray-300 rounded-full focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition text-sm sm:text-base"
+                                    onkeypress="handleMessageKeyPress(event)">
+
+                                <!-- Boutons à l'intérieur de l'input -->
+                                <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5 sm:gap-1">
+                                    <!-- Bouton Sondage (avec indicateur visuel) -->
+                                    <button onclick="openPollModal()"
+                                        class="p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition relative"
+                                        title="Créer un sondage">
+                                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        <!-- L'indicateur sera ajouté dynamiquement ici -->
+                                    </button>
+
+                                    <!-- Bouton Image (avec indicateur visuel + compteur) -->
+                                    <button onclick="document.getElementById('imageInput').click()"
+                                        class="p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition relative"
+                                        title="Ajouter une image">
+                                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        <!-- L'indicateur avec compteur sera ajouté dynamiquement ici -->
+                                    </button>
+                                    <input type="file" id="imageInput" class="hidden" multiple accept="image/*,video/*">
+                                </div>
+                            </div>
+
+                            <!-- Bouton Envoyer -->
+                            <button onclick="sendQuickMessage()"
+                                class="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-600 hover:bg-indigo-700 rounded-full flex items-center justify-center transition flex-shrink-0">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
             @endif
 
@@ -619,7 +619,64 @@
 
     <script src="{{ asset('assets/vip/canal.js') }}"></script>
     <script src="{{ asset('assets/vip/vip.js') }}"></script>
-    <script id="data" type="application/json" src="{{ asset('assets/vip/event.js') }}"></script>
+    <script>
+        .calendar - grid {
+            display: grid;
+            grid - template - columns: 60px repeat(7, 1fr);
+            min - width: 900px;
+        }
+
+        @media(max - width: 768px) {
+    .calendar - grid {
+                grid - template - columns: 50px repeat(7, minmax(100px, 1fr));
+                min - width: 750px;
+            }
+        }
+
+.time - slot {
+            border - right: 1px solid #e5e7eb;
+            border - bottom: 1px solid #e5e7eb;
+            min - height: 64px;
+        }
+
+.day - column {
+            position: relative;
+        }
+
+/* Modal */
+.modal - backdrop {
+            backdrop - filter: blur(4px);
+            transition: opacity 0.2s ease;
+        }
+
+.modal - content {
+            transform: scale(0.95);
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+
+.modal - backdrop.active.modal - content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* Animation événement en cours */
+        @keyframes pulse - live {
+
+            0 %,
+                100 % {
+                    opacity: 1;
+                }
+
+            50 % {
+                opacity: 0.8;
+            }
+        }
+
+.live - badge {
+            animation: pulse - live 2s ease -in -out infinite;
+        }
+    </script>
 
 </body>
 
