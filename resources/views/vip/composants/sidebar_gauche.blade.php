@@ -4,7 +4,7 @@
         <!-- Profil utilisateur -->
         <div class="p-6 text-center border-b border-gray-200 gradient-bg">
             <div class="relative inline-block mb-3">
-                <img src="{{ Auth::user()->getAvatar(48) }}" alt="Profil"
+                <img src="{{ Auth::user()->getAvatar(48) }}" alt=""
                     class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg mx-auto">
                 <div class="absolute bottom-2 right-2 w-3 h-3 bg-green-500 border-3 border-white rounded-full">
                 </div>

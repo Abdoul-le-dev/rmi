@@ -4,9 +4,17 @@ const sidebar = document.getElementById('sidebar');
 const channelItems = document.querySelectorAll('.channel-item');
 
 // Initialement, afficher la sidebar sur mobile
-if (window.innerWidth < 768) {
-    sidebar.classList.remove('-translate-x-full');
+function updateSidebarState() {
+    if (window.innerWidth < 768) {
+        // Mobile : sidebar fermée
+        sidebar.classList.add('-translate-x-full');
+    } else {
+        // Desktop : sidebar visible
+        sidebar.classList.remove('-translate-x-full');
+    }
 }
+
+window.addEventListener('resize', updateSidebarState);
 
 backButton?.addEventListener('click', () => {
     if (window.innerWidth < 768) {
@@ -636,18 +644,7 @@ document.addEventListener('keydown', (e) => {
 // ============================================
 // MENU DROPDOWN
 // ============================================
-function toggleMenu(button) {
-    const menu = button.nextElementSibling;
-    const allMenus = document.querySelectorAll('.dropdown-menu');
-    
-    // Fermer tous les autres menus
-    allMenus.forEach(m => {
-        if (m !== menu) m.classList.add('hidden');
-    });
-    
-    // Toggle le menu cliqué
-    menu.classList.toggle('hidden');
-}
+
 
 // Fermer les menus au clic extérieur
 document.addEventListener('click', (e) => {

@@ -285,6 +285,12 @@
 
 
             <!-- BARRE DE MESSAGE FIXE -->
+
+            @if (auth()->user()->role_name != 'user')
+
+                                        
+                                            
+                                      
             <div class="bg-white border-t border-gray-200 p-3 sm:p-4 flex-shrink-0"
                 data-forum-id="{{ $forum->forum_id ?? '' }}">
                 <div class="max-w-4xl mx-auto">
@@ -342,6 +348,8 @@
                     </div>
                 </div>
             </div>
+
+            @endif
 
             <!-- MODAL SONDAGE -->
             <div id="poll-modal"

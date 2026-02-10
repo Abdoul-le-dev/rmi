@@ -46,9 +46,7 @@
                     <div class="mb-4">
                         <!-- Ligne du haut -->
                         <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-gray-900">
-                                Bienvenue {{ $userData['user_name'] }} 👋
-                            </h3>
+                            <h3 class="text-sm sm:text-base md:text-lg font-bold text-gray-900">Bienvenue {{ $userData['user_name'] }} 👋</h3>
 
                             <!-- Actions rapides -->
                             <div class="flex items-center gap-2">
@@ -155,7 +153,7 @@
                             <!-- Textarea -->
                             <div class="relative">
                                 <textarea id="post-textarea" name="contents"
-                                    placeholder="Partagez vos idées, vos perfomances ... (@ pour mentionner, # pour hashtag)"
+                                    placeholder="Partagez vos idées, vos perfomances ..."
                                     class="w-full p-4 pr-16 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none transition-all duration-300"
                                     rows="3" oninput="handleTextInput()" onkeydown="handleKeyPress(event)"></textarea>
 
@@ -283,7 +281,7 @@
                                 <!-- Emoji Picker -->
                                 <div class="relative">
                                     <button type="button" onclick="toggleEmojiPicker()"
-                                        class="sm:hidden md:hidden lg:block  p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                                        class="hidden md:flex  p-2 rounded-lg hover:bg-gray-100 transition-colors"
                                         title="Emoji">
                                         <i class="far fa-smile text-gray-600 text-lg"></i>
                                     </button>
@@ -494,9 +492,17 @@
                         <div class="p-4 border-b border-gray-100">
                             <div class="flex items-start gap-3">
                                 <div class="profile-avatar">
-                                    <div
-                                        class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex-shrink-0">
+                                   <div class="w-9 h-9 rounded-full border-4 border-white shadow-lg mx-auto overflow-hidden flex items-center justify-center {{ Auth::user() && Auth::user()->avatar ? '' : 'bg-gradient-to-br from-purple-500 to-pink-500' }}">
+
+                                        @if(Auth::user() && Auth::user()->avatar)
+                                            <img src="{{ Auth::user()->getAvatar(48) }}" alt="Avatar" class="w-7 h-7 rounded-full object-cover">
+                                        @else
+                                            <span class="text-white text-2xl font-bold select-none">
+                                            {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
+                                            </span>
+                                        @endif
                                     </div>
+
                                     <div class="profile-tooltip">
                                         <div class="text-xs text-gray-500 mb-1">Performance</div>
                                         <div class="flex items-center justify-between mb-2">
@@ -1129,6 +1135,7 @@
                 </div>
 
                 <!-- Modal de partage -->
+                                         
                 <div class="share-modal" id="shareModal">
                     <div class="share-modal-content">
                         <div class="flex items-center justify-between mb-4">
@@ -1142,9 +1149,9 @@
                             </button>
                         </div>
                         <p class="text-sm text-gray-600 mb-4">Copiez le lien ci-dessous pour partager ce post</p>
-                        <div class="flex gap-2">
+                        <div class="flex gap-2 flex-col sm:flex-row">
                             <input type="text" id="shareLink" readonly
-                                class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-indigo-400"
+                                class="flex-1 min-w-0 px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:border-indigo-400"
                                 value="https://rmclass.com/post/123456">
                             <button onclick="copyShareLink()"
                                 class="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors font-medium">

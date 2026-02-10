@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Helpers\S3Helper;
 
-//Auth::loginUsingId(22422);
+Auth::loginUsingId(22422);
 
 class PostController extends Controller
 {
