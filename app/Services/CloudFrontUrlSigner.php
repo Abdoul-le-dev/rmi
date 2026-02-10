@@ -17,7 +17,7 @@ class CloudFrontUrlSigner
         $this->keyPairId = config('services.cloudfront.key_pair_id');
         $this->privateKey = file_get_contents(config('services.cloudfront.private_key_path'));
         $this->domain = config('services.cloudfront.domain');
-        $this->expiration = config('services.cloudfront.url_expiration', 3600);
+        $this->expiration = 8*config('services.cloudfront.url_expiration', 3600);
 
         $this->cloudFrontClient = new CloudFrontClient([
             'version' => 'latest',
@@ -59,9 +59,6 @@ class CloudFrontUrlSigner
 
         // Si vous voulez autoriser tous les fichiers sous /sign/
         $resource = 'https://' . $this->domain . '/*';
-
-        // OU si vous voulez être spécifique
-        // $resource = 'https://' . $this->domain . '/' . ltrim($paths[0], '/');
 
         $policy = [
             'Statement' => [

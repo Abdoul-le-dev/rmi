@@ -4,6 +4,26 @@
     <link rel="stylesheet" href="/assets/default/learning_page/styles.css"/>
     {{-- <link rel="stylesheet" href="/assets/default/vendors/video/video-js.min.css"> --}}
 <link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.6.1/video-js.min.css" rel="stylesheet">
+<style>
+/* Force l'affichage du menu des qualités */
+.vjs-quality-selector .vjs-menu {
+    display: block !important;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.vjs-quality-selector.vjs-hover .vjs-menu,
+.vjs-quality-selector:focus .vjs-menu {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Style pour que les items ressemblent au menu de vitesse */
+.vjs-menu-item-text {
+    text-transform: none;
+}
+</style>
 
 @endpush
 
@@ -82,7 +102,11 @@
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.6.1/video.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-quality-levels/4.0.0/videojs-contrib-quality-levels.min.js"></script>
+
+<!-- Plugin de sélection de qualité pour Video.js -->
+<script src="https://unpkg.com/videojs-contrib-quality-levels@4.1.0/dist/videojs-contrib-quality-levels.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/videojs-quality-selector-hls/dist/videojs-quality-selector-hls.min.js"></script>
 
     <script>
         var defaultItemType = '{{ !empty(request()->get('type')) ? request()->get('type') : (!empty($userLearningLastView) ? $userLearningLastView->item_type : '') }}'

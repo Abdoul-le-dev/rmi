@@ -30,8 +30,6 @@
         height,
         playerId,
     ) {
-        console.log("url :", videoUrl);
-
         const html = `
             <video 
                 id="${playerId}" 
@@ -50,9 +48,8 @@
         `;
 
         // 🔥 HLS (.m3u8)
-       
-        if ( videoUrl.endsWith('.m3u8')) {
-          console.log("HLS video detected:", videoUrl);
+
+        if (videoUrl.endsWith(".m3u8")) {
             return {
                 html,
                 options: {
@@ -62,6 +59,7 @@
                             enableLowInitialPlaylist: true,
                             withCredentials: true,
                             smoothQualityChange: true,
+                            
                         },
                         nativeAudioTracks: false,
                         nativeVideoTracks: false,
@@ -79,8 +77,6 @@
                             "timeDivider",
                             "durationDisplay",
                             "progressControl",
-                            // 'qualitySelector', // Sélecteur de qualité
-                          
                             "playbackRateMenuButton",
                             "fullscreenToggle",
                         ],
@@ -121,7 +117,7 @@
         const height = $(window).width() > 991 ? 426 : 264;
 
         $.post("/course/getFilePath", { file_id: fileId }, function (response) {
-            console.log("📦 Réponse brute backend:", response);
+            // console.log("📦 Réponse brute backend:", response);
             if (!response || response.code !== 200) {
                 return showAccessError();
             }
@@ -152,25 +148,42 @@
             container.html(playerData.html);
 
             playerInstance = videojs(playerId, playerData.options);
-            // playerInstance.ready(() => {
-            //     playerInstance.httpSourceSelector({
-            //         default: "auto",
-            //     });
-            // });
+            playerInstance.ready(function () {
+                if (videoUrl.endsWith(".m3u8")) {
+                    const player = this;
+                    player.qualitySelectorHls();
+
+                    const qualityLevels = player.qualityLevels();
+
+                    qualityLevels.on("change", function () {
+                        const selectedIndex = qualityLevels.selectedIndex;
+
+                        if (selectedIndex !== -1) {
+                            for (let i = 0; i < qualityLevels.length; i++) {
+                                qualityLevels[i].enabled = i === selectedIndex;
+                            }
+                        } else {
+                            for (let i = 0; i < qualityLevels.length; i++) {
+                                qualityLevels[i].enabled = true;
+                            }
+                        }
+                    });
+                }
+            });
 
             callback && callback();
         }).fail(function (xhr, status, error) {
-            console.error("❌ ERREUR AJAX");
-            console.error("Status HTTP :", xhr.status); // 500
-            console.error("Status text :", xhr.statusText);
-            console.error("Erreur JS :", error);
+            // console.error("❌ ERREUR AJAX");
+            // console.error("Status HTTP :", xhr.status); // 500
+            // console.error("Status text :", xhr.statusText);
+            // console.error("Erreur JS :", error);
 
-            console.error("ResponseText brut :");
-            console.error(xhr.responseText);
+            // console.error("ResponseText brut :");
+            // console.error(xhr.responseText);
 
             // si backend renvoie du JSON même en erreur
             try {
-                console.error("Response JSON :", JSON.parse(xhr.responseText));
+                // console.error("Response JSON :", JSON.parse(xhr.responseText));
             } catch (e) {
                 console.warn("Response non JSON");
             }
