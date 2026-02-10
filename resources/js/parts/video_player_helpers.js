@@ -30,7 +30,7 @@
         height,
         playerId,
     ) {
-        console.log("url :", videoUrl);
+       
 
         const html = `
             <video 
@@ -52,7 +52,7 @@
         // 🔥 HLS (.m3u8)
 
         if (videoUrl.endsWith(".m3u8")) {
-            console.log("HLS video detected:", videoUrl);
+           
             return {
                 html,
                 options: {
