@@ -468,7 +468,7 @@ class ForumController extends Controller
             ->where('status', 'validated')
             ->get();
 
-        $montantTotal = 10050; // $validatedTrophes->sum('montant_genere');
+        $montantTotal = 100000; // $validatedTrophes->sum('montant_genere');
 
         $percent = (($montantTotal / 1000) + 0.1);
 

@@ -42,23 +42,7 @@
                     <span class="notification-badge pulse-dot">2</span>
                 </button>
 
-                <!-- Avatar utilisateur -->
-                <div class="relative">
-                    <button id="user-menu-btn"
-                        class="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-100 transition-colors">
-                        <img src="{{ Auth::user()->getAvatar(48) }}"  alt="Avatar"
-                            class="w-7 h-7 rounded-full object-cover ring-2 ring-indigo-500">
-                    </button>
-
-                    <!-- Dropdown menu (caché par défaut) -->
-                    <div id="user-dropdown"
-                        class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
-                        <a href="#" class="block px-4 py-2 text-xs text-gray-700 hover:bg-gray-100">Mon Profil</a>
-                        <a href="#" class="block px-4 py-2 text-xs text-gray-700 hover:bg-gray-100">Paramètres</a>
-                        <hr class="my-2">
-                        <a href="#" class="block px-4 py-2 text-xs text-red-600 hover:bg-gray-100">Déconnexion</a>
-                    </div>
-                </div>
+                <
             </div>
         </div>
     </div>

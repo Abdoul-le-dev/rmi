@@ -8,6 +8,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('assets/vip/vip.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         .scrollbar-hide::-webkit-scrollbar {
@@ -129,15 +133,15 @@
                     <div class="flex ">
 
                         <a href="/vip" class="hidden md:flex p-2 rounded-lg hover:bg-gray-100 transition text-gray-600"
-                        title="Retour VIP">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                        </svg>
-                       </a>
+                            title="Retour VIP">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </a>
 
-                       <h1 class="text-base md:text-lg font-medium text-black uppercase tracking-wide p-1">
-                        Coach Community
-                       </h1>
+                        <h1 class="text-base md:text-lg font-medium text-black uppercase tracking-wide p-1">
+                            Coach Community
+                        </h1>
 
                     </div>
 
@@ -146,7 +150,7 @@
 
 
                     <div class="flex gap-2">
-                        
+
 
                         <div class="relative group hidden md:block">
                             <button class="p-2 hover:bg-gray-100 rounded-full transition">
@@ -155,13 +159,13 @@
                                         d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                                 </svg>
                             </button>
-                           
+
                         </div>
                     </div>
                 </div>
 
                 <!-- Barre de recherche -->
-                
+
             </div>
 
             <!-- Liste des canaux -->
@@ -176,9 +180,9 @@
 
                         <div class="relative flex-shrink-0 my-2">
                             @if($forum->forum->icon)
-                                <img src="{{ asset($forum->forum->icon) }}" alt="{{ $forum->title ?? $forum->forum->slug }}"
+                                <img src="{{$forum->forum->getAvatar(48) }}" alt="{{ $forum->title ?? $forum->forum->slug }}"
                                     class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
-                                    onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($forum->title ?? $forum->forum->slug) }}&background=random'">
+                                    onerror="this.src='https://ui-avatars.com/api/?name={{ strtoupper(substr($forum->title ?? $forum->forum->slug, 0, 2)) }}&background=random'">
                             @else
                                 <div
                                     class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
@@ -288,66 +292,66 @@
 
             @if (auth()->user()->role_name != 'user')
 
-                                        
-                                            
-                                      
-            <div class="bg-white border-t border-gray-200 p-3 sm:p-4 flex-shrink-0"
-                data-forum-id="{{ $forum->forum_id ?? '' }}">
-                <div class="max-w-4xl mx-auto">
-                    <div class="flex items-center gap-2 sm:gap-3">
-                        <!-- Avatar utilisateur -->
-                        <div
-                            class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold text-xs sm:text-sm flex-shrink-0">
-                            {{ strtoupper(substr(auth()->user()->full_name ?? 'U', 0, 2)) }}
-                        </div>
 
-                        <!-- Input message -->
-                        <div class="flex-1 relative">
-                            <input type="text" id="messageInput" placeholder="Écrivez un message..."
-                                class="w-full px-3 sm:px-4 py-2 sm:py-3 pr-24 sm:pr-32 border border-gray-300 rounded-full focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition text-sm sm:text-base"
-                                onkeypress="handleMessageKeyPress(event)">
 
-                            <!-- Boutons à l'intérieur de l'input -->
-                            <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5 sm:gap-1">
-                                <!-- Bouton Sondage (avec indicateur visuel) -->
-                                <button onclick="openPollModal()"
-                                    class="p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition relative"
-                                    title="Créer un sondage">
-                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                    <!-- L'indicateur sera ajouté dynamiquement ici -->
-                                </button>
 
-                                <!-- Bouton Image (avec indicateur visuel + compteur) -->
-                                <button onclick="document.getElementById('imageInput').click()"
-                                    class="p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition relative"
-                                    title="Ajouter une image">
-                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                    <!-- L'indicateur avec compteur sera ajouté dynamiquement ici -->
-                                </button>
-                                <input type="file" id="imageInput" class="hidden" multiple accept="image/*,video/*">
+                <div class="bg-white border-t border-gray-200 p-3 sm:p-4 flex-shrink-0"
+                    data-forum-id="{{ $forum->forum_id ?? '' }}">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="flex items-center gap-2 sm:gap-3">
+                            <!-- Avatar utilisateur -->
+                            <div
+                                class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold text-xs sm:text-sm flex-shrink-0">
+                                {{ strtoupper(substr(auth()->user()->full_name ?? 'U', 0, 2)) }}
                             </div>
-                        </div>
 
-                        <!-- Bouton Envoyer -->
-                        <button onclick="sendQuickMessage()"
-                            class="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-600 hover:bg-indigo-700 rounded-full flex items-center justify-center transition flex-shrink-0">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                            </svg>
-                        </button>
+                            <!-- Input message -->
+                            <div class="flex-1 relative">
+                                <input type="text" id="messageInput" placeholder="Écrivez un message..."
+                                    class="w-full px-3 sm:px-4 py-2 sm:py-3 pr-24 sm:pr-32 border border-gray-300 rounded-full focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition text-sm sm:text-base"
+                                    onkeypress="handleMessageKeyPress(event)">
+
+                                <!-- Boutons à l'intérieur de l'input -->
+                                <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5 sm:gap-1">
+                                    <!-- Bouton Sondage (avec indicateur visuel) -->
+                                    <button onclick="openPollModal()"
+                                        class="p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition relative"
+                                        title="Créer un sondage">
+                                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                        <!-- L'indicateur sera ajouté dynamiquement ici -->
+                                    </button>
+
+                                    <!-- Bouton Image (avec indicateur visuel + compteur) -->
+                                    <button onclick="document.getElementById('imageInput').click()"
+                                        class="p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition relative"
+                                        title="Ajouter une image">
+                                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        <!-- L'indicateur avec compteur sera ajouté dynamiquement ici -->
+                                    </button>
+                                    <input type="file" id="imageInput" class="hidden" multiple accept="image/*,video/*">
+                                </div>
+                            </div>
+
+                            <!-- Bouton Envoyer -->
+                            <button onclick="sendQuickMessage()"
+                                class="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-600 hover:bg-indigo-700 rounded-full flex items-center justify-center transition flex-shrink-0">
+                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
             @endif
 
@@ -615,7 +619,444 @@
 
     <script src="{{ asset('assets/vip/canal.js') }}"></script>
     <script src="{{ asset('assets/vip/vip.js') }}"></script>
-    <script src="{{ asset('assets/vip/send_message_canal.js') }}"></script>
+    <script>
+        // ============================================
+        // ÉTAT GLOBAL DES CONTENUS
+        // ============================================
+        const messageState = {
+            poll: null,           // Sondage ajouté
+            media: [],            // Images/vidéos ajoutées
+            text: ''              // Texte du message
+        };
+
+        // ============================================
+        // GESTION DU SONDAGE
+        // ============================================
+        function openPollModal() {
+            // Ouvrir votre modal de sondage existant
+            // Si un sondage existe déjà, pré-remplir le modal
+            if (messageState.poll) {
+                document.getElementById('poll-question').value = messageState.poll.question;
+                messageState.poll.options.forEach((option, index) => {
+                    const input = document.querySelector(`#poll-options input:nth-child(${index + 1})`);
+                    if (input) input.value = option;
+                });
+            }
+
+            // Afficher le modal
+            const modal = document.getElementById('poll-modal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function savePoll() {
+            const question = document.getElementById('poll-question')?.value.trim();
+            const optionInputs = document.querySelectorAll('#poll-options input');
+            const options = Array.from(optionInputs)
+                .map(input => input.value.trim())
+                .filter(val => val !== '');
+
+            if (!question || options.length < 2) {
+                if (typeof showToast === 'function') {
+                    showToast('Le sondage doit avoir une question et au moins 2 options', 'warning');
+                }
+                return;
+            }
+
+            // Sauvegarder dans l'état
+            messageState.poll = { question, options };
+
+            // Afficher l'indicateur
+            showPollIndicator();
+
+            // Fermer le modal
+            closePollModal();
+
+            if (typeof showToast === 'function') {
+                showToast('Sondage ajouté ✅', 'success');
+            }
+        }
+
+        function closePollModal() {
+            const modal = document.getElementById('poll-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function showPollIndicator() {
+            const pollButton = document.querySelector('button[onclick="openPollModal()"]');
+            if (!pollButton) return;
+
+            // Retirer l'ancien indicateur s'il existe
+            const oldIndicator = pollButton.querySelector('.poll-indicator');
+            if (oldIndicator) oldIndicator.remove();
+
+            // Ajouter le nouvel indicateur
+            const indicator = document.createElement('div');
+            indicator.className = 'poll-indicator absolute -top-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full animate-pulse';
+            indicator.title = 'Sondage ajouté';
+            pollButton.style.position = 'relative';
+            pollButton.appendChild(indicator);
+        }
+
+        function removePollIndicator() {
+            const indicator = document.querySelector('.poll-indicator');
+            if (indicator) indicator.remove();
+        }
+
+        function deletePoll() {
+            messageState.poll = null;
+            removePollIndicator();
+            closePollModal();
+
+            // Réinitialiser le formulaire du modal
+            const pollQuestion = document.getElementById('poll-question');
+            if (pollQuestion) pollQuestion.value = '';
+
+            const optionInputs = document.querySelectorAll('#poll-options input');
+            optionInputs.forEach(input => input.value = '');
+
+            if (typeof showToast === 'function') {
+                showToast('Sondage supprimé', 'info');
+            }
+        }
+
+        // ============================================
+        // GESTION DES MÉDIAS (IMAGES/VIDÉOS)
+        // ============================================
+        function handleMediaSelection(event) {
+            const files = event.target.files;
+            if (!files || files.length === 0) return;
+
+            // Ajouter les fichiers à l'état
+            messageState.media = Array.from(files);
+
+            // Afficher l'indicateur
+            showMediaIndicator(files.length);
+
+            // Afficher la preview
+            showMediaPreview();
+
+            if (typeof showToast === 'function') {
+                showToast(`${files.length} fichier(s) ajouté(s) ✅`, 'success');
+            }
+        }
+
+        function showMediaIndicator(count) {
+            const imageButton = document.querySelector('button[onclick*="imageInput"]');
+            if (!imageButton) return;
+
+            // Retirer l'ancien indicateur s'il existe
+            const oldIndicator = imageButton.querySelector('.media-indicator');
+            if (oldIndicator) oldIndicator.remove();
+
+            // Ajouter le nouvel indicateur avec compteur
+            const indicator = document.createElement('div');
+            indicator.className = 'media-indicator absolute -top-1 -right-1 w-5 h-5 bg-blue-500 border-2 border-white rounded-full flex items-center justify-center text-white text-[10px] font-bold';
+            indicator.textContent = count;
+            indicator.title = `${count} fichier(s)`;
+            imageButton.style.position = 'relative';
+            imageButton.appendChild(indicator);
+        }
+
+        function removeMediaIndicator() {
+            const indicator = document.querySelector('.media-indicator');
+            if (indicator) indicator.remove();
+        }
+
+        function showMediaPreview() {
+            // Créer ou afficher le conteneur de preview
+            let previewContainer = document.getElementById('media-preview-container');
+
+            if (!previewContainer) {
+                previewContainer = document.createElement('div');
+                previewContainer.id = 'media-preview-container';
+                previewContainer.className = 'mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200';
+
+                // Insérer avant la barre de message
+                const messageBar = document.querySelector('[data-forum-id]');
+                if (messageBar) {
+                    messageBar.parentNode.insertBefore(previewContainer, messageBar);
+                }
+            }
+
+            // Construire le HTML de preview
+            let html = `
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-gray-700">
+                📎 ${messageState.media.length} fichier(s) sélectionné(s)
+            </span>
+            <button onclick="deleteAllMedia()" 
+                class="text-xs text-red-600 hover:text-red-800 font-medium">
+                Tout supprimer
+            </button>
+        </div>
+        <div class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+    `;
+
+            messageState.media.forEach((file, index) => {
+                const isVideo = file.type.startsWith('video/');
+                const url = URL.createObjectURL(file);
+
+                html += `
+            <div class="relative group">
+                ${isVideo ?
+                        `<video src="${url}" class="w-full h-20 object-cover rounded-lg"></video>` :
+                        `<img src="${url}" class="w-full h-20 object-cover rounded-lg">`
+                    }
+                <button onclick="deleteMedia(${index})" 
+                    class="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+                ${isVideo ? '<div class="absolute bottom-1 right-1 bg-black/50 text-white text-xs px-1 rounded">📹</div>' : ''}
+            </div>
+        `;
+            });
+
+            html += `</div>`;
+            previewContainer.innerHTML = html;
+            previewContainer.classList.remove('hidden');
+        }
+
+        function hideMediaPreview() {
+            const previewContainer = document.getElementById('media-preview-container');
+            if (previewContainer) {
+                previewContainer.classList.add('hidden');
+            }
+        }
+
+        function deleteMedia(index) {
+            messageState.media.splice(index, 1);
+
+            if (messageState.media.length === 0) {
+                deleteAllMedia();
+            } else {
+                showMediaIndicator(messageState.media.length);
+                showMediaPreview();
+            }
+        }
+
+        function deleteAllMedia() {
+            messageState.media = [];
+            removeMediaIndicator();
+            hideMediaPreview();
+
+            // Réinitialiser l'input file
+            const imageInput = document.getElementById('imageInput');
+            if (imageInput) imageInput.value = '';
+
+            if (typeof showToast === 'function') {
+                showToast('Fichiers supprimés', 'info');
+            }
+        }
+
+        // ============================================
+        // ENVOI DU MESSAGE (VERSION COMPLÈTE)
+        // ============================================
+        async function sendQuickMessage() {
+            const input = document.getElementById('messageInput');
+            const sendButton = document.querySelector('button[onclick="sendQuickMessage()"]');
+            const sendIcon = sendButton?.querySelector('svg');
+            const pollButton = document.querySelector('button[onclick="openPollModal()"]');
+            const imageButton = document.querySelector('button[onclick*="imageInput"]');
+
+            /** ---------------- VALIDATION ---------------- */
+            const hasText = input.value.trim() !== '';
+            const hasPoll = messageState.poll !== null;
+            const hasMedia = messageState.media.length > 0;
+
+            if (!hasText && !hasPoll && !hasMedia) {
+                sendButton?.classList.add('shake-animation');
+                setTimeout(() => sendButton?.classList.remove('shake-animation'), 500);
+
+                if (typeof showToast === 'function') {
+                    showToast('Ajoutez du texte, un sondage ou une image', 'warning');
+                }
+                return;
+            }
+
+            /** ---------------- RÉCUPÉRATION DU FORUM_ID ---------------- */
+            const forumId = document.querySelector('[data-forum-id]')?.dataset.forumId || window.currentForumId;
+
+            if (!forumId) {
+                console.error('❌ Forum ID non trouvé');
+                if (typeof showToast === 'function') {
+                    showToast('Erreur: Forum non identifié', 'error');
+                }
+                return;
+            }
+
+            /** ---------------- CONSTRUCTION DU FORMDATA ---------------- */
+            const formData = new FormData();
+            formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+            formData.append('forum_id', forumId);
+
+            // Texte (peut être vide si sondage ou média)
+            formData.append('contents', input.value.trim());
+
+            // Sondage
+            if (messageState.poll) {
+                formData.append('poll', JSON.stringify(messageState.poll));
+            }
+
+            // Médias
+            if (messageState.media.length > 0) {
+                messageState.media.forEach(file => {
+                    formData.append('media[]', file);
+                });
+            }
+
+            console.log('📤 Envoi du message...');
+            console.log('Texte:', input.value.trim());
+            console.log('Sondage:', messageState.poll);
+            console.log('Médias:', messageState.media.length);
+
+            /** ---------------- UI : DÉMARRAGE ANIMATION ---------------- */
+            // 🔒 BOUTON 1 : BLOQUER TOUT
+            sendButton.disabled = true;
+            if (pollButton) {
+                pollButton.disabled = true;
+                pollButton.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+            if (imageButton) {
+                imageButton.disabled = true;
+                imageButton.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+            input.disabled = true;
+            input.classList.add('opacity-70', 'cursor-not-allowed');
+
+            // 🔄 BOUTON 2 : ANIMATION ENVOI
+            if (sendIcon) sendIcon.classList.add('animate-spin-fast');
+            sendButton.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+            sendButton.classList.add('bg-blue-500', 'scale-95', 'sending-pulse');
+            input.classList.add('message-aspiration');
+
+            /** ---------------- API CALL ---------------- */
+            try {
+                const res = await fetch('/vip', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                const data = await res.json();
+                console.log('📥 Response:', data);
+
+                if (!res.ok) {
+                    throw new Error(data.message || 'Erreur lors de l\'envoi');
+                }
+
+                /** ---------------- SUCCÈS ---------------- */
+                // 🟢 ANIMATION SUCCÈS
+                if (sendIcon) sendIcon.classList.remove('animate-spin-fast');
+                sendButton.classList.remove('bg-blue-500', 'scale-95', 'sending-pulse');
+                sendButton.classList.add('bg-indigo-600', 'scale-110', 'success-glow');
+                if (sendIcon) sendIcon.classList.add('animate-bounce-once');
+
+                if (typeof showToast === 'function') {
+                    showToast('Message envoyé 🎉', 'success');
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 600));
+
+                /** ---------------- RESET COMPLET ---------------- */
+                // Réinitialiser l'input
+                input.value = '';
+                input.disabled = false;
+                input.classList.remove('message-aspiration', 'opacity-70', 'cursor-not-allowed');
+
+                // Réinitialiser l'état
+                messageState.poll = null;
+                messageState.media = [];
+                messageState.text = '';
+
+                // Supprimer les indicateurs
+                removePollIndicator();
+                removeMediaIndicator();
+                hideMediaPreview();
+
+                // Réinitialiser l'input file
+                const imageInput = document.getElementById('imageInput');
+                if (imageInput) imageInput.value = '';
+
+                // 🔓 DÉBLOQUER TOUT
+                sendButton.disabled = false;
+                if (pollButton) {
+                    pollButton.disabled = false;
+                    pollButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+                if (imageButton) {
+                    imageButton.disabled = false;
+                    imageButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+
+                // 🔵 RETOUR À LA NORMALE
+                sendButton.classList.remove('scale-110', 'success-glow');
+                sendButton.classList.add('hover:bg-indigo-700');
+                if (sendIcon) sendIcon.classList.remove('animate-bounce-once');
+
+                // 🔄 RAFRAÎCHIR LES MESSAGES
+                if (typeof refreshMessagess === 'function') {
+                    refreshMessagess();
+                }
+
+            } catch (error) {
+                console.error('❌ ERROR:', error);
+
+                /** ---------------- ERREUR ---------------- */
+                if (sendIcon) sendIcon.classList.remove('animate-spin-fast');
+                sendButton.classList.remove('bg-blue-500', 'scale-95', 'sending-pulse');
+                sendButton.classList.add('bg-red-500', 'shake-animation');
+
+                if (typeof showToast === 'function') {
+                    showToast(error.message || 'Une erreur est survenue', 'error');
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 800));
+
+                /** ---------------- RESET APRÈS ERREUR ---------------- */
+                input.disabled = false;
+                input.classList.remove('message-aspiration', 'opacity-70', 'cursor-not-allowed');
+
+                sendButton.disabled = false;
+                if (pollButton) {
+                    pollButton.disabled = false;
+                    pollButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+                if (imageButton) {
+                    imageButton.disabled = false;
+                    imageButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+
+                sendButton.classList.remove('bg-red-500', 'shake-animation');
+                sendButton.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+            }
+        }
+
+        // ============================================
+        // GESTION ENTER
+        // ============================================
+        function handleMessageKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendQuickMessage();
+            }
+        }
+
+        // ============================================
+        // INITIALISATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function () {
+            // Attacher l'event listener sur l'input file
+            const imageInput = document.getElementById('imageInput');
+            if (imageInput) {
+                imageInput.addEventListener('change', handleMediaSelection);
+            }
+        });
+    </script>
 
 </body>
 

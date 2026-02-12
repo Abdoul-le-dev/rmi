@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\PollVoted;
 use App\Events\PostDeleted;
 use App\Events\PostShared;
 // Events
-use App\Models\Translation\ForumTranslation;
+use App\Helpers\S3Helper;
 use App\Models\ForumTopic;
 use App\Models\PollOption;
 use App\Models\Post;
+use App\Models\Translation\ForumTranslation;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\User;
-use App\Helpers\S3Helper;
 
 Auth::loginUsingId(22422);
 
@@ -39,11 +38,12 @@ class PostController extends Controller
                 ->limit(50)
                 ->get();
 
-             // 🔥 AJOUT ICI
+            // 🔥 AJOUT ICI
             $posts->each(function ($post) {
-            $post->media->each(function ($media) {
-                $media->url = S3Helper::getTemporaryUrl($media->path, 60);
-            }); });    
+                $post->media->each(function ($media) {
+                    $media->url = S3Helper::getTemporaryUrl($media->path, 60);
+                });
+            });
 
             return response()->json([
                 'success' => true,
@@ -63,7 +63,7 @@ class PostController extends Controller
 
     public function canal_index()
     {
-        $forums = ForumTranslation::with(['forum','topics'])->get();
+        $forums = ForumTranslation::with(['forum', 'topics'])->get();
 
         $posts = Post::with(['user', 'media', 'poll.options', 'comments.user'])
             ->where('status', 'published')
@@ -76,7 +76,7 @@ class PostController extends Controller
             ->where('status', 'validated')
             ->get();
 
-        $montantTotal = $validatedTrophes->sum('montant_genere');
+        $montantTotal = 100000;//$validatedTrophes->sum('montant_genere');
 
         $percent = ($montantTotal / 1000) + 1;
 
@@ -106,13 +106,13 @@ class PostController extends Controller
         $montant = (float) $montant;
 
         if ($montant >= 10000) {
-            return 'diamond 💎'; // 
+            return 'diamond 💎'; //
         } elseif ($montant >= 5000) {
-            return 'gold 🥇'; // 
+            return 'gold 🥇'; //
         } elseif ($montant >= 1000) {
-            return 'silver🥈'; // 
+            return 'silver🥈'; //
         } elseif ($montant >= 100) {
-            return 'bronze🥉'; // 
+            return 'bronze🥉'; //
         }
 
         return 'none'; // ⭐
@@ -128,15 +128,26 @@ class PostController extends Controller
             'option_id' => 'required|exists:poll_options,id',
         ]);
 
-        $option = PollOption::findOrFail($validated['option_id']);
+        $option = PollOption::where('poll_id', $validated['poll_id'])
+            ->where('id', $validated['option_id'])
+            ->firstOrFail();
+
         $option->increment('votes');
 
-        // 🔥 Déclencher l'événement WebSocket
-        event(new PollVoted($validated['poll_id'], $validated['option_id']));
+        $poll = $option->poll()->with('options')->first();
+
+        $totalVotes = $poll->options->sum('votes');
 
         return response()->json([
             'success' => true,
-            'votes' => $option->votes,
+            'poll' => [
+                'id' => $poll->id,
+                'total_votes' => $totalVotes,
+                'options' => $poll->options->map(fn ($opt) => [
+                    'id' => $opt->id,
+                    'votes_count' => $opt->votes,
+                ]),
+            ],
         ]);
     }
 

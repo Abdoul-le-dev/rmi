@@ -17,8 +17,9 @@
             <!-- Profil utilisateur -->
             <div class="text-center">
                 <div class="relative inline-block mb-3">
-                    <img src="{{ Auth::user()->getAvatar(48) }}"  alt="Profil"
-                        class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg mx-auto">
+                    <img src="{{ Auth::user()->getAvatar(48) }}" alt="Profil"
+                    class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg mx-auto" onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode(string: Auth::user()->full_name) }}&background=random'">
+
                     <div class="absolute bottom-1 right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
                 </div>
                 <h3 class="font-bold text-white text-base">{{ $userData['user_name'] }}</h3>

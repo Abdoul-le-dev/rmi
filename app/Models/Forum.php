@@ -7,6 +7,8 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class Forum extends Model implements TranslatableContract
 {
@@ -104,5 +106,42 @@ class Forum extends Model implements TranslatableContract
         }
 
         return $result;
+    }
+
+     public function getAvatar($size = 40)
+    {
+
+
+        if (!empty($this->avatar)) {
+            // $avatarUrl = $this->avatar;
+            // $avatarUrl = Storage::disk('s3')->url($this->avatar);
+
+            // Modification StanislasKB
+            
+            $cacheKey = "user:avatar:{$this->id}:{$size}"; 
+
+            // On met en cache pendant 2h (7200 secondes)
+            $avatarUrl = Cache::remember($cacheKey, 7200, function () {
+                
+                return Storage::disk('s3')->temporaryUrl(
+                    $this->avatar,
+                    now()->addHours(2)
+                );
+            });
+        } else {
+            $settings = getOthersPersonalizationSettings();
+
+            if (!empty($settings) and !empty($settings['user_avatar_style']) and $settings['user_avatar_style'] == "ui_avatar") {
+                $avatarUrl = "/getDefaultAvatar?item={$this->id}&name={$this->full_name}&size=$size";
+            } else {
+                if (!empty($settings) and !empty($settings['default_user_avatar'])) {
+                    $avatarUrl = $settings['default_user_avatar'];
+                } else {
+                    $avatarUrl = "/assets/default/img/default/avatar-1.png";
+                }
+            }
+        }
+
+        return $avatarUrl;
     }
 }
