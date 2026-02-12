@@ -46,5 +46,10 @@ class update_landing_page extends Controller
         return view("update.cgu");
     }
 
+     public function appointment(Request $request)
+    {
+        return view("update.appointment");
+    }
+
     
 }

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LiveClassController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\AppointmentAdminController;
 
 $prefix = getAdminPanelUrlPrefix();
 
@@ -58,8 +59,6 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             Route::post('/add', 'DashboardController@suscriber_add');
             Route::get('/test', 'DashboardController@subscribedUsers');
             Route::get('/try', 'DashboardController@suscriber_search');
-            
-        
         });
 
         //teams end
@@ -496,7 +495,6 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
         Route::group(['prefix' => 'consultants'], function () {
             Route::get('/', 'ConsultantsController@index');
             Route::get('/excel', 'ConsultantsController@exportExcel');
-
         });
 
         Route::group(['prefix' => 'appointments'], function () {
@@ -1171,7 +1169,6 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             });
 
             Route::post("/{form_id}/submissions/{id}/update", 'FormSubmissionsController@update');
-
         });
 
         Route::group(['prefix' => 'ai-contents'], function () {
@@ -1189,7 +1186,6 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
                 Route::get('/{id}/delete', 'AIContentTemplatesController@delete');
                 Route::get('/{id}/statusToggle', 'AIContentTemplatesController@statusToggle');
             });
-
         });
 
         Route::group(['prefix' => 'purchase_notifications'], function () {
@@ -1259,16 +1255,14 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
         });
 
 
-         Route::group(['prefix' => 'lives-classes'], function () {
+        Route::group(['prefix' => 'lives-classes'], function () {
             Route::get('', [LiveClassController::class, 'index_admin'])->name('sessions.index');
             Route::get('/edit/{liveClass}', [LiveClassController::class, 'edit_admin'])->name('sessions.edit');
             Route::put('/edit/{liveClass}', [LiveClassController::class, 'update_admin'])->name('sessions.update');
             Route::post('/destroy/{liveClass}', [LiveClassController::class, 'destroy_admin'])->name('sessions.destroy');
-            
-
         });
 
-          Route::group(['prefix' => 'new-notifications'], function () {
+        Route::group(['prefix' => 'new-notifications'], function () {
             Route::get('', [NotificationController::class, 'index'])->name('notifications.index');
             Route::post('/send-mail', [NotificationController::class, 'sendMail'])->name('send.mail');
             Route::get('/history', [NotificationController::class, 'history'])->name('notifications.history');
@@ -1279,10 +1273,17 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
 
             Route::post('/preview-excel', [NotificationController::class, 'previewExcel'])->name('preview.excel');
             Route::post('/validate-excel', [NotificationController::class, 'validateExcel'])->name('validate.excel');
-   
-            });
+        });
+
+
+        Route::prefix('rendez-vous')->group(function () {
+            Route::get('/', [AppointmentAdminController::class, 'index'])->name('admin.appointments.index');
+            Route::get('/{id}', [AppointmentAdminController::class, 'show'])->name('admin.appointments.show');
+            Route::post('/{id}/approuver', [AppointmentAdminController::class, 'approve'])->name('admin.appointments.approve');
+            Route::post('/{id}/rejeter', [AppointmentAdminController::class, 'reject'])->name('admin.appointments.reject');
+            Route::patch('/{id}/terminer', [AppointmentAdminController::class, 'markCompleted'])->name('admin.appointments.mark-completed');
+        });
 
         /* End Admin Middleware */
-
     });
 });

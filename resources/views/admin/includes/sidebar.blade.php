@@ -59,7 +59,7 @@
                 <li class="menu-header">{{ trans('site.education') }}</li>
             @endif
             @can('admin_webinars')
-                 <li class="{{ (request()->is(getAdminPanelUrl('/quizzes*', false))) ? 'active' : '' }}">
+                 <li class="{{ (request()->is(getAdminPanelUrl('/lives-classes*', false))) ? 'active' : '' }}">
                     <a class="nav-link " href="{{ route('sessions.index') }}">
                         <i class="fas fa-video"></i>
                         <span>Live class</span>
@@ -337,7 +337,14 @@
                     </a>
                 </li>
             @endcan
-
+             @can('admin_webinars')
+                 <li class="{{ (request()->is(getAdminPanelUrl('/rendez-vous*', false))) ? 'active' : '' }}">
+                    <a class="nav-link " href="{{ route('admin.appointments.index') }}">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Rendez-vous</span>
+                    </a>
+                </li>
+            @endcan
 
 
 

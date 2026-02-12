@@ -209,6 +209,20 @@
                 </div>
             </li>
         @endcan
+        @if ($authUser->isOrganization() || $authUser->isTeacher())
+             @can('panel_meetings')
+            <li class="sidenav-item {{ (request()->is('panel/rendez-vous')) ? 'sidenav-item-active' : '' }}">
+                <a href="/panel/rendez-vous" class="d-flex align-items-center">
+                <span class="sidenav-setting-icon sidenav-item-icon mr-10">
+                    @include('web.default.panel.includes.sidebar_icons.appointment')
+                </span>
+                    <span class="font-14 text-dark-blue font-weight-500">Rendez-vous</span>
+                </a>
+            </li>
+        @endcan
+        @endif
+
+         
 
         @if(!empty(getFeaturesSettings('upcoming_courses_status')))
             @can('panel_upcoming_courses')

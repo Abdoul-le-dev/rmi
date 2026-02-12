@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InstructorAppointmentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -127,8 +128,6 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['imp
 
         Route::get('/{quizResultId}/edit-result', 'QuizController@editResult');
         Route::post('/{quizResultId}/update-result', 'QuizController@updateResult');
-
-
     });
 
     Route::group(['prefix' => 'quizzes-questions'], function () {
@@ -338,7 +337,6 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['imp
             Route::post('/{id}/update', 'DiscountController@update');
             Route::get('/{id}/delete', 'DiscountController@delete');
         });
-
     });
 
     Route::group(['prefix' => 'noticeboard'], function () {
@@ -505,4 +503,9 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['imp
         Route::post('/generate', 'AiContentController@generate');
     });
 
+
+    Route::prefix('rendez-vous')->group(function () {
+        Route::get('/', [InstructorAppointmentController::class, 'index'])->name('instructor.appointments.index');
+        Route::get('/{id}', [InstructorAppointmentController::class, 'show'])->name('instructor.appointments.show');
+    });
 });

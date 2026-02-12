@@ -7,6 +7,7 @@ use App\Http\Controllers\MediaController;
 use App\Services\CloudFrontUrlSigner;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ForumController;
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentPostController;
 use App\Models\LiveClass;
@@ -111,6 +112,8 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     Route::get('/instructeurs', 'update_landing_page@instructeurs');
     Route::get('/privacy', 'update_landing_page@privacy');
     Route::get('/cgu', 'update_landing_page@cgu');
+    Route::get('/rendez-vous', 'update_landing_page@appointment');
+    Route::post('/rendez-vous', [AppointmentController::class, 'store'])->name('appointments.store');
     #Route::get('/', 'update_landing_page@index');
 
     //Route::get('/', function () {
