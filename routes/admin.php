@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\WithdrawalController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LiveClassController;
 use App\Http\Controllers\NotificationController;
@@ -1282,6 +1283,15 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             Route::post('/{id}/approuver', [AppointmentAdminController::class, 'approve'])->name('admin.appointments.approve');
             Route::post('/{id}/rejeter', [AppointmentAdminController::class, 'reject'])->name('admin.appointments.reject');
             Route::patch('/{id}/terminer', [AppointmentAdminController::class, 'markCompleted'])->name('admin.appointments.mark-completed');
+        });
+
+
+        Route::prefix('withdrawals')->name('admin.withdrawals.')->group(function () {
+            Route::get('/', [WithdrawalController::class, 'index'])->name('index');
+            Route::get('/export', [WithdrawalController::class, 'export'])->name('export');
+            Route::get('/{id}', [WithdrawalController::class, 'show'])->name('show');
+            Route::post('/{id}/approve', [WithdrawalController::class, 'approve'])->name('approve');
+            Route::post('/{id}/reject', [WithdrawalController::class, 'reject'])->name('reject');
         });
 
         /* End Admin Middleware */

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\InstructorAppointmentController;
+use App\Http\Controllers\WithdrawalController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -507,5 +508,13 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['imp
     Route::prefix('rendez-vous')->group(function () {
         Route::get('/', [InstructorAppointmentController::class, 'index'])->name('instructor.appointments.index');
         Route::get('/{id}', [InstructorAppointmentController::class, 'show'])->name('instructor.appointments.show');
+    });
+
+
+    Route::prefix('marketing/withdrawals')->name('user.withdrawals.')->group(function () {
+        Route::get('/', [WithdrawalController::class, 'index'])->name('index');
+        Route::post('/', [WithdrawalController::class, 'store'])->name('store');
+        Route::get('/{id}', [WithdrawalController::class, 'show'])->name('show');
+        Route::post('/{id}/cancel', [WithdrawalController::class, 'cancel'])->name('cancel');
     });
 });

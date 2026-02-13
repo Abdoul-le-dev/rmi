@@ -108,6 +108,7 @@
                                                     <li><a href="https://rmiclass.net/a-propos">A propos</a></li>
                                                     <li><a href="#">Partner Program</a></li>
                                                     <li><a href="https://rmiclass.net/faq">Faq</a></li>
+                                                    <li><a href="/rendez-vous">Rendez-vous</a></li>
                                                 </ul>
                                             </li>
                                             <li class="mega-menu-item active">

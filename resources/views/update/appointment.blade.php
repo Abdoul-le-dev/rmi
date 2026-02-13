@@ -137,6 +137,7 @@
                                                     <li><a href="https://rmiclass.net/a-propos">A propos</a></li>
                                                     <li><a href="#">Partner Program</a></li>
                                                     <li><a href="https://rmiclass.net/faq">Faq</a></li>
+                                                    <li><a href="/rendez-vous">Rendez-vous</a></li>
                                                 </ul>
                                             </li>
                                             <li class="mega-menu-item">
@@ -176,14 +177,14 @@
                     <div class="row align-items-center">
                         <div class="col-lg-12">
                             <div class="page-title-heading">
-                                <h2 class="title">À propos</h2>
+                                <h2 class="title">Rendez-vous</h2>
                             </div>
                             <div class="breadcrumb-wrapper">
                                 <span>
                                     <i class="ti ti-home"></i>
                                     <a title="Homepage" href="https://rmiclass.net/">Accueil</a>
                                 </span>
-                                <span>À propos</span>
+                                <span>Rendez-vous</span>
                             </div>
                         </div>
                     </div>

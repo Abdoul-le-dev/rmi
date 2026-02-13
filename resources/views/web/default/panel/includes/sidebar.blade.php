@@ -651,6 +651,9 @@
                                     <li class="mt-5 {{ (request()->is('panel/marketing/affiliates')) ? 'active' : '' }}">
                                         <a href="/panel/marketing/affiliates">{{ trans('panel.affiliates') }}</a>
                                     </li>
+                                    <li class="mt-5 {{ (request()->is('panel/marketing/withdrawals*')) ? 'active' : '' }}">
+                                        <a href="{{ route('user.withdrawals.index') }}">Retraits</a>
+                                    </li>
                                 @endcan
                             @endif
 

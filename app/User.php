@@ -78,12 +78,12 @@ class User extends Authenticatable
 
     public function posts()
     {
-       return $this->hasMany(Post::class);
+        return $this->hasMany(Post::class);
     }
 
     public function trophes()
     {
-       return $this->hasMany(Trophe::class);
+        return $this->hasMany(Trophe::class);
     }
 
     //end
@@ -155,12 +155,12 @@ class User extends Authenticatable
             // $avatarUrl = Storage::disk('s3')->url($this->avatar);
 
             // Modification StanislasKB
-            
-            $cacheKey = "user:avatar:{$this->id}:{$size}"; 
+
+            $cacheKey = "user:avatar:{$this->id}:{$size}";
 
             // On met en cache pendant 2h (7200 secondes)
             $avatarUrl = Cache::remember($cacheKey, 7200, function () {
-                
+
                 return Storage::disk('s3')->temporaryUrl(
                     $this->avatar,
                     now()->addHours(2)
@@ -294,6 +294,30 @@ class User extends Authenticatable
     public function affiliates()
     {
         return $this->hasOne('App\Models\Affiliate', 'affiliate_user_id', 'id');
+    }
+
+    public function referredUsers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'affiliates',
+            'affiliate_user_id',
+            'referred_user_id'
+        );
+    }
+
+    public function referrers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'affiliates',
+            'referred_user_id',
+            'affiliate_user_id'
+        );
+    }
+    public function referrer()
+    {
+        return $this->referrers()->first();
     }
 
     public function followers()

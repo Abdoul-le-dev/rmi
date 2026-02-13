@@ -17,8 +17,8 @@ class CreateAffiliatesTable extends Migration
             $table->engine = 'InnoDB';
 
             $table->increments('id');
-            $table->integer('affiliate_user_id')->unsigned();
-            $table->integer('referred_user_id')->unsigned();
+            $table->integer('affiliate_user_id')->unsigned(); // le parrain
+            $table->integer('referred_user_id')->unsigned(); // le filleul
             $table->integer('created_at')->unsigned();
 
             $table->foreign('affiliate_user_id')->on('users')->references('id')->onDelete('cascade');

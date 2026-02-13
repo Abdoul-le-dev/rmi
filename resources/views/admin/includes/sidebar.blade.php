@@ -1297,6 +1297,14 @@
                     </li>
                 </ul>
             </li>
+            @can('admin_webinars')
+                 <li class="{{ (request()->is(getAdminPanelUrl('/withdrawals*', false))) ? 'active' : '' }}">
+                    <a class="nav-link " href="{{ route('admin.withdrawals.index') }}">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Retraits</span>
+                    </a>
+                </li>
+            @endcan
 
 
             @can('admin_rewards')

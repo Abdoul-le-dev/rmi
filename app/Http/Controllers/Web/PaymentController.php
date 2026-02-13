@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PaymentSuccessMail;
+use App\Models\Commission;
 
 class PaymentController extends Controller
 {
@@ -195,6 +196,8 @@ class PaymentController extends Controller
                 // Log::info('Here inside paymentOrderAfterVerify paying');
                 $this->setPaymentAccounting($order);
 
+                Commission::createFromOrder($order);
+                
                 $order->update(['status' => Order::$paid]);
                 Mail::to($order->user->email)->send(new PaymentSuccessMail($order, $carts));
             } else {

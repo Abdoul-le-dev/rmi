@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Accounting;
 use App\Models\Affiliate;
 use App\Models\AffiliateCode;
+use App\Models\Commission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -33,10 +34,11 @@ class AffiliateController extends Controller
             ->where('user_id', $user->id)
             ->sum('amount');
 
-        $affiliateBonus = Accounting::where('is_affiliate_commission', true)
-            ->where('system', false)
-            ->where('user_id', $user->id)
-            ->sum('amount');
+        // $affiliateBonus = Accounting::where('is_affiliate_commission', true)
+        //     ->where('system', false)
+        //     ->where('user_id', $user->id)
+        //     ->sum('amount');
+        $affiliateBonus = Commission::totalForAffiliate($user->id);
 
         $query = Affiliate::where('affiliate_user_id', $user->id)
             ->with(['referredUser'])
